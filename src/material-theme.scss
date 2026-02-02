@@ -1,0 +1,131 @@
+// Include theming for Angular Material with `mat.theme()`.
+// This Sass mixin will define CSS variables that are used for styling Angular Material
+// components according to the Material 3 design spec.
+@use '@angular/material' as mat;
+
+html {
+  height: 100%;
+  // Force light mode only - 'only' prevents dark mode from being applied
+  color-scheme: light only;
+
+  // Include base Angular Material theme with light mode explicitly
+  @include mat.theme((
+    color: (
+      theme-type: light,
+      primary: mat.$violet-palette,
+      tertiary: mat.$magenta-palette,
+    ),
+    typography: Lato,
+    density: 0,
+  ));
+
+  // Custom MD3 color tokens (light theme)
+  --md-sys-color-primary: rgb(101 85 143);
+  --md-sys-color-surface-tint: rgb(101 85 143);
+  --md-sys-color-on-primary: rgb(255 255 255);
+  --md-sys-color-primary-container: rgb(233 221 255);
+  --md-sys-color-on-primary-container: rgb(76 61 117);
+  --md-sys-color-secondary: rgb(98 91 113);
+  --md-sys-color-on-secondary: rgb(255 255 255);
+  --md-sys-color-secondary-container: rgb(232 222 248);
+  --md-sys-color-on-secondary-container: rgb(74 68 88);
+  --md-sys-color-tertiary: rgb(126 82 96);
+  --md-sys-color-on-tertiary: rgb(255 255 255);
+  --md-sys-color-tertiary-container: rgb(255 217 227);
+  --md-sys-color-on-tertiary-container: rgb(99 59 72);
+  --md-sys-color-error: rgb(186 26 26);
+  --md-sys-color-on-error: rgb(255 255 255);
+  --md-sys-color-error-container: rgb(255 218 214);
+  --md-sys-color-on-error-container: rgb(147 0 10);
+  --md-sys-color-background: rgb(253 247 255);
+  --md-sys-color-on-background: rgb(29 27 32);
+  --md-sys-color-surface: rgb(253 247 255);
+  --md-sys-color-on-surface: rgb(29 27 32);
+  --md-sys-color-surface-variant: rgb(231 224 235);
+  --md-sys-color-on-surface-variant: rgb(73 69 78);
+  --md-sys-color-outline: rgb(122 117 127);
+  --md-sys-color-outline-variant: rgb(202 196 207);
+  --md-sys-color-shadow: rgb(0 0 0);
+  --md-sys-color-scrim: rgb(0 0 0);
+  --md-sys-color-inverse-surface: rgb(50 47 53);
+  --md-sys-color-inverse-on-surface: rgb(245 239 247);
+  --md-sys-color-inverse-primary: rgb(207 189 254);
+  --md-sys-color-primary-fixed: rgb(233 221 255);
+  --md-sys-color-on-primary-fixed: rgb(32 16 71);
+  --md-sys-color-primary-fixed-dim: rgb(207 189 254);
+  --md-sys-color-on-primary-fixed-variant: rgb(76 61 117);
+  --md-sys-color-secondary-fixed: rgb(232 222 248);
+  --md-sys-color-on-secondary-fixed: rgb(30 25 43);
+  --md-sys-color-secondary-fixed-dim: rgb(203 194 219);
+  --md-sys-color-on-secondary-fixed-variant: rgb(74 68 88);
+  --md-sys-color-tertiary-fixed: rgb(255 217 227);
+  --md-sys-color-on-tertiary-fixed: rgb(49 16 29);
+  --md-sys-color-tertiary-fixed-dim: rgb(239 184 200);
+  --md-sys-color-on-tertiary-fixed-variant: rgb(99 59 72);
+  --md-sys-color-surface-dim: rgb(222 216 224);
+  --md-sys-color-surface-bright: rgb(253 247 255);
+  --md-sys-color-surface-container-lowest: rgb(255 255 255);
+  --md-sys-color-surface-container-low: rgb(248 242 250);
+  --md-sys-color-surface-container: rgb(242 236 244);
+  --md-sys-color-surface-container-high: rgb(236 230 238);
+  --md-sys-color-surface-container-highest: rgb(230 224 233);
+
+  // Map MD3 tokens to Angular Material system variables
+  --mat-sys-primary: var(--md-sys-color-primary);
+  --mat-sys-on-primary: var(--md-sys-color-on-primary);
+  --mat-sys-primary-container: var(--md-sys-color-primary-container);
+  --mat-sys-on-primary-container: var(--md-sys-color-on-primary-container);
+  --mat-sys-primary-fixed: var(--md-sys-color-primary-fixed);
+  --mat-sys-primary-fixed-dim: var(--md-sys-color-primary-fixed-dim);
+  --mat-sys-on-primary-fixed: var(--md-sys-color-on-primary-fixed);
+  --mat-sys-on-primary-fixed-variant: var(--md-sys-color-on-primary-fixed-variant);
+  --mat-sys-inverse-primary: var(--md-sys-color-inverse-primary);
+  --mat-sys-secondary: var(--md-sys-color-secondary);
+  --mat-sys-on-secondary: var(--md-sys-color-on-secondary);
+  --mat-sys-secondary-container: var(--md-sys-color-secondary-container);
+  --mat-sys-on-secondary-container: var(--md-sys-color-on-secondary-container);
+  --mat-sys-secondary-fixed: var(--md-sys-color-secondary-fixed);
+  --mat-sys-secondary-fixed-dim: var(--md-sys-color-secondary-fixed-dim);
+  --mat-sys-on-secondary-fixed: var(--md-sys-color-on-secondary-fixed);
+  --mat-sys-on-secondary-fixed-variant: var(--md-sys-color-on-secondary-fixed-variant);
+  --mat-sys-tertiary: var(--md-sys-color-tertiary);
+  --mat-sys-on-tertiary: var(--md-sys-color-on-tertiary);
+  --mat-sys-tertiary-container: var(--md-sys-color-tertiary-container);
+  --mat-sys-on-tertiary-container: var(--md-sys-color-on-tertiary-container);
+  --mat-sys-tertiary-fixed: var(--md-sys-color-tertiary-fixed);
+  --mat-sys-tertiary-fixed-dim: var(--md-sys-color-tertiary-fixed-dim);
+  --mat-sys-on-tertiary-fixed: var(--md-sys-color-on-tertiary-fixed);
+  --mat-sys-on-tertiary-fixed-variant: var(--md-sys-color-on-tertiary-fixed-variant);
+  --mat-sys-error: var(--md-sys-color-error);
+  --mat-sys-on-error: var(--md-sys-color-on-error);
+  --mat-sys-error-container: var(--md-sys-color-error-container);
+  --mat-sys-on-error-container: var(--md-sys-color-on-error-container);
+  --mat-sys-surface: var(--md-sys-color-surface);
+  --mat-sys-on-surface: var(--md-sys-color-on-surface);
+  --mat-sys-surface-variant: var(--md-sys-color-surface-variant);
+  --mat-sys-on-surface-variant: var(--md-sys-color-on-surface-variant);
+  --mat-sys-surface-tint: var(--md-sys-color-surface-tint);
+  --mat-sys-surface-dim: var(--md-sys-color-surface-dim);
+  --mat-sys-surface-bright: var(--md-sys-color-surface-bright);
+  --mat-sys-surface-container: var(--md-sys-color-surface-container);
+  --mat-sys-surface-container-low: var(--md-sys-color-surface-container-low);
+  --mat-sys-surface-container-lowest: var(--md-sys-color-surface-container-lowest);
+  --mat-sys-surface-container-high: var(--md-sys-color-surface-container-high);
+  --mat-sys-surface-container-highest: var(--md-sys-color-surface-container-highest);
+  --mat-sys-inverse-surface: var(--md-sys-color-inverse-surface);
+  --mat-sys-inverse-on-surface: var(--md-sys-color-inverse-on-surface);
+  --mat-sys-background: var(--md-sys-color-background);
+  --mat-sys-on-background: var(--md-sys-color-on-background);
+  --mat-sys-outline: var(--md-sys-color-outline);
+  --mat-sys-outline-variant: var(--md-sys-color-outline-variant);
+  --mat-sys-shadow: var(--md-sys-color-shadow);
+  --mat-sys-scrim: var(--md-sys-color-scrim);
+}
+
+body {
+  background-color: var(--mat-sys-surface);
+  color: var(--mat-sys-on-surface);
+  font: var(--mat-sys-body-medium);
+  margin: 0;
+  height: 100%;
+}

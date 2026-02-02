@@ -1,0 +1,21 @@
+<mat-card appearance="outlined" class="px-6 py-5">
+  <mat-card-content>
+    <div class="flex justify-center mb-4">
+      <img src="/assets/images/pollify-logo.svg" alt="Pollify" class="w-32 h-16">
+    </div>
+
+    <h2 class="text-lg text-center mb-6">Enter your RFID number and code to login</h2>
+    <form class="flex flex-col gap-2" [formGroup]="loginForm">
+      <mat-form-field appearance="outline">
+        <mat-label>RFID Number</mat-label>
+        <input matInput type="text" formControlName="rfid_number">
+      </mat-form-field>
+      <mat-form-field appearance="outline">
+        <mat-label>Code</mat-label>
+        <input matInput type="text" formControlName="code">
+      </mat-form-field>
+
+      <button matButton="filled" color="primary" type="submit">Login</button>
+    </form>
+  </mat-card-content>
+</mat-card>

@@ -1,0 +1,23 @@
+<mat-card appearance="outlined" class="px-6 py-5">
+  <mat-card-content>
+    <div class="flex justify-center mb-4">
+      <img src="/assets/images/pollify-logo.svg" alt="Pollify" class="w-32 h-16">
+    </div>
+    <form class="flex flex-col gap-2" [formGroup]="loginForm">
+      <mat-form-field appearance="outline">
+        <mat-label>Email</mat-label>
+        <input matInput type="email" formControlName="email">
+      </mat-form-field>
+      <mat-form-field appearance="outline">
+        <mat-label>Password</mat-label>
+        <input matInput [type]="hidePassword() ? 'password' : 'text'" formControlName="password">
+        <button matIconButton matSuffix (click)="togglePasswordVisibility()">
+          <mat-icon>{{ hidePassword() ? 'visibility_off' : 'visibility' }}</mat-icon>
+        </button>
+      </mat-form-field>
+
+      <button matButton="filled" color="primary" type="submit">Login</button>
+      <button matButton="text" color="primary" type="button" (click)="navigateToParticipants()">Sign in as participant</button>
+    </form>
+  </mat-card-content>
+</mat-card>
