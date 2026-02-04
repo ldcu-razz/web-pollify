@@ -1,0 +1,72 @@
+<section class="flex flex-col gap-4 px-8 py-6 mat-bg-surface-container-lowest">
+  <section class="flex flex-col gap-2">
+    <h2 class="text-xl font-bold">Add user to Workspace</h2>
+    <p class="text-sm text-gray-500">Search for a user by email and add them to the workspace.</p>
+  </section>
+
+  <section class="flex flex-col mt-4">
+    <section class="flex flex-col gap-2">
+      <mat-form-field appearance="outline">
+        <mat-label>Search user</mat-label>
+        <mat-chip-grid #chipGrid>
+          @for (keyword of keywords(); track keyword) {
+            <mat-chip-row>
+              <div class="flex items-center gap-2">
+                <img
+                  matListAvatar
+                  src="https://material.angular.dev/assets/img/examples/shiba1.jpg"
+                  alt="Photo of a Shiba Inu"
+                  class="w-5 h-5 rounded-full"
+                />
+                <span>{{keyword}}</span>
+              </div>
+              <button matChipRemove>
+                <mat-icon>cancel</mat-icon>
+              </button>
+            </mat-chip-row>
+          }
+        </mat-chip-grid>
+        <input matInput type="text" [matChipInputFor]="chipGrid">
+      </mat-form-field>
+    </section>
+
+    <section class="flex flex-col">
+      <mat-action-list class="p-0!">
+        <button mat-list-item (click)="selectUser()">
+          <section class="flex items-center gap-2">
+            <img
+              matListAvatar
+              src="https://material.angular.dev/assets/img/examples/shiba1.jpg"
+              alt="Photo of a Shiba Inu"
+              class="w-8 h-8 rounded-full"
+            />
+            <span>Dog one</span>
+          </section>
+        </button>
+        
+        <button mat-list-item (click)="selectUser()">
+          <section class="flex items-center gap-2">
+            <img
+              matListAvatar
+              src="https://material.angular.dev/assets/img/examples/shiba1.jpg"
+              alt="Photo of a Shiba Inu"
+              class="w-8 h-8 rounded-full"
+            />
+            <span>Dog one</span>
+          </section>
+        </button>
+      </mat-action-list>
+    </section>
+  </section>
+
+  <section class="flex justify-end gap-2">
+    <button matButton="tonal" color="primary" (click)="closeDialog()">
+      <mat-icon>close</mat-icon>
+      <span>Cancel</span>
+    </button>
+    <button matButton="filled" color="primary">
+      <mat-icon>add</mat-icon>
+      <span>Add user</span>
+    </button>
+  </section>
+</section>

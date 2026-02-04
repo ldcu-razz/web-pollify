@@ -1,8 +1,18 @@
 import { Routes } from '@angular/router';
+import { ROUTES as ROUTES_CONSTANTS } from '@constants/routes.constants';
 
 export const routes: Routes = [
   {
     path: '',
-    loadChildren: () => import('./auth/auth.module').then(m => m.AuthModule)
+    redirectTo: ROUTES_CONSTANTS.AUTH.LOGIN,
+    pathMatch: 'full',
+  },
+  {
+    path: '',
+    loadChildren: () => import('./auth/auth.module').then(m => m.AuthModule),
+  },
+  {
+    path: '',
+    loadChildren: () => import('./main/main.module').then(m => m.MainModule),
   }
 ];

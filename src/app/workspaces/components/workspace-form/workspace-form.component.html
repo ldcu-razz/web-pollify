@@ -1,0 +1,29 @@
+<section class="flex flex-col gap-4 px-8 py-6">
+  <section class="flex flex-col gap-2">
+    <h3 class="text-xl font-bold">Create Workspace</h3>
+    <p class="text-sm">Fill out the fields below. The field with * are required.</p>
+  </section>
+
+  <form class="mt-4 flex flex-col gap-4">
+    <mat-form-field appearance="outline" class="w-full">
+      <mat-label>Workspace Name</mat-label>
+      <input matInput type="text" placeholder="Workspace Name" [formField]="workspaceForm.name">
+      @if (workspaceForm.name().touched() && workspaceForm.name().required()) {
+        <mat-error>Workspace name is required</mat-error>
+      }
+    </mat-form-field>
+
+    <mat-form-field appearance="outline" class="w-full">
+      <mat-label>Workspace Description</mat-label>
+      <textarea matInput type="text" [formField]="workspaceForm.description" placeholder="Workspace Description"></textarea>
+      @if (workspaceForm.description().touched() && workspaceForm.description().required()) {
+        <mat-error>Workspace description is required</mat-error>
+      }
+    </mat-form-field>
+  </form>
+
+  <section class="flex justify-end gap-2">
+    <button matButton="tonal" color="primary" (click)="closeDialog()">Cancel</button>
+    <button matButton="filled" color="primary" [disabled]="isFormInvalid() && isFormTouched()">Create Workspace</button>
+  </section>
+</section>

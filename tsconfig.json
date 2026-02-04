@@ -18,6 +18,7 @@
     "paths": {
       "@constants/*": ["./src/constants/*" ],
       "@store/*": ["./src/store/*" ],
+      "@models/*": ["./src/models/*" ],
     },
   },
   "angularCompilerOptions": {

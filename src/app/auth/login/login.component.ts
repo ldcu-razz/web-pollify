@@ -10,6 +10,7 @@ import { LoginFormComponent } from './login-form/login-form.component';
 export class LoginComponent implements OnInit {
 
   public ngOnInit(): void {
-
+    // TODO: add logic to get login
+    console.log('login');
   }
 }

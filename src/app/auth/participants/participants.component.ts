@@ -10,6 +10,7 @@ import { ParticipantsLoginFormComponent } from "./participants-login-form/partic
 export class ParticipantsComponent implements OnInit {
 
   public ngOnInit(): void {
-    //
+    // TODO: add logic to get participants
+    console.log('participants');
   }
 }

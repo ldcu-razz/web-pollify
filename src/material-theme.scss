@@ -19,6 +19,8 @@ html {
     density: 0,
   ));
 
+  @include mat.system-classes();
+
   // Custom MD3 color tokens (light theme)
   --md-sys-color-primary: rgb(101 85 143);
   --md-sys-color-surface-tint: rgb(101 85 143);

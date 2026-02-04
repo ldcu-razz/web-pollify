@@ -30,7 +30,8 @@ export class LoginFormComponent implements OnInit {
   }
 
   public ngOnInit(): void {
-    //
+    // TODO: add logic to login
+    console.log('login form');
   }
 
   public navigateToParticipants(): void {

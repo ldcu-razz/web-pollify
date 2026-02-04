@@ -1,0 +1,29 @@
+<section class="w-full flex flex-col py-2 h-full">
+  <div class="flex justify-center items-center py-4">
+    <img src="/assets/images/pollify-logo.svg" alt="Pollify" class="w-24 h-10">
+  </div>
+
+  <mat-nav-list class="h-full">
+    <section class="flex flex-col gap-2 h-full">
+      <section class="mx-4">
+        @for (navigation of navigations(); track navigation.path) {
+          <a
+            mat-list-item
+            [routerLink]="navigation.path"
+            routerLinkActive="mat-list-item-active"
+          >
+            <mat-icon matListItemIcon>{{ navigation.icon }}</mat-icon>
+            <span>{{ navigation.label }}</span>
+          </a>
+        }
+      </section>
+
+      <section class="mt-auto mx-4">
+        <button mat-list-item class="flex items-center gap-2 text-left">
+          <mat-icon matListItemIcon>logout</mat-icon>
+          <span>Logout</span>
+        </button>
+      </section>
+    </section>
+  </mat-nav-list>
+</section>

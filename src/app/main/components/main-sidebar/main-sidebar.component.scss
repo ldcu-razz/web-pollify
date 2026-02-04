@@ -1,0 +1,9 @@
+.mat-list-item-active {
+  background-color: var(--mat-sys-primary-container) !important;
+  color: var(--mat-sys-on-primary-container) !important;
+  border-radius: 8px;
+
+  .mat-icon {
+    color: var(--mat-sys-on-primary-container) !important;
+  }
+}
