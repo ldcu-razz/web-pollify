@@ -5,47 +5,61 @@
       <span class="font-bold">Back</span>
     </button>
   </section>
-  <section class="flex flex-col gap-2">
-    <div class="flex gap-4">
-      <img src="https://picsum.photos/200/300" alt="Workspace Avatar" class="w-14 h-14 rounded-full">
-      <div class="flex flex-col gap-1">
-        <h1 class="text-3xl font-bold">Name of the workspace</h1>
-        <p class="text-sm text-gray-500 max-w-md">
-          Lorem ipsum dolor sit amet consectetur adipisicing elit. Quisquam, quos.
-          Lorem ipsum dolor sit amet consectetur adipisicing elit. Quisquam, quos.
-        </p>
-      </div>
+
+  @if (currentWorkspaceLoading()) {
+    <div class="flex justify-center items-center h-full">
+      <mat-progress-spinner mode="indeterminate" diameter="40"></mat-progress-spinner>
     </div>
-  </section>
-
-  <section class="flex flex-col gap-2">
-    <section class="flex justify-between items-center">
-      <h2 class="text-lg font-bold">Users</h2>
-      <button matButton="text" color="primary" (click)="openAddUserDialog()">
-        <mat-icon>add</mat-icon>
-        <span>Add user</span>
-      </button>
+  }
+  @else {
+    <section class="flex flex-col gap-2">
+      <div class="flex justify-between items-start">
+        <div class="flex gap-4">
+          <app-avatar [avatar]="currentWorkspace()?.avatar ?? null" [name]="currentWorkspace()?.name ?? ''" size="lg"></app-avatar>
+          <div class="flex flex-col gap-1">
+            <h1 class="text-3xl font-bold">{{ currentWorkspace()?.name }}</h1>
+            <p class="text-sm text-gray-500 max-w-md">
+              {{ currentWorkspace()?.description }}
+            </p>
+          </div>
+        </div>
+  
+        <button matButton="tonal" color="primary" (click)="openEditWorkspaceDialog()">
+          <mat-icon>edit</mat-icon>
+          <span>Edit Workspace</span>
+        </button>
+      </div>
     </section>
-    <app-workspace-users></app-workspace-users>
-  </section>
-
-  <section class="flex flex-col gap-2">
-    <section class="flex justify-between items-center">
-      <h2 class="text-lg font-bold">Polls</h2>
-    </section>
-    <app-workspace-polls></app-workspace-polls>
-  </section>
-
-  <section class="flex flex-col gap-2">
-    <section class="flex justify-between items-center p-3 rounded-md border border-(--mat-sys-error)">
-      <section class="flex flex-col gap-1">
-        <span class="text-lg font-bold text-(--mat-sys-error)">Delete Workspace</span>
-        <p class="text-(--mat-sys-error)">Deleting this workspace will permanently delete all data associated with it.</p>
+  
+    <section class="flex flex-col gap-2">
+      <section class="flex justify-between items-center">
+        <h2 class="text-lg font-bold">Users</h2>
+        <button matButton="text" color="primary" (click)="openAddUserDialog()">
+          <mat-icon>add</mat-icon>
+          <span>Add user</span>
+        </button>
       </section>
-
-      <button matButton="filled" (click)="openDeleteConfirmDialog()">
-        <span>Delete Workspace</span>
-      </button>
+      <app-workspace-users></app-workspace-users>
     </section>
-  </section>
+  
+    <section class="flex flex-col gap-2">
+      <section class="flex justify-between items-center">
+        <h2 class="text-lg font-bold">Polls</h2>
+      </section>
+      <app-workspace-polls></app-workspace-polls>
+    </section>
+  
+    <section class="flex flex-col gap-2">
+      <section class="flex justify-between items-center p-3 rounded-md border border-(--mat-sys-error)">
+        <section class="flex flex-col gap-1">
+          <span class="text-lg font-bold text-(--mat-sys-error)">Delete Workspace</span>
+          <p class="text-(--mat-sys-error)">Deleting this workspace will permanently delete all data associated with it.</p>
+        </section>
+  
+        <button matButton="filled" (click)="openDeleteConfirmDialog()">
+          <span>Delete Workspace</span>
+        </button>
+      </section>
+    </section>
+  }
 </section>

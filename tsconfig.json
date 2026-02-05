@@ -17,8 +17,12 @@
     "module": "preserve",
     "paths": {
       "@constants/*": ["./src/constants/*" ],
+      "@components/*": ["./src/components/*" ],
       "@store/*": ["./src/store/*" ],
       "@models/*": ["./src/models/*" ],
+      "@services/*": ["./src/services/*" ],
+      "@controllers/*": ["./src/controllers/*" ],
+      "@environments/*": ["./environments/*" ],
     },
   },
   "angularCompilerOptions": {

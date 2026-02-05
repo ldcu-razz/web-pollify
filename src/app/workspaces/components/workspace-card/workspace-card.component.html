@@ -1,12 +1,14 @@
 <mat-card appearance="outlined" class="h-full">
-  <mat-card-header class="flex items-center mb-4">
-    <img matCardAvatar src="https://picsum.photos/200/300" alt="Workspace Avatar" class="mb-0!">
-    <mat-card-title>Name of the workspace</mat-card-title>
+  <mat-card-header class="flex items-baseline mb-4">
+    <div matCardAvatar class="flex items-baseline justify-center mb-0!">
+      <app-avatar [avatar]="workspace()?.avatar ?? null" [name]="workspace()?.name ?? ''" size="sm"></app-avatar>
+    </div>
+    <mat-card-title class="text-ellipsis">{{ workspace()?.name }}</mat-card-title>
   </mat-card-header>
   <mat-card-content>
-    <p class="line-clamp-3">Lorem ipsum dolor sit amet consectetur adipisicing elit. Quisquam, quos. Lorem ipsum dolor sit amet consectetur adipisicing elit. Quisquam, quos.</p>
+    <p class="line-clamp-3">{{ workspace()?.description }}</p>
   </mat-card-content>
-  <mat-card-actions class="flex items-center justify-between gap-2">
+  <mat-card-actions class="flex items-center justify-between gap-2 mt-auto">
     <div class="flex items-center gap-2 ml-2">
       <div class="flex items-center gap-1" matTooltip="2 people are in this workspace" matTooltipPosition="above">
         <mat-icon class="text-[14px]! size-[14px]! mat-text-secondary">contacts_product</mat-icon>

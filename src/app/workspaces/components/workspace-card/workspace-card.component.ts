@@ -7,12 +7,13 @@ import { MatIconModule } from "@angular/material/icon";
 import { MatTooltipModule } from "@angular/material/tooltip";
 import { Router } from "@angular/router";
 import { ROUTES as ROUTES_CONSTANTS } from "@constants/routes.constants";
+import { AvatarComponent } from "@components/avatar/avatar.component";
 
 @Component({
   selector: 'app-workspace-card',
   templateUrl: './workspace-card.component.html',
   styleUrls: ['./workspace-card.component.scss'],
-  imports: [MatCardModule, MatButtonModule, MatChipsModule, MatIconModule, MatTooltipModule]
+  imports: [MatCardModule, MatButtonModule, MatChipsModule, MatIconModule, MatTooltipModule, AvatarComponent]
 })
 export class WorkspaceCardComponent {
   private router = inject(Router);
@@ -23,7 +24,7 @@ export class WorkspaceCardComponent {
     this.router.navigate([
       ROUTES_CONSTANTS.MAIN.BASE,
       ROUTES_CONSTANTS.MAIN.WORKSPACES,
-      1, // TODO: replace with workspace id
+      this.workspace()?.id ?? '',
     ]);
   }
 }

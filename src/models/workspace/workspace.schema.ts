@@ -8,15 +8,18 @@ export const WorkspaceSchema = z.object({
   name: z.string(),
   description: z.string(),
   avatar: z.string().nullable(),
-  createdAt: z.date(),
-  updatedAt: z.date(),
+  createdAt: z.string(),
+  updatedAt: z.string(),
 });
 
 export const GetWorkspaceSchema = WorkspaceSchema;
 export const GetPaginatedWorkspacesSchema = PaginationSchema.extend({
   data: z.array(WorkspaceSchema),
 });
+export const GetPaginatedWorkspacesFilters = z.object({
+  q: z.string().optional(),
+});
 export const PostWorkspaceSchema = WorkspaceSchema;
-export const PutWorkspaceSchema = WorkspaceSchema;
-export const PatchWorkspaceSchema = WorkspaceSchema.partial();
+export const PutWorkspaceSchema = WorkspaceSchema.omit({ id: true, createdAt: true }).partial();
+export const PatchWorkspaceSchema = WorkspaceSchema.omit({ id: true, createdAt: true }).partial();
 export const DeleteWorkspaceSchema = WorkspaceSchema.pick({ id: true });

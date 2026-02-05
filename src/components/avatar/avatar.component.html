@@ -1,0 +1,12 @@
+@if (avatar()) {
+  <img
+    [ngSrc]="avatar()!"
+    [alt]="alt()"
+    [width]="pixelSize()"
+    [height]="pixelSize()"
+    class="size-full object-cover"
+  />
+} @else {
+  <span aria-hidden="true">{{ initial() }}</span>
+  <span class="sr-only">{{ name() || 'Unknown user' }}</span>
+}

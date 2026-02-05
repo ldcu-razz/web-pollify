@@ -17,13 +17,25 @@
         search
       </mat-icon>
       <mat-label>Search Workspace</mat-label>
-      <input matInput type="text" placeholder="Search" [formControl]="searchWorkspace">
+      <input matInput type="text" placeholder="Search" [disabled]="workspaceLoading()" [formControl]="searchWorkspace" (input)="searchWorkspaces()">
     </mat-form-field>
   </section>
 
-  <section class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
-    <app-workspace-card></app-workspace-card>
-    <app-workspace-card></app-workspace-card>
-    <app-workspace-card></app-workspace-card>
-  </section>
+  @if (workspaceLoading() || searchLoading()) {
+    <div class="flex justify-center items-center gap-2">
+      <mat-progress-spinner mode="indeterminate" diameter="24"></mat-progress-spinner>
+      <span>{{ searchLoading() ? 'Searching workspaces...' : 'Loading workspaces...' }}</span>
+    </div>
+  }
+  @else {
+    <section class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
+      @for (workspace of workspaces(); track workspace.id) {
+        <app-workspace-card [workspace]="workspace"></app-workspace-card>
+      } @empty {
+        <div class="flex justify-center items-center col-span-1 md:col-span-2 lg:col-span-3">
+          <span class="text-gray-500 text-lg">No workspaces found</span>
+        </div>
+      }
+    </section>
+  }
 </section>
