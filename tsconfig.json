@@ -18,11 +18,14 @@
     "paths": {
       "@constants/*": ["./src/constants/*" ],
       "@components/*": ["./src/components/*" ],
+      "@pipes/*": ["./src/pipes/*" ],
       "@store/*": ["./src/store/*" ],
       "@models/*": ["./src/models/*" ],
       "@services/*": ["./src/services/*" ],
       "@controllers/*": ["./src/controllers/*" ],
+      "@resolvers/*": ["./src/resolvers/*" ],
       "@environments/*": ["./environments/*" ],
+      "@validators/*": ["./src/validators/*" ],
     },
   },
   "angularCompilerOptions": {

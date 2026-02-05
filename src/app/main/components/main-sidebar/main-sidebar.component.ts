@@ -26,7 +26,7 @@ export class MainSidebarComponent {
     {
       label: 'Users',
       icon: 'group',
-      path: '/users',
+      path: `${ROUTES_CONSTANTS.MAIN.USERS}`,
     },
     {
       label: 'Workspaces',

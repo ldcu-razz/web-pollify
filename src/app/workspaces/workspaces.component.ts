@@ -34,7 +34,8 @@ export class WorkspacesComponent implements OnInit {
   public searchLoading = computed(() => this.workspaceStore.searchLoading());
 
   public ngOnInit(): void {
-    this.workspaceStore.getWorkspaces(this.workspacePagination(), { q: this.searchWorkspace.value ?? '' });
+    // TODO: Implement ngOnInit
+    console.log('WorkspacesComponent ngOnInit');
   }
   
   public openDeleteWorkspaceDialog(): void {

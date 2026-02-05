@@ -1,8 +1,8 @@
-import { inject } from '@angular/core';
+import { computed, inject } from '@angular/core';
 import { MatSnackBar } from '@angular/material/snack-bar';
 import { Pagination } from '@models/common/common.type';
 import { GetPaginatedWorkspacesFilters, PostWorkspace, PutWorkspace, Workspace } from '@models/workspace/workspace.type';
-import { signalStore, withProps, withState, withMethods, patchState } from '@ngrx/signals';
+import { signalStore, withProps, withState, withMethods, patchState, withComputed } from '@ngrx/signals';
 import { rxMethod } from '@ngrx/signals/rxjs-interop';
 import { WorkspacesService } from '@services/workspaces.service';
 import { debounceTime, distinctUntilChanged, pipe, switchMap, tap } from 'rxjs';
@@ -43,6 +43,9 @@ export const WorkspaceStore = signalStore(
   withProps(() => ({
     workspaceService: inject(WorkspacesService),
     snackBar: inject(MatSnackBar),
+  })),
+  withComputed((store) => ({
+    workspacesMap: computed(() => new Map(store.workspaces().map(workspace => [workspace.id, workspace]))),
   })),
   withMethods(({ workspaceService, snackBar, ...store }) => ({
     getWorkspaces: async (payload: Pagination, filters: GetPaginatedWorkspacesFilters) => {

@@ -1,0 +1,37 @@
+<section class="w-full flex flex-col h-full gap-6">
+  <section class="flex justify-between items-center gap-2">
+    <section class="flex flex-col gap-2">
+      <h1 class="text-2xl font-bold">Users</h1>
+      <p class="text-sm text-gray-500">Manage your users and create ones.</p>
+    </section>
+
+    <button matButton="filled" color="primary" (click)="openCreateUserDialog()">
+      <mat-icon>add</mat-icon>
+      Add User
+    </button>
+  </section>
+
+  <section class="flex items-center gap-3">
+    <mat-form-field appearance="outline" class="w-full max-w-md">
+      <mat-icon matPrefix>
+        search
+      </mat-icon>
+      <mat-label>Search by name or email</mat-label>
+      <input matInput type="text" placeholder="Search" [(ngModel)]="searchUser" (input)="searchUsers()">
+    </mat-form-field>
+
+    <mat-form-field appearance="outline" class="max-w-md">
+      <mat-label>Select role</mat-label>
+      <mat-select [(ngModel)]="filterRole" (selectionChange)="filterUsers()">
+        <mat-option [value]="null">All</mat-option>
+        @for (role of roleOptions(); track role) {
+          <mat-option [value]="role">{{ role | textTransform }}</mat-option>
+        }
+      </mat-select>
+    </mat-form-field>
+  </section>
+
+  <section class="w-full">
+    <app-users-table></app-users-table>
+  </section>
+</section>

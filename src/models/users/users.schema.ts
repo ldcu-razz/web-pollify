@@ -14,13 +14,18 @@ export const UserSchema = z.object({
   avatar: z.string().nullable(),
   role: UserRolesSchema,
   workspace_id: z.string().nullable().default(null),
-  createdAt: z.date(),
-  updatedAt: z.date(),
+  createdAt: z.string(),
+  updatedAt: z.string(),
 });
 
 export const GetUserSchema = UserSchema;
 export const GetPaginatedUsersSchema = PaginationSchema.extend({
   data: z.array(UserSchema),
+});
+export const GetPaginatedUsersFiltersSchema = z.object({
+  q: z.string().optional(),
+  status: UserStatusSchema.optional(),
+  role: UserRolesSchema.optional(),
 });
 export const PostUserSchema = UserSchema;
 export const PutUserSchema = UserSchema.omit({ id: true, password: true });

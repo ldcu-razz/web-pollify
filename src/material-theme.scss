@@ -131,3 +131,93 @@ body {
   margin: 0;
   height: 100%;
 }
+
+// ===========================================
+// Global Material Table Styles
+// ===========================================
+
+.table-container {
+  position: relative;
+  width: 100%;
+  overflow-x: auto;
+  background-color: var(--mat-sys-surface-container-lowest);
+  border-radius: 8px;
+  border: 1px solid var(--mat-sys-outline-variant);
+
+  table {
+    width: 100%;
+    background-color: transparent;
+
+    // Remove default elevation
+    &.mat-mdc-table {
+      --mat-table-background-color: transparent;
+      box-shadow: none;
+    }
+  }
+}
+
+// Header row styling
+tr.mat-mdc-header-row {
+  background-color: var(--mat-sys-surface-container-low);
+  border-bottom: 1px solid var(--mat-sys-outline-variant);
+  height: 52px;
+}
+
+th.mat-mdc-header-cell {
+  color: var(--mat-sys-on-surface-variant);
+  font-weight: 500;
+  font-size: 14px;
+  border-bottom: none;
+  padding: 0 16px;
+}
+
+// Data row styling
+tr.mat-mdc-row {
+  background-color: var(--mat-sys-surface-container-lowest);
+  border-bottom: 1px solid var(--mat-sys-outline-variant);
+  height: 52px;
+  transition: background-color 0.15s ease;
+
+  &:hover {
+    background-color: var(--mat-sys-surface-container);
+    cursor: pointer;
+  }
+
+  &.selected-row {
+    background-color: var(--mat-sys-secondary-container);
+  }
+
+  &:last-of-type {
+    border-bottom: none;
+  }
+}
+
+td.mat-mdc-cell {
+  color: var(--mat-sys-on-surface);
+  font-size: 14px;
+  border-bottom: none;
+  padding: 0 16px;
+}
+
+// Table checkbox styling
+.table-container mat-checkbox {
+  --mdc-checkbox-selected-checkmark-color: var(--mat-sys-on-primary);
+  --mdc-checkbox-selected-focus-icon-color: var(--mat-sys-primary);
+  --mdc-checkbox-selected-hover-icon-color: var(--mat-sys-primary);
+  --mdc-checkbox-selected-icon-color: var(--mat-sys-primary);
+  --mdc-checkbox-selected-pressed-icon-color: var(--mat-sys-primary);
+  --mdc-checkbox-unselected-icon-color: var(--mat-sys-on-surface-variant);
+}
+
+// Table action buttons
+.table-container button.mat-mdc-icon-button {
+  color: var(--mat-sys-on-surface-variant);
+
+  &:hover {
+    color: var(--mat-sys-on-surface);
+  }
+
+  &.header-action-btn {
+    color: var(--mat-sys-on-surface-variant);
+  }
+}
