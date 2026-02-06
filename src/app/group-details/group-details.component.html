@@ -1,0 +1,41 @@
+<section class="w-full max-w-6xl mx-auto mt-4 flex flex-col gap-6">
+  <section class="flex justify-between items-center gap-2">
+    <section class="flex items-baseline gap-2">
+      <button mat-icon-button color="primary" (click)="navigateToGroups()">
+        <mat-icon>arrow_back</mat-icon>
+      </button>
+      @if (!loading()) {
+        <section class="flex flex-col gap-2">
+          <h1 class="text-2xl font-bold">{{ group()?.name }}</h1>
+          <p class="text-sm text-gray-500 max-w-xl">{{ group()?.description }}</p>
+        </section>
+      }
+    </section>
+  
+    <div class="flex items-center gap-2">
+      <button matButton="outlined" color="primary" (click)="openEditGroupDialog()">
+        <mat-icon>edit</mat-icon>
+        Edit Group
+      </button>
+      <button matButton="outlined" color="primary" [disabled]="loading()" (click)="openImportParticipantDialog()">
+        <mat-icon>publish</mat-icon>
+        Import Participant
+      </button>
+      <button matButton="filled" color="primary" [disabled]="loading()" (click)="openAddParticipantDialog()">
+        <mat-icon>add</mat-icon>
+        Add Participant
+      </button>
+    </div>
+  </section>
+
+  <section class="flex flex-col gap-1">
+    <div class="flex items-center gap-4">
+      <mat-form-field appearance="outline">
+        <mat-icon matPrefix>search</mat-icon>
+        <mat-label>Search by name, RFID number</mat-label>
+        <input matInput type="text" [(ngModel)]="searchQuery">
+      </mat-form-field>
+    </div>
+    <app-group-participants-table></app-group-participants-table>
+  </section>
+</section>

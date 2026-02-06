@@ -10,7 +10,8 @@ import { GroupsStore } from "@store/groups/groups.store";
 import { MAT_DIALOG_DATA, MatDialogRef } from "@angular/material/dialog";
 import { form, required, FormField } from "@angular/forms/signals";
 import { WorkspaceStore } from "@store/workspaces/workspace.store";
-import { PostGroup } from "@models/groups/groups.type";
+import { PatchGroup, PostGroup } from "@models/groups/groups.type";
+import { GroupDetailsStore } from "@store/groups/group-details.store";
 
 interface GroupFormData {
   mode: 'create' | 'update';
@@ -26,19 +27,26 @@ export class GroupFormComponent {
   private readonly dialogRef = inject(MatDialogRef<GroupFormComponent>);
   private readonly data = inject<GroupFormData>(MAT_DIALOG_DATA);
   private readonly groupsStore = inject(GroupsStore);
+  private readonly groupDetailsStore = inject(GroupDetailsStore);
   private readonly workspaceStore = inject(WorkspaceStore);
 
   public formMode = computed(() => this.data.mode ?? 'create');
 
   public currentGroup = computed(() => this.groupsStore.currentGroup());
 
-  public title = computed(() => this.formMode() === 'create' ? 'Create Group' : 'Update Group');
+  public groupDetails = computed(() => this.groupDetailsStore.group());
+
+  private isCreateMode = computed(() => this.formMode() === 'create');
+
+  private isUpdateMode = computed(() => this.formMode() === 'update');
+
+  public title = computed(() => this.isCreateMode() ? 'Create Group' : 'Update Group');
 
   public groupFormData = signal({
-    name: '',
-    description: '',
-    workspace_id: '',
-  });
+    name: this.isUpdateMode() ? this.groupDetails()?.name ?? '' : '',
+    description: this.isUpdateMode() ? this.groupDetails()?.description ?? '' : '',
+    workspace_id: this.isUpdateMode() ? this.groupDetails()?.workspace_id ?? '' : '',
+  }); 
 
   public groupForm = form(this.groupFormData, (schemaPath) => {
     required(schemaPath.name, { message: 'Name is required' });
@@ -78,7 +86,14 @@ export class GroupFormComponent {
     this.closeDialog();
   }
 
-  private updateGroup(): void {
-    // this.groupsStore.updateGroup(this.currentGroup()?.id ?? '', this.groupForm().value);
+  private async updateGroup(): Promise<void> {
+    const payload: PatchGroup = {
+      name: this.groupFormData().name,
+      description: this.groupFormData().description,
+      workspace_id: this.groupFormData().workspace_id,
+      updated_at: new Date().toISOString(),
+    };
+    await this.groupDetailsStore.updateGroupDetails(this.groupDetails()?.id ?? '', payload);
+    this.closeDialog();
   }
 }

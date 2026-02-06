@@ -7,6 +7,7 @@ import { UsersComponent } from "../users/users.component";
 import { workspacesResolver } from "src/resolvers/workspace.resolver";
 import { UserDetailsComponent } from "../user-details/user-details.component";
 import { GroupsComponent } from "../groups/groups.component";
+import { GroupDetailsComponent } from "../group-details/group-details.component";
 
 export const mainRoutes: Routes = [
   {
@@ -21,12 +22,16 @@ export const mainRoutes: Routes = [
         component: UsersComponent,
       },
       {
+        path: `${ROUTES_CONSTANTS.MAIN.USERS}/${ROUTES_CONSTANTS.MAIN.USER_DETAILS}`,
+        component: UserDetailsComponent,
+      },
+      {
         path: ROUTES_CONSTANTS.MAIN.GROUPS,
         component: GroupsComponent
       },
       {
-        path: `${ROUTES_CONSTANTS.MAIN.USERS}/${ROUTES_CONSTANTS.MAIN.USER_DETAILS}`,
-        component: UserDetailsComponent,
+        path: `${ROUTES_CONSTANTS.MAIN.GROUPS}/${ROUTES_CONSTANTS.MAIN.GROUP_DETAILS}`,
+        component: GroupDetailsComponent,
       },
       {
         path: ROUTES_CONSTANTS.MAIN.WORKSPACES,

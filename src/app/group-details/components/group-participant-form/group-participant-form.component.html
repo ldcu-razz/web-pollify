@@ -1,0 +1,60 @@
+<section class="flex flex-col gap-4 px-8 py-6 mat-bg-surface-container-lowest">
+  <section class="flex flex-col gap-2">
+    <h3 class="text-xl font-bold">{{ title() }}</h3>
+    <p class="text-sm">Fill out the fields below. The field with * are required.</p>
+  </section>
+
+  <form class="mt-4 flex flex-col gap-4">
+    <mat-form-field appearance="outline" class="w-full">
+      <mat-label>RFID Number</mat-label>
+      <input matInput type="text" [formField]="groupParticipantForm.rfid_number">
+      @if (groupParticipantForm.rfid_number().touched() && groupParticipantForm.rfid_number().required()) {
+        <mat-error>RFID number is required</mat-error>
+      }
+    </mat-form-field>
+
+    <mat-form-field appearance="outline" class="w-full">
+      <mat-label>Name</mat-label>
+      <input matInput type="text" [formField]="groupParticipantForm.name">
+      @if (groupParticipantForm.name().touched() && groupParticipantForm.name().required()) {
+        <mat-error>Name is required</mat-error>
+      }
+    </mat-form-field>
+
+    <mat-form-field appearance="outline" class="w-full">
+      <mat-label>Department</mat-label>
+      <mat-select [formField]="groupParticipantForm.department">
+        @for (department of departments(); track department) {
+          <mat-option [value]="department">{{ department }}</mat-option>
+        }
+      </mat-select>
+      @if (groupParticipantForm.department().touched() && groupParticipantForm.department().required()) {
+        <mat-error>Department is required</mat-error>
+      }
+    </mat-form-field>
+
+    <mat-form-field appearance="outline" class="w-full">
+      <mat-label>Workspace</mat-label>
+      <mat-select [formField]="groupParticipantForm.workspace_id">
+        @for (workspace of workspaces(); track workspace.id) {
+          <mat-option [value]="workspace.id">{{ workspace.name }}</mat-option>
+        }
+      </mat-select>
+      @if (groupParticipantForm.workspace_id().touched() && groupParticipantForm.workspace_id().required()) {
+        <mat-error>Workspace is required</mat-error>
+      }
+    </mat-form-field>
+  </form>
+  
+  <section class="flex justify-end gap-2">
+    <button matButton="tonal" color="primary" (click)="closeDialog()">Cancel</button>
+    <button matButton="filled" color="primary" [disabled]="(isFormInvalid() && isFormTouched()) || formLoading()" (click)="submitForm()">
+      <div class="flex items-center gap-2">
+        @if (formLoading()) {
+          <mat-progress-spinner mode="indeterminate" diameter="18"></mat-progress-spinner>
+        }
+        <span>{{ submitFormLabel() }}</span>
+      </div>
+    </button>
+  </section>
+</section>

@@ -1,0 +1,12 @@
+ .drop-zone {
+  border-width: 2px;
+  border-style: dashed;
+  border-radius: 0.75rem;
+  cursor: pointer;
+  transition: border-style 150ms ease-in-out, transform 150ms ease-in-out;
+}
+
+.drop-zone.drag-over {
+  border-style: solid;
+  transform: scale(1.01);
+}

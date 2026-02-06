@@ -1,0 +1,58 @@
+<section class="flex flex-col gap-4 px-8 py-6 mat-bg-surface-container-lowest">
+  <h2 class="text-2xl font-bold">Import Participants</h2>
+  <p>Upload a CSV file to import participants into the group.</p>
+
+  @if (!importingParticipantsLoading()) {
+    <div
+      class="drop-zone mt-2 flex flex-col items-center justify-center gap-2 px-6 py-10 mat-bg-surface-container-low"
+      (dragover)="onDragOver($event)"
+      (dragleave)="onDragLeave($event)"
+      (drop)="onDrop($event)"
+      (click)="triggerFileInput()"
+      tabindex="0"
+      role="button"
+      [class.drag-over]="isDragOver"
+    >
+      <p class="font-medium text-center">Drag and drop your CSV file here</p>
+      <p class="text-sm text-center">or</p>
+      <button matButton="outlined" color="primary" type="button" (click)="$event.stopPropagation(); triggerFileInput()">
+        Choose file
+      </button>
+
+      @if (selectedFileName) {
+        <p class="mt-2 text-sm text-center">
+          Selected file:
+          <span class="font-medium">{{ selectedFileName }}</span>
+        </p>
+      } @else {
+        <p class="mt-2 text-xs text-center">Only .csv files are supported.</p>
+      }
+
+      <input
+        #fileInput
+        type="file"
+        class="hidden"
+        accept=".csv"
+        (change)="onFileChange($event)"
+      />
+    </div>
+  } @else {
+    <section class="flex justify-center items-center gap-2 py-4 mat-bg-surface-container-high rounded-md">
+      <mat-progress-spinner mode="indeterminate" diameter="20"></mat-progress-spinner>
+      <p class="text-sm text-center">Please wait while we are processing your file. Don't close this window.</p>
+    </section> 
+  }
+  
+  <section class="flex align-items justify-between gap-2">
+    <section class="flex flex-col gap-2">
+      <button matButton="text" color="primary" type="button" (click)="downloadTemplate()">
+        <mat-icon>download</mat-icon>
+        Download Template
+      </button>
+    </section>
+
+    <section class="flex justify-end gap-2">
+      <button matButton="tonal" color="primary" type="button" (click)="closeDialog()">Cancel</button>
+    </section>
+  </section>
+</section>
