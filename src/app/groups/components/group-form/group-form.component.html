@@ -1,0 +1,48 @@
+<section class="flex flex-col gap-4 px-8 py-6 mat-bg-surface-container-lowest">
+  <section class="flex flex-col gap-2">
+    <h3 class="text-xl font-bold">{{ title() }}</h3>
+    <p class="text-sm">Fill out the fields below. The field with * are required.</p>
+  </section>
+
+  <form class="mt-4 flex flex-col gap-4">
+    <mat-form-field appearance="outline" class="w-full">
+      <mat-label>Group Name</mat-label>
+      <input matInput type="text" [formField]="groupForm.name">
+      @if (groupForm.name().touched() && groupForm.name().required()) {
+        <mat-error>Group name is required</mat-error>
+      }
+    </mat-form-field>
+
+    <mat-form-field appearance="outline" class="w-full">
+      <mat-label>Group Description</mat-label>
+      <textarea matInput type="text" [formField]="groupForm.description"></textarea>
+      @if (groupForm.description().touched() && groupForm.description().required()) {
+        <mat-error>Group description is required</mat-error>
+      }
+    </mat-form-field>
+
+    <mat-form-field appearance="outline" class="w-full">
+      <mat-label>Workspace</mat-label>
+      <mat-select [formField]="groupForm.workspace_id">
+        @for (workspace of workspaces(); track workspace.id) {
+          <mat-option [value]="workspace.id">{{ workspace.name }}</mat-option>
+        }
+      </mat-select>
+      @if (groupForm.workspace_id().touched() && groupForm.workspace_id().required()) {
+        <mat-error>Workspace is required</mat-error>
+      }
+    </mat-form-field>
+  </form>
+
+  <section class="flex justify-end gap-2">
+    <button matButton="tonal" color="primary" (click)="closeDialog()">Cancel</button>
+    <button matButton="filled" color="primary" [disabled]="(isFormInvalid() && isFormTouched()) || formLoading()" (click)="submitForm()">
+      <div class="flex items-center gap-2">
+        @if (formLoading()) {
+          <mat-progress-spinner mode="indeterminate" diameter="18"></mat-progress-spinner>
+        }
+        <span>{{ submitFormLabel() }}</span>
+      </div>
+    </button>
+  </section>
+</section>

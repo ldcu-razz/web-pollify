@@ -24,6 +24,11 @@ export class MainSidebarComponent {
       path: '/polls',
     },
     {
+      label: 'Groups',
+      icon: 'groups_3',
+      path: `${ROUTES_CONSTANTS.MAIN.GROUPS}`,
+    },
+    {
       label: 'Users',
       icon: 'group',
       path: `${ROUTES_CONSTANTS.MAIN.USERS}`,
