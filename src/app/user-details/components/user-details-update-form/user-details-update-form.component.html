@@ -1,0 +1,119 @@
+<section class="flex flex-col gap-4 px-8 py-6 mat-bg-surface-container-lowest">
+  <h3 class="text-xl font-bold">{{ title() }}</h3>
+  @if (fieldUpdateType() === 'workspace_id' && currentUser()?.workspace_id) {
+    <p>Update workspace is not allowed.</p>
+  }
+
+  @if (fieldUpdateType() === 'full_name') {
+    <form class="mt-4 flex flex-col gap-3" (ngSubmit)="$event.preventDefault(); updateUser()">
+      <mat-form-field appearance="outline" class="w-full">
+        <mat-label>First Name</mat-label>
+        <input matInput type="text" placeholder="First Name" [formField]="userFirstAndLastNameForm.first_name">
+        @if (userFirstAndLastNameForm.first_name().touched() && userFirstAndLastNameForm.first_name().required()) {
+          <mat-error>First name is required</mat-error>
+        }
+      </mat-form-field>
+      <mat-form-field appearance="outline" class="w-full">
+        <mat-label>Last Name</mat-label>
+        <input matInput type="text" placeholder="Last Name" [formField]="userFirstAndLastNameForm.last_name">
+        @if (userFirstAndLastNameForm.last_name().touched() && userFirstAndLastNameForm.last_name().required()) {
+          <mat-error>Last name is required</mat-error>
+        }
+      </mat-form-field>
+    </form>
+  }
+
+  @if (fieldUpdateType() === 'email') {
+    <form class="mt-4 flex flex-col gap-3" (ngSubmit)="$event.preventDefault(); updateUser()">
+      <mat-form-field appearance="outline" class="w-full">
+        <mat-label>Email</mat-label>
+        <input matInput type="email" placeholder="Email" [formField]="userEmailForm.email">
+        @if (userEmailForm.email().touched() && hasEmailRequiredError()) {
+          <mat-error>Email is required</mat-error>
+        } @else if (userEmailForm.email().touched() && hasEmailInvalidError()) {
+          <mat-error>Your email address is invalid</mat-error>
+        }
+      </mat-form-field>
+    </form>
+  }
+
+  @if (fieldUpdateType() === 'status') {
+    <form class="mt-4 flex flex-col gap-3" (ngSubmit)="$event.preventDefault(); updateUser()">
+      <mat-form-field appearance="outline" class="w-full">
+        <mat-label>Status</mat-label>
+        <mat-select [formField]="userStatusForm.status">
+          @for (status of statusOptions(); track status) {
+            <mat-option [value]="status">{{ status | textTransform }}</mat-option>
+          }
+        </mat-select>
+        @if (userStatusForm.status().touched() && userStatusForm.status().required()) {
+          <mat-error>Status is required</mat-error>
+        }
+      </mat-form-field>
+    </form>
+  }
+
+  @if (fieldUpdateType() === 'role') {
+    <form class="mt-4 flex flex-col gap-3" (ngSubmit)="$event.preventDefault(); updateUser()">
+      <mat-form-field appearance="outline" class="w-full">
+        <mat-label>Role</mat-label>
+        <mat-select [formField]="userRoleForm.role">
+          @for (role of roleOptions(); track role) {
+            <mat-option [value]="role">{{ role | textTransform }}</mat-option>
+          }
+        </mat-select>
+        @if (userRoleForm.role().touched() && userRoleForm.role().required()) {
+          <mat-error>Role is required</mat-error>
+        }
+      </mat-form-field>
+    </form>
+  }
+
+  @if (fieldUpdateType() === 'password') {
+    <form class="mt-4 flex flex-col gap-3" (ngSubmit)="$event.preventDefault(); updateUser()">
+      <mat-form-field appearance="outline" class="w-full">
+        <mat-label>New Password</mat-label>
+        <input matInput type="password" placeholder="New Password" [formField]="userPasswordForm.newPassword">
+        @if (userPasswordForm.newPassword().touched() && userPasswordForm.newPassword().required()) {
+          <mat-error>New password is required</mat-error>
+        }
+      </mat-form-field>
+    </form>
+    <mat-form-field appearance="outline" class="w-full">
+      <mat-label>Confirm New Password</mat-label>
+      <input matInput type="password" placeholder="Confirm New Password" [formField]="userPasswordForm.confirmNewPassword">
+      @if (isConfirmNewPasswordRequired()) {
+        <mat-error>Confirm new password is required</mat-error>
+      } @else if (isPasswordsNotMatch()) {
+        <mat-error>Passwords must match</mat-error>
+      }
+    </mat-form-field>
+  }
+
+  @if (fieldUpdateType() === 'workspace_id') {
+    <form class="mt-4 flex flex-col gap-3" (ngSubmit)="$event.preventDefault(); updateUser()">
+      <mat-form-field appearance="outline" class="w-full">
+        <mat-label>Workspace</mat-label>
+        <mat-select [formField]="userWorkspaceForm.workspace_id">
+          @for (workspace of workspaceOptions(); track workspace) {
+            <mat-option [value]="workspace.id">{{ workspace.name | textTransform }}</mat-option>
+          }
+        </mat-select>
+      </mat-form-field>
+    </form>
+  }
+
+  <section class="flex justify-end gap-2">
+    <button matButton="tonal" color="primary" (click)="closeDialog()">Cancel</button>
+    @if ((fieldUpdateType() === 'workspace_id' && !currentUser()?.workspace_id) || fieldUpdateType() !== 'workspace_id') {
+      <button matButton="filled" color="primary" [disabled]="loadingUpdateUser()" (click)="updateUser()">
+        <div class="flex items-center gap-2">
+          @if (loadingUpdateUser()) {
+            <mat-progress-spinner mode="indeterminate" diameter="20"></mat-progress-spinner>
+          }
+          <span>Update User</span>
+        </div>
+      </button>
+    }
+  </section>
+</section>

@@ -28,5 +28,5 @@ export const GetPaginatedUsersFiltersSchema = z.object({
   role: UserRolesSchema.optional(),
 });
 export const PostUserSchema = UserSchema;
-export const PutUserSchema = UserSchema.omit({ id: true, password: true });
-export const PatchUserSchema = UserSchema.omit({ id: true, password: true }).partial();
+export const PutUserSchema = UserSchema.omit({ id: true });
+export const PatchUserSchema = UserSchema.omit({ id: true }).partial();

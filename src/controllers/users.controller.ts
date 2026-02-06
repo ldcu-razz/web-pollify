@@ -1,6 +1,6 @@
 import { inject, Injectable } from "@angular/core";
 import { Pagination } from "@models/common/common.type";
-import { GetPaginatedUsers, GetPaginatedUsersFilters, GetUser, PostUser, User } from "@models/users/users.type";
+import { GetPaginatedUsers, GetPaginatedUsersFilters, GetUser, PatchUser, PostUser, User } from "@models/users/users.type";
 import { SupabaseService } from "@services/supabase.service";
 import * as bcrypt from 'bcryptjs';
 
@@ -17,7 +17,8 @@ export class UsersController {
     const status = filters.status ?? null;
     const role = filters.role ?? null;
 
-    const getUsersQuery = supabase.from(this.usersTable).select('*').range((pagination.page - 1) * pagination.limit, pagination.page * pagination.limit);
+    const getUsersQuery = supabase.from(this.usersTable).select('*')
+      .range((pagination.page - 1) * pagination.limit, (pagination.page * pagination.limit) - 1);
     if (query) {
       getUsersQuery.or(`email.ilike.%${query}%,first_name.ilike.%${query}%,last_name.ilike.%${query}%`);
     }
@@ -82,12 +83,35 @@ export class UsersController {
     return data;
   }
 
-  public async deleteUser(userId: string): Promise<boolean> {
+  public async updateUser(userId: string, payload: PatchUser): Promise<User> {
     const supabase = await this.supabase.supabaseClient();
-    const { error } = await supabase.from(this.usersTable).delete().eq('id', userId);
+    const { data, error } = await supabase.from(this.usersTable).update(payload).eq('id', userId).select().single();
     if (error) {
       throw error;
     }
+    return data;
+  }
+
+  public async deleteUser(userId: string): Promise<boolean> {
+    const supabase = await this.supabase.supabaseClient();
+    const { data, error } = await supabase.from(this.usersTable).delete().eq('id', userId).select();
+    if (error) {
+      throw error;
+    }
+
+    if (!data || data.length === 0) {
+      throw new Error('User not found or delete not permitted');
+    }
     return true;
+  }
+
+  public async checkUserPasswordIsValid(userId: string, password: string): Promise<boolean> {
+    const supabase = await this.supabase.supabaseClient();
+    const { data, error } = await supabase.from(this.usersTable).select('password').eq('id', userId).single();
+    if (error) {
+      throw error;
+    }
+    const isPasswordValid = await bcrypt.compare(password, data.password);
+    return isPasswordValid;
   }
 }

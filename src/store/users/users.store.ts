@@ -1,5 +1,5 @@
 import { Pagination } from "@models/common/common.type";
-import { GetPaginatedUsersFilters, PostUser, User } from "@models/users/users.type";
+import { GetPaginatedUsersFilters, PatchUser, PostUser, User } from "@models/users/users.type";
 import { signalStore, withState, withProps, withMethods, patchState } from '@ngrx/signals';
 import { inject } from '@angular/core';
 import { MatSnackBar } from '@angular/material/snack-bar';
@@ -16,6 +16,8 @@ interface UserState {
   formLoading: boolean;
   deletingUserLoading: boolean;
   error: string | null;
+  currentUser: User | null;
+  loadingUpdateUser: boolean;
 }
 
 const initialState: UserState = {
@@ -30,6 +32,8 @@ const initialState: UserState = {
   searchLoading: false,
   formLoading: false,
   deletingUserLoading: false,
+  currentUser: null,
+  loadingUpdateUser: false,
   error: null,
 }
 
@@ -60,7 +64,7 @@ export const UserStore = signalStore(
       patchState(store, { loading: true });
       try {
         const result = await userService.getUser(userId);
-        patchState(store, { users: [result, ...store.users()], loading: false });
+        patchState(store, { currentUser: result, loading: false });
       } catch (error) {
         patchState(store, { error: error as string, loading: false });
       }
@@ -110,9 +114,35 @@ export const UserStore = signalStore(
 
     deleteUser: async (userId: string) => {
       patchState(store, { deletingUserLoading: true });
-      await userService.deleteUser(userId);
-      patchState(store, { users: store.users().filter(user => user.id !== userId), deletingUserLoading: false });
-      snackBar.open("User deleted successfully", "Close", { duration: 3000 });
+      try {
+        await userService.deleteUser(userId);
+        patchState(store, { users: store.users().filter(user => user.id !== userId), deletingUserLoading: false });
+        snackBar.open("User deleted successfully", "Close", { duration: 3000 });
+      } catch (error) {
+        patchState(store, { error: error as string, deletingUserLoading: false });
+      }
+    },
+
+    updateUser: async (userId: string, payload: PatchUser) => {
+      patchState(store, { loadingUpdateUser: true });
+      try {
+        const currentUser = store.currentUser();
+        const result = await userService.updateUser(userId, payload);
+        patchState(store, { currentUser: { ...currentUser, ...result }, loadingUpdateUser: false });
+        snackBar.open("User updated successfully", "Close", { duration: 3000 });
+      } catch (error) {
+        patchState(store, { error: error as string, loadingUpdateUser: false });
+      }
+    },
+
+    checkUserPasswordIsValid: async (userId: string, password: string) => {
+      try {
+        const result = await userService.checkUserPasswordIsValid(userId, password);
+        return result;
+      } catch (error) {
+        patchState(store, { error: error as string });
+        return false;
+      }
     },
   }))
 )

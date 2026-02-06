@@ -12,7 +12,7 @@ interface UserDeleteConfirmationDialogData {
   selector: 'app-user-delete-confirmation',
   templateUrl: './user-delete-confirmation.component.html',
   styleUrls: ['./user-delete-confirmation.component.scss'],
-  imports: [MatDialogModule, MatButtonModule, MatProgressSpinnerModule]
+  imports: [MatDialogModule, MatButtonModule, MatProgressSpinnerModule],
 })
 export class UserDeleteConfirmationComponent {
 

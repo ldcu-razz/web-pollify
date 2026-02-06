@@ -1,7 +1,7 @@
 import { Component, computed, inject } from "@angular/core";
 import { UserStore } from "@store/users/users.store";
 import { MatTableModule } from "@angular/material/table";
-import { MatPaginatorModule } from "@angular/material/paginator";
+import { MatPaginatorModule, PageEvent } from "@angular/material/paginator";
 import { MatSortModule } from "@angular/material/sort";
 import { MatIconModule } from "@angular/material/icon";
 import { MatButtonModule } from "@angular/material/button";
@@ -11,6 +11,10 @@ import { WorkspaceStore } from "@store/workspaces/workspace.store";
 import { MatProgressSpinnerModule } from "@angular/material/progress-spinner";
 import { MatDialog } from "@angular/material/dialog";
 import { UserDeleteConfirmationComponent } from "../user-delete-confirmation/user-delete-confirmation.component";
+import { Router } from "@angular/router";
+import { ROUTES as ROUTES_CONSTANTS } from "@constants/routes.constants";
+import { MatChipsModule } from "@angular/material/chips";
+import { TextTransformPipe } from "@pipes/text-transform.pipe";
 
 @Component({
   selector: 'app-users-table',
@@ -26,10 +30,13 @@ import { UserDeleteConfirmationComponent } from "../user-delete-confirmation/use
     MatPaginatorModule,
     MatMenuModule,
     MatProgressSpinnerModule,
+    MatChipsModule,
+    TextTransformPipe
   ],
 })
 export class UsersTableComponent {
   private readonly dialog = inject(MatDialog);
+  private readonly router = inject(Router);
   public userStore = inject(UserStore);
   public workspaceStore = inject(WorkspaceStore);
 
@@ -43,7 +50,6 @@ export class UsersTableComponent {
   public workspacesMap = computed(() => this.workspaceStore.workspacesMap());
 
   public openDeleteUserConfirmationDialog(userId: string): void {
-    console.log(userId);
     this.dialog.open(UserDeleteConfirmationComponent, {
       width: '100%',
       maxWidth: '600px',
@@ -51,5 +57,22 @@ export class UsersTableComponent {
         userId: userId,
       }
     })
+  }
+
+  public navigateToUserDetails(userId: string): void {
+    this.router.navigate([
+      ROUTES_CONSTANTS.MAIN.BASE,
+      ROUTES_CONSTANTS.MAIN.USERS,
+      userId,
+    ]);
+  }
+
+  public onPageChange(event: PageEvent): void {
+    const pagination = {
+      page: event.pageIndex + 1,
+      limit: event.pageSize,
+      total: this.pagination().total,
+    }
+    this.userStore.getUsers(pagination, {});
   }
 }

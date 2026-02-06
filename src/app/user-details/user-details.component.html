@@ -1,0 +1,73 @@
+@if (currentUserLoading()) {
+  <div class="flex justify-center items-center gap-2 mt-16">
+    <mat-progress-spinner mode="indeterminate" diameter="40"></mat-progress-spinner>
+    <span>Loading user details...</span>
+  </div>
+} @else {
+  <section class="flex flex-col gap-4 mt-8 max-w-3xl mx-auto">
+    <section>
+      <button matButton="text" color="primary" (click)="navigateToUsers()">
+        <mat-icon>arrow_back</mat-icon>
+        <span>Back</span>
+      </button>
+    </section>
+    <section class="flex justify-between items-center">
+      <section class="flex items-center gap-4">
+        <app-avatar [avatar]="userAvatar()" [name]="userName()" size="lg"></app-avatar>
+        <h2 class="text-2xl font-bold">{{ userName() }}</h2>
+      </section>
+  
+      <section>
+        <button matButton="outlined" color="primary" (click)="openDeleteUserConfirmationDialog()">
+          <mat-icon>delete</mat-icon>
+          <span>Delete</span>
+        </button>
+      </section>
+    </section>
+  
+    <section class="flex flex-col gap-1">
+      <div class="flex items-center gap-6 px-6 py-6 rounded-md mat-bg-surface-container-low rounded-t-3xl cursor-pointer hover:bg-(--md-sys-color-surface-container-high)!" role="button" tabindex="0" (click)="openUpdateUserForm('full_name')">
+        <mat-icon>person</mat-icon>
+        <div class="flex flex-col">
+          <span class="text-md font-bold">Full name</span>
+          <span>{{ userName() }}</span>
+        </div>
+      </div>
+      <div class="flex items-center gap-6 px-6 py-6 rounded-md mat-bg-surface-container-low cursor-pointer hover:bg-(--md-sys-color-surface-container-high)!" role="button" tabindex="0" (click)="openUpdateUserForm('email')">
+        <mat-icon>email</mat-icon>
+        <div class="flex flex-col">
+          <span class="text-md font-bold">Email</span>
+          <span>{{ currentUser()?.email }}</span>
+        </div>
+      </div>
+      <div class="flex items-center gap-6 px-6 py-6 rounded-md mat-bg-surface-container-low cursor-pointer hover:bg-(--md-sys-color-surface-container-high)!" role="button" tabindex="0" (click)="openUpdateUserForm('status')">
+        <mat-icon>check_circle</mat-icon>
+        <div class="flex flex-col">
+          <span class="text-md font-bold">Status</span>
+          <span>{{ currentUser()?.status | textTransform }}</span>
+        </div>
+      </div>
+      <div class="flex items-center gap-6 px-6 py-6 rounded-md mat-bg-surface-container-low cursor-pointer hover:bg-(--md-sys-color-surface-container-high)!" role="button" tabindex="0" (click)="openUpdateUserForm('role')">
+        <mat-icon>person_book</mat-icon>
+        <div class="flex flex-col">
+          <span class="text-md font-bold">Role</span>
+          <span>{{ currentUser()?.role | textTransform }}</span>
+        </div>
+      </div>
+      <div class="flex items-center gap-6 px-6 py-6 rounded-md mat-bg-surface-container-low cursor-pointer hover:bg-(--md-sys-color-surface-container-high)!" role="button" tabindex="0" (click)="openUpdateUserForm('password')">
+        <mat-icon>lock</mat-icon>
+        <div class="flex flex-col">
+          <span class="text-md font-bold">Password</span>
+          <span>********</span>
+        </div>
+      </div>
+      <div class="flex items-center gap-6 px-6 py-6 rounded-md mat-bg-surface-container-low rounded-b-3xl cursor-pointer hover:bg-(--md-sys-color-surface-container-high)!" role="button" tabindex="0" (click)="openUpdateUserForm('workspace_id')">
+        <mat-icon>computer</mat-icon>
+        <div class="flex flex-col">
+          <span class="text-md font-bold">Workspace</span>
+          <span>{{ userWorkspaces() }}</span>
+        </div>
+      </div>
+    </section>
+  </section>
+}
