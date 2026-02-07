@@ -20,9 +20,9 @@
       <td mat-cell *matCellDef="let element"> {{element.department}} </td>
     </ng-container>
 
-    <ng-container matColumnDef="created_at">
-      <th mat-header-cell *matHeaderCellDef> Created At </th>
-      <td mat-cell *matCellDef="let element"> {{element.created_at | date:'medium'}} </td>
+    <ng-container matColumnDef="updated_at">
+      <th mat-header-cell *matHeaderCellDef> Updated At </th>
+      <td mat-cell *matCellDef="let element"> {{element.updated_at | date:'medium'}} </td>
     </ng-container>
 
     <ng-container matColumnDef="actions">
@@ -32,6 +32,10 @@
       <td mat-cell *matCellDef="let element">
         <button mat-icon-button [matMenuTriggerFor]="participantsMenu" (click)="$event.stopPropagation()"><mat-icon>more_vert</mat-icon></button>
         <mat-menu #participantsMenu="matMenu">
+          <button mat-menu-item (click)="openEditParticipantDialog(element.id)">
+            <mat-icon>edit</mat-icon>
+            <span>Edit participant</span>
+          </button>
           <button mat-menu-item (click)="openDeleteParticipantConfirmationDialog(element.id)">
             <mat-icon>delete</mat-icon>
             <span>Remove participant</span>
@@ -50,9 +54,9 @@
     </ng-container>
 
     <tr mat-header-row *matHeaderRowDef="displayedColumns"></tr>
-    <tr mat-row *matRowDef="let row; columns: displayedColumns" [class.hidden]="loading()">
-    <tr mat-footer-row *matFooterRowDef="['loading']" [class.hidden]="!loading()"></tr>
-    <tr class="mat-row" *matNoDataRow [class.hidden]="loading()">
+    <tr mat-row *matRowDef="let row; columns: displayedColumns" [class.hidden]="loading() || searchLoading()">
+    <tr mat-footer-row *matFooterRowDef="['loading']" [class.hidden]="!loading() && !searchLoading()"></tr>
+    <tr class="mat-row" *matNoDataRow [class.hidden]="loading() || searchLoading()">
       <td class="mat-cell text-center py-8" [attr.colspan]="displayedColumns.length">
         <div class="flex justify-center items-center py-8 gap-2">
           <mat-icon>search_off</mat-icon>
@@ -62,3 +66,22 @@
     </tr>
   </table>
 </div>
+
+@if (!groupsLengthReached()) {
+  <div class="flex justify-center items-center mt-2 gap-2">
+    <button matButton="tonal" color="primary" [disabled]="loadMoreLoading()" (click)="loadMoreGroupParticipants()">
+      <div class="flex items-center gap-2">
+        @if (loadMoreLoading()) {
+          <mat-progress-spinner mode="indeterminate" diameter="24"></mat-progress-spinner>
+        } @else {
+          <mat-icon>arrow_downward</mat-icon>
+        }
+        <span>Load More</span>
+      </div>
+    </button>
+  </div>
+} @else {
+  <div class="flex justify-center items-center mt-2 gap-2">
+    <p class="text-sm text-center">No more participants to load</p>
+  </div>
+}

@@ -1,7 +1,7 @@
 import { inject, Injectable } from "@angular/core";
 import { Pagination } from "@models/common/common.type";
 import { SupabaseService } from "@services/supabase.service";
-import { GetParticipantsPagination, GetParticipant, PostParticipants, PatchParticipants, BulkPostParticipants } from "@models/participants/participants.type";
+import { GetParticipantsPagination, GetParticipant, PostParticipants, PatchParticipants, BulkPostParticipants, GetParticipantsFilter } from "@models/participants/participants.type";
 import { GetGroup, PatchGroup } from "@models/groups/groups.type";
 
 @Injectable({
@@ -33,11 +33,18 @@ export class ParticipantsController {
     return data;
   }
 
-  public async getParticipants(pagination: Pagination, groupId: string): Promise<GetParticipantsPagination> {
+  public async getParticipants(pagination: Pagination, filters: GetParticipantsFilter, groupId: string): Promise<GetParticipantsPagination> {
     const supabase = await this.supabaseService.supabaseClient();
+
+    const query = filters.q ?? null;
+
     const getParticipantsQuery = supabase.from(this.participantsTable).select('*,workspace:workspace_id(id,name),group:group_id(id,name)')
       .eq('group_id', groupId)
-      .range((pagination.page - 1) * pagination.limit, pagination.page * pagination.limit);
+      .range((pagination.page - 1) * pagination.limit, (pagination.page * pagination.limit) - 1);
+
+    if (query) {
+      getParticipantsQuery.filter('name', 'ilike', `%${query}%`);
+    }
 
     const { data, error } = await getParticipantsQuery;
 
@@ -46,6 +53,11 @@ export class ParticipantsController {
     }
 
     const countQuery = supabase.from(this.participantsTable).select('*', { count: 'exact' }).eq('group_id', groupId);
+
+    if (query) {
+      countQuery.filter('name', 'ilike', `%${query}%`);
+    }
+
     const { count, error: countError } = await countQuery;
 
     if (countError) {

@@ -39,6 +39,10 @@ export class GroupDetailsComponent implements OnInit, OnDestroy {
     this.groupDetailsStore.getGroupParticipants(this.pagination(), this.groupId());
   }
 
+  public searchGroupParticipants(): void {
+    this.groupDetailsStore.searchGroupParticipants(this.searchQuery());
+  }
+
   public openEditGroupDialog(): void {
     this.dialog.open(GroupFormComponent, {
       width: '100%',

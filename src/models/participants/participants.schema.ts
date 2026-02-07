@@ -23,6 +23,10 @@ export const GetParticipantsPaginationSchema = PaginationSchema.extend({
   data: z.array(GetParticipantSchema),
 });
 
+export const GetParticipantsFilterSchema = z.object({
+  q: z.string().optional(),
+});
+
 export const PostParticipantsSchema = ParticipantsSchema;
 export const BulkPostParticipantsSchema = z.array(PostParticipantsSchema);
 export const PatchParticipantsSchema = ParticipantsSchema.omit({ id: true, created_at: true }).partial();

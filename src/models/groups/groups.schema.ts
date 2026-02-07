@@ -13,6 +13,7 @@ export const GroupsSchema = z.object({
 
 export const GetGroupsSchema = GroupsSchema.extend({
   workspace: WorkspaceSchema.pick({ id: true, name: true }),
+  total_participants: z.number(),
 });
 
 export const GetPaginatedGroupsSchema = PaginationSchema.extend({

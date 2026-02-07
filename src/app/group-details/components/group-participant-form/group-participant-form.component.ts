@@ -11,7 +11,7 @@ import { form, FormField, required } from "@angular/forms/signals";
 import { GroupDetailsStore } from "@store/groups/group-details.store";
 import { DepartmentsTypeSchema } from "@models/departments/departments.schema";
 import { WorkspaceStore } from "@store/workspaces/workspace.store";
-import { PostParticipants } from "@models/participants/participants.type";
+import { PatchParticipants, PostParticipants } from "@models/participants/participants.type";
 
 interface GroupParticipantFormProps {
   mode: 'create' | 'update';
@@ -31,23 +31,26 @@ export class GroupParticipantFormComponent implements OnInit {
   private readonly workspaceStore = inject(WorkspaceStore);
 
   public mode = computed(() => this.data.mode ?? 'create');
+  public isCreateMode = computed(() => this.mode() === 'create');
+  public isUpdateMode = computed(() => this.mode() === 'update');
 
   public groupId = computed(() => this.data.groupId);
 
-  public title = computed(() => this.mode() === 'create' ? 'Create Participant' : 'Update Participant');
+  public title = computed(() => this.isCreateMode() ? 'Create Participant' : 'Update Participant');
+
+  public currentParticipant = computed(() => this.groupDetailsStore.currentParticipant());
 
   public groupParticipantData = signal({
-    name: '',
-    rfid_number: '',
-    department: '',
-    workspace_id: '',
+    name: this.isUpdateMode() ? this.currentParticipant()?.name ?? '' : '',
+    rfid_number: this.isUpdateMode() ? this.currentParticipant()?.rfid_number ?? '' : '',
+    department: this.isUpdateMode() ? this.currentParticipant()?.department ?? '' : '',
+    workspace_id: this.isUpdateMode() ? this.currentParticipant()?.workspace_id ?? '' : '',
   });
 
   public groupParticipantForm = form(this.groupParticipantData, (schemaPath) => {
     required(schemaPath.name, { message: 'Name is required' });
     required(schemaPath.rfid_number, { message: 'RFID number is required' });
     required(schemaPath.department, { message: 'Department is required' });
-    required(schemaPath.workspace_id, { message: 'Workspace is required' });
   })
 
   public isFormInvalid = computed(() => this.groupParticipantForm().invalid());
@@ -72,8 +75,10 @@ export class GroupParticipantFormComponent implements OnInit {
   }
 
   public submitForm(): void {
-    if (this.mode() === 'create') {
+    if (this.isCreateMode()) {
       this.addGroupParticipant();
+    } else if (this.isUpdateMode()) {
+      this.updateGroupParticipant();
     }
   }
 
@@ -83,13 +88,26 @@ export class GroupParticipantFormComponent implements OnInit {
       rfid_number: this.groupParticipantData().rfid_number,
       name: this.groupParticipantData().name,
       department: this.groupParticipantData().department,
-      workspace_id: this.groupParticipantData().workspace_id,
+      workspace_id: this.groupParticipantData().workspace_id || null,
       group_id: this.groupId(),
       created_at: new Date().toISOString(),
       updated_at: new Date().toISOString(),
     };
 
     await this.groupDetailsStore.addGroupParticipant(payload);
+    this.closeDialog();
+  }
+
+  public async updateGroupParticipant(): Promise<void> {
+    const payload: PatchParticipants = {
+      rfid_number: this.groupParticipantData().rfid_number,
+      name: this.groupParticipantData().name,
+      department: this.groupParticipantData().department,
+      workspace_id: this.groupParticipantData().workspace_id || null,
+      updated_at: new Date().toISOString(),
+    };
+
+    await this.groupDetailsStore.updateGroupParticipant(this.currentParticipant()?.id ?? '', payload);
     this.closeDialog();
   }
 }

@@ -20,7 +20,10 @@ export class GroupsController {
     const query = filters.q ?? null;
     const workspaceId = filters.workspace_id ?? null;
 
-    const getGroupsQuery = supabase.from(this.groupsTable).select('*').range((page - 1) * limit, (page * limit) - 1);
+    const getGroupsQuery = supabase
+      .from(this.groupsTable)
+      .select('*, total_participants:participants(count)')
+      .range((page - 1) * limit, (page * limit) - 1);
     
     if (query) {
       getGroupsQuery.filter('name', 'ilike', `%${query}%`);
@@ -33,6 +36,13 @@ export class GroupsController {
     if (error) {
       throw new Error(error.message);
     }
+
+    const groups = (data ?? []).map((group) => ({
+      ...group,
+      total_participants: Array.isArray(group.total_participants)
+        ? (group.total_participants[0]?.count ?? 0)
+        : (group.total_participants ?? 0),
+    }));
 
     const totalGroupsQuery = supabase.from(this.groupsTable).select('*', { count: 'exact' });
     if (query) {
@@ -49,7 +59,7 @@ export class GroupsController {
     }
 
     const response: GetPaginatedGroups = {
-      data: data ?? [],
+      data: groups,
       page: pagination.page,
       limit: pagination.limit,
       total: count ?? 0,

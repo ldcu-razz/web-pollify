@@ -1,10 +1,13 @@
-import { inject } from "@angular/core";
+import { computed, inject } from "@angular/core";
 import { MatSnackBar } from "@angular/material/snack-bar";
 import { Pagination } from "@models/common/common.type";
 import { GetGroup, PatchGroup } from "@models/groups/groups.type";
-import { BulkPostParticipants, GetParticipant, PostParticipants } from "@models/participants/participants.type";
-import { patchState, signalStore, withMethods, withProps, withState } from "@ngrx/signals";
+import { BulkPostParticipants, GetParticipant, PatchParticipants, PostParticipants } from "@models/participants/participants.type";
+import { patchState, signalStore, withComputed, withMethods, withProps, withState } from "@ngrx/signals";
+import { rxMethod } from "@ngrx/signals/rxjs-interop";
 import { GroupDetailsService } from "@services/group-details.service";
+import { pipe } from "rxjs";
+import { debounceTime, distinctUntilChanged, switchMap, tap } from "rxjs/operators";
 
 interface GroupDetailsState {
   group: GetGroup | null;
@@ -17,6 +20,7 @@ interface GroupDetailsState {
   formLoading: boolean;
   deletingParticipantLoading: boolean;
   importingParticipantsLoading: boolean;
+  currentParticipant: GetParticipant | null;
 }
 
 const initialState: GroupDetailsState = {
@@ -24,7 +28,7 @@ const initialState: GroupDetailsState = {
   participants: [],
   pagination: {
     page: 1,
-    limit: 10,
+    limit: 20,
     total: 0,
   },
   loading: false,
@@ -34,6 +38,7 @@ const initialState: GroupDetailsState = {
   formLoading: false,
   deletingParticipantLoading: false,
   importingParticipantsLoading: false,
+  currentParticipant: null,
 }
 
 export const GroupDetailsStore = signalStore(
@@ -42,6 +47,9 @@ export const GroupDetailsStore = signalStore(
   withProps(() => ({
     snackbar: inject(MatSnackBar),
     groupDetailsService: inject(GroupDetailsService),
+  })),
+  withComputed((store) => ({
+    groupsLengthReached: computed(() => store.participants().length >= store.pagination().total),
   })),
   withMethods(({ groupDetailsService, snackbar, ...store }) => ({
     getGroupDetails: async (groupId: string): Promise<void> => {
@@ -72,7 +80,7 @@ export const GroupDetailsStore = signalStore(
     getGroupParticipants: async (pagination: Pagination, groupId: string): Promise<void> => {
       patchState(store, { loading: true });
       try {
-        const result = await groupDetailsService.getGroupParticipants(pagination, groupId);
+        const result = await groupDetailsService.getGroupParticipants(pagination, { q: store.searchQuery() }, groupId);
         patchState(store, {
           participants: result.data,
           pagination: {
@@ -88,6 +96,41 @@ export const GroupDetailsStore = signalStore(
       }
     },
 
+    searchGroupParticipants: rxMethod<string>(
+      pipe(
+        debounceTime(300),
+        distinctUntilChanged(),
+        tap((query) => patchState(store, { searchQuery: query, searchLoading: true, pagination: { page: 1, limit: 20, total: 0 } })),
+        switchMap(async (query) => {
+          const result = await groupDetailsService.getGroupParticipants(store.pagination(), { q: query }, store.group()?.id ?? '');
+          patchState(store, { participants: result.data, searchLoading: false });
+        })
+      )
+    ),
+
+    loadMoreGroupParticipants: async (): Promise<void> => {
+      patchState(store, { loadMoreLoading: true });
+      try {
+        const pagination = {
+          page: store.pagination().page + 1,
+          limit: store.pagination().limit,
+          total: store.pagination().total,
+        };
+        const result = await groupDetailsService.getGroupParticipants(pagination, { q: store.searchQuery() }, store.group()?.id ?? '');
+        patchState(store, {
+          participants: [...store.participants(), ...result.data],
+          pagination: {
+            page: result.page,
+            limit: result.limit,
+            total: result.total,
+          },
+        });
+      } catch (error) {
+        console.error(error);
+      } finally {
+        patchState(store, { loadMoreLoading: false });
+      }
+    },
 
     addGroupParticipant: async (payload: PostParticipants): Promise<void> => {
       patchState(store, { formLoading: true });
@@ -137,8 +180,30 @@ export const GroupDetailsStore = signalStore(
       }
     },
 
+    updateGroupParticipant: async (participantId: string, payload: PatchParticipants): Promise<void> => {
+      patchState(store, { formLoading: true });
+      try {
+        const result = await groupDetailsService.updateParticipant(participantId, payload);
+        snackbar.open('Participant updated successfully', 'Close', { duration: 3000 });
+        patchState(store, { participants: store.participants().map(participant => participant.id === participantId ? result : participant) });
+      } catch (error) {
+        console.error(error);
+        snackbar.open('Failed to update participant', 'Close', { duration: 3000 });
+      } finally {
+        patchState(store, { formLoading: false });
+      }
+    },
+
+    setSelectedParticipant: (participantId: string): void => {
+      const participant = store.participants().find(participant => participant.id === participantId);
+      if (!participant) {
+        return;
+      }
+      patchState(store, { currentParticipant: participant });
+    },
+
     resetGroupParticipants: (): void => {
-      patchState(store, { participants: [], pagination: { page: 1, limit: 10, total: 0 } });
+      patchState(store, { participants: [], pagination: { page: 1, limit: 20, total: 0 } });
     },
   }))
 )

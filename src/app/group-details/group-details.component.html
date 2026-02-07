@@ -33,7 +33,7 @@
       <mat-form-field appearance="outline">
         <mat-icon matPrefix>search</mat-icon>
         <mat-label>Search by name, RFID number</mat-label>
-        <input matInput type="text" [(ngModel)]="searchQuery">
+        <input matInput type="text" [(ngModel)]="searchQuery" (input)="searchGroupParticipants()">
       </mat-form-field>
     </div>
     <app-group-participants-table></app-group-participants-table>

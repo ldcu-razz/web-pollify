@@ -11,6 +11,7 @@ import { MatProgressSpinnerModule } from "@angular/material/progress-spinner";
 import { GroupDeleteParticipantConfirmationComponent } from "../group-delete-participant-confirmation/group-delete-participant-confirmation.component";
 import { MatDialog } from "@angular/material/dialog";
 import { DatePipe } from "@angular/common";
+import { GroupParticipantFormComponent } from "../group-participant-form/group-participant-form.component";
 
 @Component({
   selector: 'app-group-participants-table',
@@ -37,8 +38,26 @@ export class GroupParticipantsTableComponent {
   public pagination = computed(() => this.groupDetailsStore.pagination());
 
   public loading = computed(() => this.groupDetailsStore.loading());
+  
+  public searchLoading = computed(() => this.groupDetailsStore.searchLoading());
+  
+  public loadMoreLoading = computed(() => this.groupDetailsStore.loadMoreLoading());
 
-  public displayedColumns = ['rfid_number', 'name', 'department', 'created_at', 'actions'];
+  public groupsLengthReached = computed(() => this.groupDetailsStore.groupsLengthReached());
+
+  public displayedColumns = ['rfid_number', 'name', 'department', 'updated_at', 'actions'];
+
+  public openEditParticipantDialog(participantId: string): void {
+    this.groupDetailsStore.setSelectedParticipant(participantId);
+
+    this.dialog.open(GroupParticipantFormComponent, {
+      width: '100%',
+      maxWidth: '800px',
+      data: {
+        mode: 'update',
+      }
+    });
+  }
 
   public openDeleteParticipantConfirmationDialog(participantId: string): void {
     this.dialog.open(GroupDeleteParticipantConfirmationComponent, {
@@ -48,5 +67,9 @@ export class GroupParticipantsTableComponent {
         participantId: participantId,
       }
     });
+  }
+
+  public loadMoreGroupParticipants(): void {
+    this.groupDetailsStore.loadMoreGroupParticipants();
   }
 }

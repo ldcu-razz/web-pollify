@@ -10,9 +10,9 @@
   <mat-card-actions class="mt-auto">
     <div class="flex justify-between items-center w-full px-2">
       <div class="flex items-center gap-2">
-        <div class="flex items-center gap-1" matTooltip="10 participants are in this group" matTooltipPosition="above">
+        <div class="flex items-center gap-1" matTooltip="{{ group().total_participants }} participants are in this group" matTooltipPosition="above">
           <mat-icon class="text-[16px]! size-[16px]! mat-text-secondary">person</mat-icon>
-          <span>10</span>
+          <span>{{ group().total_participants }}</span>
         </div>
       </div>
       <div class="flex items-center gap-2">

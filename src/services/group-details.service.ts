@@ -3,7 +3,7 @@ import { MatSnackBar } from "@angular/material/snack-bar";
 import { ParticipantsController } from "@controllers/participants.controller";
 import { Pagination } from "@models/common/common.type";
 import { GetGroup, PatchGroup } from "@models/groups/groups.type";
-import { BulkPostParticipants, GetParticipant, GetParticipantsPagination, PatchParticipants, PostParticipants } from "@models/participants/participants.type";
+import { BulkPostParticipants, GetParticipant, GetParticipantsFilter, GetParticipantsPagination, PatchParticipants, PostParticipants } from "@models/participants/participants.type";
 
 @Injectable({
   providedIn: 'root'
@@ -34,8 +34,8 @@ export class GroupDetailsService {
     });
   }
 
-  public async getGroupParticipants(pagination: Pagination, groupId: string): Promise<GetParticipantsPagination> {
-    return this.participantsController.getParticipants(pagination, groupId).catch((error) => {
+  public async getGroupParticipants(pagination: Pagination, filters: GetParticipantsFilter, groupId: string): Promise<GetParticipantsPagination> {
+    return this.participantsController.getParticipants(pagination, filters, groupId).catch((error) => {
       console.error(error);
       this.snackbar.open("Failed to get group participants", 'Close', {
         duration: 3000,
