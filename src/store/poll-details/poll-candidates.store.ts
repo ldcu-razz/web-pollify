@@ -1,8 +1,9 @@
-import { inject } from "@angular/core";
+import { computed, inject } from "@angular/core";
 import { MatSnackBar } from "@angular/material/snack-bar";
 import { Pagination } from "@models/common/common.type";
 import { PatchPollCandidate, PollCandidate, PostPollCandidate } from "@models/polls/poll-candidate.type";
-import { patchState, signalStore, withMethods, withProps, withState } from "@ngrx/signals";
+import { GetPollPosition } from "@models/polls/poll-positions.type";
+import { patchState, signalStore, withComputed, withMethods, withProps, withState } from "@ngrx/signals";
 import { PollCandidatesService } from "@services/poll-candidates.service";
 
 interface PollCandidatesState {
@@ -36,8 +37,15 @@ export const PollCandidatesStore = signalStore(
     pollCandidatesService: inject(PollCandidatesService),
     snackbar: inject(MatSnackBar),
   })),
+  withComputed(({ candidates }) => ({
+    isCandidateNotEmpty: computed(() => candidates().length > 0),
+  })),
   withMethods(({ pollCandidatesService, snackbar, ...store }) => ({
     getPollCandidates: async (pollId: string): Promise<void> => {
+      if (store.isCandidateNotEmpty()) {
+        return;
+      }
+
       patchState(store, { loading: true });
       try {
         const result = await pollCandidatesService.getPollCandidates(pollId, store.pagination());
@@ -87,5 +95,21 @@ export const PollCandidatesStore = signalStore(
         snackbar.open("Failed to delete poll candidate", "Close", { duration: 3000 });
       }
     },
+
+    setSelectedCandidate: (candidateId: string, position: GetPollPosition | null): void => {
+      const candidate = store.candidates().find(candidate => candidate.id === candidateId);
+      if (!candidate) {
+        return;
+      }
+
+      const candidates = store.candidates().map(candidate => candidate.id === candidateId ? { ...candidate, poll_position: position ?? null, poll_position_id: position?.id ?? null } : candidate);
+      patchState(store, { candidates });
+    },
+
+    resetPollCandidates: async (): Promise<void> => {
+      patchState(store, {
+        ...initialState,
+      });
+    }
   }))
 );

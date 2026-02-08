@@ -28,7 +28,7 @@ export class PollCandidateTableComponent {
 
   public loading = computed(() => this.pollCandidatesStore.loading());
 
-  public displayedColumns = ['avatar', 'name', 'description', 'updated_at', 'actions'];
+  public displayedColumns = ['avatar', 'name', 'description', 'position', 'updated_at', 'actions'];
 
   public openEditCandidateDialog(candidateId: string): void {
     const candidate = this.candidates().find(candidate => candidate.id === candidateId);

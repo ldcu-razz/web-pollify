@@ -1,0 +1,67 @@
+<section class="flex flex-col gap-4 px-8 py-6 mat-bg-surface-container-lowest">
+  <section class="flex flex-col gap-2">
+    <h3 class="text-xl font-bold">{{ title() }}</h3>
+    <p class="text-sm">Fill out the fields below. The field with * are required.</p>
+  </section>
+
+  <form class="mt-4 flex flex-col gap-4">
+    <mat-form-field appearance="outline" class="w-full">
+      <mat-label>Position</mat-label>
+      <input matInput type="number" [formField]="positionForm.position">
+      @if (positionForm.position().touched() && positionForm.position().required()) {
+        <mat-error>Position is required</mat-error>
+      }
+    </mat-form-field>
+
+    <mat-form-field appearance="outline" class="w-full">
+      <mat-label>Name</mat-label>
+      <input matInput type="text" [formField]="positionForm.name">
+      @if (positionForm.name().touched() && positionForm.name().required()) {
+        <mat-error>Name is required</mat-error>
+      }
+    </mat-form-field>
+
+    <mat-form-field appearance="outline" class="w-full">
+      <mat-label>Candidates for this Position</mat-label>
+      <mat-chip-grid #selectedCandidatesGrid aria-label="Candidate selection">
+        @for (candidate of selectedCandidates(); track $index) {
+          <mat-chip-row (removed)="removeCandidate(candidate)">
+            <span class="text-sm">{{candidate.name}}</span>
+            <button matChipRemove [attr.aria-label]="'remove ' + candidate.name">
+              <mat-icon>cancel</mat-icon>
+            </button>
+          </mat-chip-row>
+        }
+      </mat-chip-grid>
+      <input
+        #candidateInput
+        name="currentCandidate"
+        placeholder="Add a candidate..."
+        [ngModel]="currentCandidateQuery"
+        [matChipInputFor]="selectedCandidatesGrid"
+        [matAutocomplete]="candidateAutocomplete"
+        [matChipInputSeparatorKeyCodes]="separatorKeysCodes"
+      />
+      <mat-autocomplete #candidateAutocomplete="matAutocomplete" (optionSelected)="selectCandidate($event); candidateInput.value = ''">
+        @for (candidate of filteredCandidates(); track candidate.id) {
+          <mat-option [value]="candidate">{{candidate.name}}</mat-option>
+        }
+      </mat-autocomplete>
+    </mat-form-field>
+  </form>
+
+  <section class="flex justify-end gap-2">
+    <button matButton="tonal" color="primary" (click)="closeDialog()">Cancel</button>
+    <button matButton="filled" color="primary" [disabled]="(isFormInvalid() && isFormTouched()) || formLoading() || updatingPollPosition()" (click)="submitForm()">
+      <div class="flex items-center gap-2">
+        @if (formLoading() || updatingPollPosition()) {
+          <mat-progress-spinner mode="indeterminate" diameter="18"></mat-progress-spinner>
+        }
+        @else {
+          <mat-icon>{{ mode() === "create" ? "add" : "edit" }}</mat-icon>
+        }
+        <span>{{ submitFormLabel() }}</span>
+      </div>
+    </button>
+  </section>
+</section>

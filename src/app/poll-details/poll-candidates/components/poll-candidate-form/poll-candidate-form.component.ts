@@ -69,6 +69,7 @@ export class PollCandidateFormComponent {
       description: this.candidateFormData().description,
       avatar: this.candidateFormData().avatar,
       poll_id: this.poolId(),
+      poll_position_id: null,
       created_at: new Date().toISOString(),
       updated_at: new Date().toISOString(),
     }

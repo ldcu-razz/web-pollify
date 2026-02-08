@@ -40,6 +40,13 @@ export class PollDetailsNavbarComponent {
     ROUTES_CONSTANTS.MAIN.POLL_DETAILS_CANDIDATES,
   ]);
 
+  private positionsRoute = computed(() => [
+    ROUTES_CONSTANTS.MAIN.BASE,
+    ROUTES_CONSTANTS.MAIN.POLLS,
+    this.poll()?.id ?? '',
+    ROUTES_CONSTANTS.MAIN.POLL_DETAILS_POSITIONS,
+  ]);
+
   private currentUrl = toSignal(
     this.router.events.pipe(
       filter((e): e is NavigationEnd => e instanceof NavigationEnd),
@@ -51,12 +58,17 @@ export class PollDetailsNavbarComponent {
 
   public isOverviewActive = computed(() => {
     const url = this.currentUrl() ?? '';
-    return url.includes(ROUTES_CONSTANTS.MAIN.POLLS) && !url.includes(ROUTES_CONSTANTS.MAIN.POLL_DETAILS_CANDIDATES);
+    return url.includes(ROUTES_CONSTANTS.MAIN.POLLS) && !url.includes(ROUTES_CONSTANTS.MAIN.POLL_DETAILS_CANDIDATES) && !url.includes(ROUTES_CONSTANTS.MAIN.POLL_DETAILS_POSITIONS);
   });
 
   public isCandidatesActive = computed(() => {
     const url = this.currentUrl() ?? '';
     return url.includes(ROUTES_CONSTANTS.MAIN.POLL_DETAILS_CANDIDATES);
+  });
+
+  public isPositionsActive = computed(() => {
+    const url = this.currentUrl() ?? '';
+    return url.includes(ROUTES_CONSTANTS.MAIN.POLL_DETAILS_POSITIONS);
   });
 
   public navigateToPolls(): void {
@@ -68,13 +80,16 @@ export class PollDetailsNavbarComponent {
 
   public navigateToOverview(): void {
     this.router.navigate(this.overviewRoute());
-
     this.setActiveNavItem('overview');
   }
 
   public navigateToCandidates(): void {
     this.router.navigate(this.candidatesRoute());
-
     this.setActiveNavItem('candidates');
+  }
+
+  public navigateToPositions(): void {
+    this.router.navigate(this.positionsRoute());
+    this.setActiveNavItem('positions');
   }
 }

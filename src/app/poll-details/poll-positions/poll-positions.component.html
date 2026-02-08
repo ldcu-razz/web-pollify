@@ -1,0 +1,31 @@
+<section class="w-full flex flex-col h-full gap-6">
+  <section class="flex justify-between items-center gap-2">
+    <section class="flex flex-col gap-2">
+      <h1 class="text-2xl font-bold">Poll Positions</h1>
+      <p class="text-sm text-gray-500">Manage your poll positions.</p>
+    </section>
+
+    <button matButton="filled" color="primary" (click)="openCreatePositionDialog()">
+      <mat-icon>add</mat-icon>
+      Add Position
+    </button>
+  </section>
+
+  <section class="grid grid-cols-1 md:grid-cols-4 gap-4">
+    @if (loading()) {
+      <div class="col-span-full flex justify-center items-center gap-4 h-full">
+        <mat-progress-spinner mode="indeterminate" diameter="24"></mat-progress-spinner>
+        <span>Loading positions...</span>
+      </div>
+    } @else {
+      @for (pollPosition of sortedPollPositions(); track pollPosition.id) {
+        <app-poll-position-card [pollPosition]="pollPosition"></app-poll-position-card>
+      } @empty {
+        <div class="col-span-full flex justify-center items-center h-full">
+          <mat-icon>search_off</mat-icon>
+          <p class="text-md">No positions found</p>
+        </div>
+      } 
+    }
+  </section>
+</section>

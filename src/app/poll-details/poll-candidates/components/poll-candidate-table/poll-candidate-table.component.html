@@ -19,6 +19,11 @@
       </td>
     </ng-container>
 
+    <ng-container matColumnDef="position">
+      <th mat-header-cell *matHeaderCellDef> Position </th>
+      <td mat-cell *matCellDef="let element"> {{element.poll_position?.name}} </td>
+    </ng-container>
+
     <ng-container matColumnDef="updated_at">
       <th mat-header-cell *matHeaderCellDef> Updated At </th>
       <td mat-cell *matCellDef="let element"> {{element.updated_at | date:'medium'}} </td>

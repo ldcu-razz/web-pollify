@@ -11,6 +11,8 @@ import { Component, computed, inject, OnDestroy, OnInit } from "@angular/core";
 import { PollDetailsStore } from "@store/poll-details/poll-details.store";
 import { PollDetailsNavbarComponent } from "./components/poll-details-navbar/poll-details-navbar.component";
 import { ActivatedRoute, RouterOutlet } from "@angular/router";
+import { PollPositionsStore } from "@store/poll-details/poll-positions.store";
+import { PollCandidatesStore } from "@store/poll-details/poll-candidates.store";
 
 @Component({
   selector: 'app-poll-details',
@@ -32,17 +34,24 @@ import { ActivatedRoute, RouterOutlet } from "@angular/router";
 })
 export class PollDetailsComponent implements OnInit, OnDestroy {
   private readonly pollDetailsStore = inject(PollDetailsStore);
+  private readonly pollPositionsStore = inject(PollPositionsStore);
+  private readonly pollCandidatesStore = inject(PollCandidatesStore);
+  
   private readonly route = inject(ActivatedRoute);
 
   public pollId = computed(() => this.route.snapshot.params['id']);
 
   public loading = computed(() => this.pollDetailsStore.loading());
 
-  public ngOnInit(): void {
-    this.pollDetailsStore.getPollDetails(this.pollId());
+  public async ngOnInit(): Promise<void> {
+    await this.pollDetailsStore.getPollDetails(this.pollId());
+    await this.pollPositionsStore.getPollPositions(this.pollId());
+    await this.pollCandidatesStore.getPollCandidates(this.pollId());
   }
 
   public ngOnDestroy(): void {
     this.pollDetailsStore.resetPollDetails();
+    this.pollPositionsStore.resetPollPositions();
+    this.pollCandidatesStore.resetPollCandidates();
   }
 }

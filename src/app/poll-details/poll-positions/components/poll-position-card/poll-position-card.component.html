@@ -1,0 +1,31 @@
+<mat-card appearance="outlined" class="cursor-pointer h-full" (click)="openUpdatePositionDialog()">
+  <mat-card-header>
+    <mat-card-title class="mb-2!">
+      <span class="font-bold rounded-full bg-(--mat-sys-secondary) text-md! text-white px-3 py-1">{{ pollPosition().position }}</span>
+    </mat-card-title>
+  </mat-card-header>
+  <mat-card-content>
+    <p class="text-lg font-bold line-clamp-3">{{ pollPosition().name }}</p>
+  </mat-card-content>
+  <mat-card-actions class="mt-auto">
+    <div class="flex justify-between items-center w-full px-2">
+      <div class="flex items-center gap-2">
+        <div class="flex items-center gap-1" matTooltip="{{ totalPollPositionCandidates() }} candidates are in this position" matTooltipPosition="above">
+          <mat-icon class="text-[16px]! size-[16px]! mat-text-secondary">person</mat-icon>
+          <span>{{ totalPollPositionCandidates() }}</span>
+        </div>
+      </div>
+      <div class="flex items-center gap-2">
+        <button mat-icon-button [matMenuTriggerFor]="menu" (click)="$event.stopPropagation()">
+          <mat-icon>more_vert</mat-icon>
+        </button>
+        <mat-menu #menu="matMenu">
+          <button mat-menu-item (click)="openDeleteConfirmationDialog()">
+            <mat-icon>delete</mat-icon>
+            <span>Delete position</span>
+          </button>
+        </mat-menu>
+      </div>
+    </div>
+  </mat-card-actions>
+</mat-card>

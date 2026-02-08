@@ -6,4 +6,11 @@
   @if (!loading()) {
     <router-outlet></router-outlet>
   }
+
+  @if (loading()) {
+    <div class="flex justify-center items-center gap-4 mt-12 h-full">
+      <mat-progress-spinner mode="indeterminate" diameter="24"></mat-progress-spinner>
+      <span>Loading poll details...</span>
+    </div>
+  }
 </div>

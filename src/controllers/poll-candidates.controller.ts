@@ -1,6 +1,6 @@
 import { inject, Injectable } from "@angular/core";
 import { Pagination } from "@models/common/common.type";
-import { GetPollCandidatePagination, PatchPollCandidate, PollCandidate, PostPollCandidate } from "@models/polls/poll-candidate.type";
+import { GetPollCandidate, GetPollCandidatePagination, PatchPollCandidate, PostPollCandidate } from "@models/polls/poll-candidate.type";
 import { SupabaseService } from "@services/supabase.service";
 
 @Injectable({
@@ -9,10 +9,11 @@ import { SupabaseService } from "@services/supabase.service";
 export class PollCandidatesController {
   private readonly supabase = inject(SupabaseService);
   private readonly pollCandidatesTable = 'poll_candidates';
+  private readonly pollPositionsTable = 'poll_positions';
 
   public async getPollCandidates(pollId: string, pagination: Pagination): Promise<GetPollCandidatePagination> {
     const supabase = await this.supabase.supabaseClient();
-    const { data, error } = await supabase.from(this.pollCandidatesTable).select('*').eq('poll_id', pollId)
+    const { data, error } = await supabase.from(this.pollCandidatesTable).select(`*, poll_position:${this.pollPositionsTable}(*)`).eq('poll_id', pollId)
       .range((pagination.page - 1) * pagination.limit, (pagination.page * pagination.limit) - 1);
 
     if (error) {
@@ -35,9 +36,9 @@ export class PollCandidatesController {
     return response;
   }
 
-  public async createPollCandidate(pollId: string, payload: PostPollCandidate): Promise<PollCandidate> {
+  public async createPollCandidate(pollId: string, payload: PostPollCandidate): Promise<GetPollCandidate> {
     const supabase = await this.supabase.supabaseClient();
-    const { data, error } = await supabase.from(this.pollCandidatesTable).insert(payload).eq('poll_id', pollId).select().single();
+    const { data, error } = await supabase.from(this.pollCandidatesTable).insert(payload).eq('poll_id', pollId).select(`*, poll_position:${this.pollPositionsTable}(*)`).single();
     if (error) {
       throw error;
     }
@@ -45,9 +46,9 @@ export class PollCandidatesController {
     return data;
   }
 
-  public async updatePollCandidate(pollCandidateId: string, payload: PatchPollCandidate): Promise<PollCandidate> {
+  public async updatePollCandidate(pollCandidateId: string, payload: PatchPollCandidate): Promise<GetPollCandidate> {
     const supabase = await this.supabase.supabaseClient();
-    const { data, error } = await supabase.from(this.pollCandidatesTable).update(payload).eq('id', pollCandidateId).select().single();
+    const { data, error } = await supabase.from(this.pollCandidatesTable).update(payload).eq('id', pollCandidateId).select(`*, poll_position:${this.pollPositionsTable}(*)`).single();
     if (error) {
       throw error;
     }
