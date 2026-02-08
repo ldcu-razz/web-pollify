@@ -7,8 +7,8 @@
     <h1 class="text-lg font-bold">{{ poll()?.name }}</h1>
   </section>
   <section class="flex items-center gap-2">
-    <button matButton="text" color="primary" class="nav-item" [class.active]="activeNavItem() === 'overview'" (click)="setActiveNavItem('overview')">Overview</button>
-    <button matButton="text" color="primary" class="nav-item" [class.active]="activeNavItem() === 'candidates'" (click)="setActiveNavItem('candidates')">Candidates</button>
+    <button matButton="text" color="primary" class="nav-item" [class.active]="isOverviewActive()" (click)="navigateToOverview()">Overview</button>
+    <button matButton="text" color="primary" class="nav-item" [class.active]="isCandidatesActive()" (click)="navigateToCandidates()">Candidates</button>
     <button matButton="text" color="primary" class="nav-item" [class.active]="activeNavItem() === 'positions'" (click)="setActiveNavItem('positions')">Positions</button>
     <button matButton="text" color="primary" class="nav-item" [class.active]="activeNavItem() === 'participants'" (click)="setActiveNavItem('participants')">Participants</button>
     <button matButton="text" color="primary" class="nav-item" [class.active]="activeNavItem() === 'results'" (click)="setActiveNavItem('results')">Results</button>

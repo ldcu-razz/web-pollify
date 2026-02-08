@@ -1,0 +1,15 @@
+<section class="flex flex-col gap-4 px-8 py-6 mat-bg-surface-container-lowest">
+  <h2 class="text-2xl font-bold">Are you sure you want to delete this candidate?</h2>
+  <p>This action cannot be undone. This will permanently delete the candidate</p>
+  <section class="flex justify-end gap-2">
+    <button matButton="filled" color="primary" (click)="deleteCandidate()" [disabled]="deletingCandidateLoading()">
+      <div class="flex items-center gap-2">
+        @if (deletingCandidateLoading()) {
+          <mat-progress-spinner mode="indeterminate" diameter="20"></mat-progress-spinner>
+        }
+        <span>Delete Candidate</span>
+      </div>
+    </button>
+    <button matButton="tonal" color="primary" (click)="closeDialog()">Cancel</button>
+  </section>
+</section>

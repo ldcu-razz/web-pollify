@@ -1,0 +1,41 @@
+<section class="flex flex-col gap-4 px-8 py-6 mat-bg-surface-container-lowest">
+  <section class="flex flex-col gap-2">
+    <h3 class="text-xl font-bold">{{ title() }}</h3>
+    <p class="text-sm">Fill out the fields below. The field with * are required.</p>
+  </section>
+
+  <form class="mt-4 flex flex-col gap-4">
+    <section class="grid grid-cols-1 gap-4">
+      <mat-form-field appearance="outline" class="w-full">
+        <mat-label>Name</mat-label>
+        <input matInput type="text" [formField]="candidateForm.name">
+        @if (candidateForm.name().touched() && candidateForm.name().required()) {
+          <mat-error>Name is required</mat-error>
+        }
+      </mat-form-field>
+
+      <mat-form-field appearance="outline" class="w-full">
+        <mat-label>Description</mat-label>
+        <textarea matInput type="text" [formField]="candidateForm.description"></textarea>
+        @if (candidateForm.description().touched() && candidateForm.description().required()) {
+          <mat-error>Description is required</mat-error>
+        }
+      </mat-form-field>
+    </section>
+  </form>
+
+  <section class="flex justify-end gap-2">
+    <button matButton="tonal" color="primary" (click)="closeDialog()">Cancel</button>
+    <button matButton="filled" color="primary" [disabled]="(isFormInvalid() && isFormTouched()) || formLoading()" (click)="submitForm()">
+      <div class="flex items-center gap-2">
+        @if (formLoading()) {
+          <mat-progress-spinner mode="indeterminate" diameter="18"></mat-progress-spinner>
+        }
+        @else {
+          <mat-icon>{{ mode() === "create" ? "add" : "edit" }}</mat-icon>
+        }
+        <span>{{ submitFormLabel() }}</span>
+      </div>
+    </button>
+  </section>
+</section>

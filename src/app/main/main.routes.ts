@@ -11,6 +11,7 @@ import { GroupDetailsComponent } from "../group-details/group-details.component"
 import { PollsComponent } from "../polls/polls.component";
 import { PollDetailsComponent } from "../poll-details/poll-details.component";
 import { PollDetailsOverviewComponent } from "../poll-details/poll-details-overview/poll-details-overview.component";
+import { PollCandidatesComponent } from "../poll-details/poll-candidates/poll-candidates.component";
 
 export const mainRoutes: Routes = [
   {
@@ -29,12 +30,12 @@ export const mainRoutes: Routes = [
         component: PollDetailsComponent,
         children: [
           {
-            path: '**',
-            redirectTo: '',
-          },
-          {
             path: '',
             component: PollDetailsOverviewComponent,
+          },
+          {
+            path: ROUTES_CONSTANTS.MAIN.POLL_DETAILS_CANDIDATES,
+            component: PollCandidatesComponent,
           },
         ],
       },

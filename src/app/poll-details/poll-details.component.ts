@@ -36,6 +36,8 @@ export class PollDetailsComponent implements OnInit, OnDestroy {
 
   public pollId = computed(() => this.route.snapshot.params['id']);
 
+  public loading = computed(() => this.pollDetailsStore.loading());
+
   public ngOnInit(): void {
     this.pollDetailsStore.getPollDetails(this.pollId());
   }
