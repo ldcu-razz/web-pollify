@@ -9,6 +9,8 @@ import { UserDetailsComponent } from "../user-details/user-details.component";
 import { GroupsComponent } from "../groups/groups.component";
 import { GroupDetailsComponent } from "../group-details/group-details.component";
 import { PollsComponent } from "../polls/polls.component";
+import { PollDetailsComponent } from "../poll-details/poll-details.component";
+import { PollDetailsOverviewComponent } from "../poll-details/poll-details-overview/poll-details-overview.component";
 
 export const mainRoutes: Routes = [
   {
@@ -19,12 +21,22 @@ export const mainRoutes: Routes = [
     },
     children: [
       {
-        path: ROUTES_CONSTANTS.MAIN.USERS,
-        component: UsersComponent,
-      },
-      {
         path: ROUTES_CONSTANTS.MAIN.POLLS,
         component: PollsComponent,
+      },
+      {
+        path: `${ROUTES_CONSTANTS.MAIN.POLLS}/${ROUTES_CONSTANTS.MAIN.POLL_DETAILS}`,
+        component: PollDetailsComponent,
+        children: [
+          {
+            path: '**',
+            redirectTo: '',
+          },
+          {
+            path: '',
+            component: PollDetailsOverviewComponent,
+          },
+        ],
       },
       {
         path: `${ROUTES_CONSTANTS.MAIN.USERS}/${ROUTES_CONSTANTS.MAIN.USER_DETAILS}`,
@@ -37,6 +49,10 @@ export const mainRoutes: Routes = [
       {
         path: `${ROUTES_CONSTANTS.MAIN.GROUPS}/${ROUTES_CONSTANTS.MAIN.GROUP_DETAILS}`,
         component: GroupDetailsComponent,
+      },
+      {
+        path: ROUTES_CONSTANTS.MAIN.USERS,
+        component: UsersComponent,
       },
       {
         path: ROUTES_CONSTANTS.MAIN.WORKSPACES,

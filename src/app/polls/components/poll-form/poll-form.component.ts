@@ -10,29 +10,48 @@ import { form, FormField, required } from "@angular/forms/signals";
 import { MatIconModule } from "@angular/material/icon";
 import { MatButtonModule } from "@angular/material/button";
 import { PollStore } from "@store/polls/polls.store";
-import { PostPoll } from "@models/polls/polls.type";
+import { GetPoll, PatchPoll, PostPoll } from "@models/polls/polls.type";
 import { PollStatusSchema } from "@models/polls/polls.schema";
+import { PollDetailsStore } from "@store/poll-details/poll-details.store";
+import { MatProgressSpinnerModule } from "@angular/material/progress-spinner";
 
 interface PollFormData {
   mode: 'create' | 'update';
+  poll: GetPoll;
 }
 
 @Component({
   selector: 'app-poll-form',
   templateUrl: './poll-form.component.html',
   styleUrls: ['./poll-form.component.scss'],
-  imports: [MatFormFieldModule, MatInputModule, MatSelectModule, MatDatepickerModule, MatNativeDateModule, MatIconModule, MatButtonModule, FormsModule, FormField]
+  imports: [
+    MatFormFieldModule,
+    MatInputModule,
+    MatSelectModule,
+    MatDatepickerModule,
+    MatNativeDateModule,
+    MatIconModule,
+    MatButtonModule,
+    FormsModule,
+    FormField,
+    MatProgressSpinnerModule
+  ]
 })
 export class PollFormComponent {
   private readonly dialogRef = inject(MatDialogRef<PollFormComponent>);
   private readonly data = inject<PollFormData>(MAT_DIALOG_DATA);
   private readonly pollsStore = inject(PollStore);
+  private readonly pollDetailsStore = inject(PollDetailsStore);
 
   public formMode = computed(() => this.data.mode ?? 'create');
   public isCreateMode = computed(() => this.formMode() === 'create');
   public isUpdateMode = computed(() => this.formMode() === 'update');
 
   public title = computed(() => this.isCreateMode() ? 'Create Poll' : 'Update Poll');
+
+  public poll = computed(() => this.data.poll);
+  public pollId = computed(() => this.poll()?.id ?? '');
+  public updatingPoll = computed(() => this.pollDetailsStore.updatingPoll());
 
   public generatedCode = computed(() => {
     const uuid = crypto.randomUUID().replace(/-/g, '');
@@ -46,9 +65,9 @@ export class PollFormComponent {
   });
 
   public pollFormData = signal({
-    name: '',
-    description: '',
-    code: '',
+    name: this.isUpdateMode() ? this.poll()?.name ?? '' : '',
+    description: this.isUpdateMode() ? this.poll()?.description ?? '' : '',
+    code: this.isUpdateMode() ? this.poll()?.code ?? '' : this.generatedCode(),
   });
 
   public pollForm = form(this.pollFormData, (schemaPath) => {
@@ -66,6 +85,10 @@ export class PollFormComponent {
     if (this.isCreateMode()) {
       this.createPoll();
     }
+
+    if (this.isUpdateMode()) {
+      this.updatePoll();
+    }
   }
 
   public async createPoll(): Promise<void> {
@@ -82,6 +105,15 @@ export class PollFormComponent {
       updated_at: new Date().toISOString(),
     };
     await this.pollsStore.createPoll(payload);
+    this.closeDialog();
+  }
+
+  public async updatePoll(): Promise<void> {
+    const payload: PatchPoll = {
+      name: this.pollFormData().name,
+      description: this.pollFormData().description,
+    };
+    await this.pollDetailsStore.updatePoll(this.pollId(), payload);
     this.closeDialog();
   }
 

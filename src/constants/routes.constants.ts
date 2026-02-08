@@ -3,6 +3,8 @@ export const ROUTES = {
     BASE: 'main',
     POLLS: 'polls',
     POLL_DETAILS: ':id',
+    POLL_DETAILS_POSITIONS: ':id/positions',
+    POLL_DETAILS_SETTINGS: ':id/settings',
     GROUPS: 'groups',
     GROUP_DETAILS: ':id',
     USERS: 'users',

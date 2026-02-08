@@ -1,0 +1,16 @@
+<nav class="flex justify-between items-center -mt-6 -mx-6 p-4 border-b border-(--mat-sys-outline-variant)">
+  <section class="flex items-center gap-2">
+    <button matButton="text" color="primary" (click)="navigateToPolls()">
+      <mat-icon>arrow_back</mat-icon>
+      <span>Back</span>
+    </button>
+    <h1 class="text-lg font-bold">{{ poll()?.name }}</h1>
+  </section>
+  <section class="flex items-center gap-2">
+    <button matButton="text" color="primary" class="nav-item" [class.active]="activeNavItem() === 'overview'" (click)="setActiveNavItem('overview')">Overview</button>
+    <button matButton="text" color="primary" class="nav-item" [class.active]="activeNavItem() === 'candidates'" (click)="setActiveNavItem('candidates')">Candidates</button>
+    <button matButton="text" color="primary" class="nav-item" [class.active]="activeNavItem() === 'positions'" (click)="setActiveNavItem('positions')">Positions</button>
+    <button matButton="text" color="primary" class="nav-item" [class.active]="activeNavItem() === 'participants'" (click)="setActiveNavItem('participants')">Participants</button>
+    <button matButton="text" color="primary" class="nav-item" [class.active]="activeNavItem() === 'results'" (click)="setActiveNavItem('results')">Results</button>
+  </section>
+</nav>

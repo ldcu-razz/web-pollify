@@ -1,0 +1,149 @@
+@if (poolLoading()) {
+  <section class="flex justify-center items-center gap-1 mb-4">
+    <div class="flex justify-center items-center gap-4 h-full">
+      <mat-progress-spinner mode="indeterminate" diameter="32"></mat-progress-spinner>
+      <span class="text-md mat-text-secondary">Loading poll details...</span>
+    </div>
+  </section>
+} @else {
+  <section class="flex justify-between items-center mb-6 gap-4">
+    <section class="flex flex-col gap-2">
+      <h2 class="text-2xl font-bold">{{ poll()?.name }}</h2>
+      <p class="text-sm mat-text-secondary max-w-xl">{{ poll()?.description }}</p>
+    </section>
+    <section class="flex items-center gap-2">
+      <button matButton="outlined" color="primary" (click)="openEditPollDialog()">
+        <mat-icon>edit</mat-icon>
+        <span>Edit poll</span>
+      </button>
+      <button matButton="filled" color="primary">
+        <mat-icon>play_arrow</mat-icon>
+        <span>Start poll</span>
+      </button>
+    </section>
+  </section>
+  
+  <section class="grid grid-cols-1 md:grid-cols-12 h-full w-full gap-4">
+    <section class="col-span-1 md:col-span-8 mat-bg-surface-container-low p-4 rounded-xl">
+      <section class="flex flex-col">
+        <h3 class="text-lg font-bold mb-2">Poll Dates</h3>
+        <section class="flex gap-2 flex-wrap">
+          <mat-form-field appearance="outline" class="flex-1 min-w-[140px]">
+            <mat-label>Start Date</mat-label>
+            <input matInput [matDatepicker]="startDatePicker" [min]="minDate()" [(ngModel)]="startDate">
+            <mat-datepicker-toggle matSuffix [for]="startDatePicker"></mat-datepicker-toggle>
+            <mat-datepicker #startDatePicker></mat-datepicker>
+          </mat-form-field>
+          <mat-form-field appearance="outline" class="w-40">
+            <mat-label>Start Time</mat-label>
+            <input matInput type="time" [(ngModel)]="startTime">
+          </mat-form-field>
+        </section>
+        <section class="flex gap-2 flex-wrap">
+          <mat-form-field appearance="outline" class="flex-1 min-w-[140px]">
+            <mat-label>End Date</mat-label>
+            <input matInput [matDatepicker]="endDatePicker" [min]="startDate()" [(ngModel)]="endDate">
+            <mat-datepicker-toggle matSuffix [for]="endDatePicker"></mat-datepicker-toggle>
+            <mat-datepicker #endDatePicker></mat-datepicker>
+          </mat-form-field>
+          <mat-form-field appearance="outline" class="w-40">
+            <mat-label>End Time</mat-label>
+            <input matInput type="time" [min]="startTime()" [(ngModel)]="endTime">
+          </mat-form-field>
+        </section>
+      </section>
+      <section class="flex justify-end gap-2">
+        <button matButton="outlined" color="primary" (click)="resetPollDuration()">
+          <span>Reset</span>
+        </button>
+        <button matButton="filled" color="primary" (click)="setPollDuration()">
+          <span>Set poll duration</span>
+        </button>
+      </section>
+    </section>
+    <section class="col-span-1 md:col-span-4 flex flex-col gap-4 border border-(--mat-sys-outline-variant) rounded-xl p-4">
+      <section class="flex flex-col">
+        <h3 class="text-lg font-bold">Code:</h3>
+        <p class="text-md">{{ poll()?.code }}</p>
+      </section>
+      <section class="flex flex-col">
+        <h3 class="text-lg font-bold">Status:</h3>
+        <p class="text-md">{{ poll()?.status | textTransform }}</p>
+      </section>
+      <section class="flex flex-col">
+        <h3 class="text-lg font-bold">Created At:</h3>
+        <p class="text-md">{{ poll()?.created_at | date:'medium' }}</p>
+      </section>
+      <section class="flex flex-col">
+        <h3 class="text-lg font-bold">Updated At:</h3>
+        <p class="text-md">{{ poll()?.updated_at | date:'medium' }}</p>
+      </section>
+    </section>
+  </section>
+  
+  <section class="grid grid-cols-1 md:grid-cols-12 h-full w-full gap-4 mt-4">
+    <section class="col-span-1 md:col-span-7 grid grid-cols-1 md:grid-cols-2 gap-4">
+      <section class="col-span-1 md:col-span-1 border border-(--mat-sys-outline-variant) flex flex-col rounded-xl p-4 h-full">
+        <mat-icon class="size-10! text-[38px]! mat-text-secondary">person</mat-icon>
+        <h3 class="text-lg">Total Candidates:</h3>
+        <p class="text-2xl font-bold mt-auto">100</p>
+      </section>
+      <section class="col-span-1 md:col-span-1 border border-(--mat-sys-outline-variant) flex flex-col rounded-xl p-4 h-full">
+        <mat-icon class="size-10! text-[38px]! mat-text-secondary">diversity_3</mat-icon>
+        <h3 class="text-lg">Total Participants:</h3>
+        <p class="text-2xl font-bold mt-auto">100</p>
+      </section>
+      <section class="col-span-1 md:col-span-1 border border-(--mat-sys-outline-variant) flex flex-col rounded-xl p-4 h-full">
+        <mat-icon class="size-10! text-[38px]! mat-text-secondary">list_alt</mat-icon>
+        <h3 class="text-lg">Total Positions:</h3>
+        <p class="text-2xl font-bold mt-auto">100</p>
+      </section>
+      <section class="col-span-1 md:col-span-1 border border-(--mat-sys-outline-variant) flex flex-col rounded-xl p-4 h-full">
+        <mat-icon class="size-10! text-[38px]! mat-text-secondary">percent</mat-icon>
+        <h3 class="text-lg">Percentage of Votes:</h3>
+        <p class="text-2xl font-bold mt-auto">100%</p>
+      </section>
+    </section>
+  
+    <section class="col-span-1 md:col-span-5 mat-bg-surface-container-low rounded-xl p-4">
+      <h3 class="text-lg font-bold mb-3">Guide</h3>
+      <ol class="flex flex-col gap-3 list-none p-0 m-0">
+        <li class="flex items-start gap-3">
+          <span class="shrink-0 size-7 rounded-full bg-(--mat-sys-primary-container) text-(--mat-sys-on-primary-container) text-sm font-semibold flex items-center justify-center">1</span>
+          <div>
+            <span class="font-bold">Create candidates first</span>
+            <p class="text-sm mat-text-secondary mt-0.5">Add the people or options that can be voted for.</p>
+          </div>
+        </li>
+        <li class="flex items-start gap-3">
+          <span class="shrink-0 size-7 rounded-full bg-(--mat-sys-primary-container) text-(--mat-sys-on-primary-container) text-sm font-semibold flex items-center justify-center">2</span>
+          <div>
+            <span class="font-bold">Add positions for the poll</span>
+            <p class="text-sm mat-text-secondary mt-0.5">Define the roles or positions that candidates will run for.</p>
+          </div>
+        </li>
+        <li class="flex items-start gap-3">
+          <span class="shrink-0 size-7 rounded-full bg-(--mat-sys-primary-container) text-(--mat-sys-on-primary-container) text-sm font-semibold flex items-center justify-center">3</span>
+          <div>
+            <span class="font-bold">Add participants to vote</span>
+            <p class="text-sm mat-text-secondary mt-0.5">Invite or register voters who can cast their votes.</p>
+          </div>
+        </li>
+        <li class="flex items-start gap-3">
+          <span class="shrink-0 size-7 rounded-full bg-(--mat-sys-primary-container) text-(--mat-sys-on-primary-container) text-sm font-semibold flex items-center justify-center">4</span>
+          <div>
+            <span class="font-bold">Toggle start poll and stop</span>
+            <p class="text-sm mat-text-secondary mt-0.5">Use the Start poll button to open voting, and stop when done.</p>
+          </div>
+        </li>
+        <li class="flex items-start gap-3">
+          <span class="shrink-0 size-7 rounded-full bg-(--mat-sys-primary-container) text-(--mat-sys-on-primary-container) text-sm font-semibold flex items-center justify-center">5</span>
+          <div>
+            <span class="font-bold">See the results on results tab</span>
+            <p class="text-sm mat-text-secondary mt-0.5">Switch to the Results tab to view vote counts and outcomes.</p>
+          </div>
+        </li>
+      </ol>
+    </section>
+  </section>
+}

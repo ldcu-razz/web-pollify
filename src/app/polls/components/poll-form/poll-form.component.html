@@ -24,7 +24,7 @@
     <div class="flex flex-col gap-2 -mt-4 w-full">
       <div class="text-lg font-bold">Code:</div>
       <div class="border-dashed rounded-lg p-4 border-2 border-(--md-sys-color-secondary) flex items-center justify-center mat-bg-surface-container-low">
-        <p class="text-xl font-extrabold">{{ generatedCode() }}</p>
+        <p class="text-xl font-extrabold">{{ pollFormData().code }}</p>
       </div>
       <p class="text-sm text-(--md-sys-color-on-surface-variant)">The code will be used to identify the poll and allow participants to vote.</p>
     </div>
@@ -32,9 +32,13 @@
 
   <section class="flex justify-end gap-2 mt-4">
     <button matButton="tonal" color="primary" (click)="closeDialog()">Cancel</button>
-    <button matButton="filled" color="primary" [disabled]="(pollForm().invalid() && pollForm().touched()) || formLoading()" (click)="submitForm()">
+    <button matButton="filled" color="primary" [disabled]="(pollForm().invalid() && pollForm().touched()) || formLoading() || updatingPoll()" (click)="submitForm()">
       <div class="flex items-center gap-2">
-        <mat-icon>{{ isCreateMode() ? 'add' : 'edit' }}</mat-icon>
+        @if (updatingPoll() && isUpdateMode()) {
+          <mat-progress-spinner mode="indeterminate" diameter="18"></mat-progress-spinner>
+        } @else {
+          <mat-icon>{{ isCreateMode() ? 'add' : 'edit' }}</mat-icon>
+        }
         <span>{{ submitFormLabel() }}</span>
       </div>
     </button>
