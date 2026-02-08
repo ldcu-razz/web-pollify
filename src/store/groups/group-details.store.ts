@@ -88,6 +88,7 @@ export const GroupDetailsStore = signalStore(
             limit: result.limit,
             total: result.total,
           },
+          loading: false,
         });
       } catch (error) {
         console.error(error);

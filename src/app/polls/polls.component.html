@@ -1,0 +1,33 @@
+<section class="w-full flex flex-col h-full gap-6">
+  <section class="flex justify-between items-center gap-2">
+    <section class="flex flex-col gap-2">
+      <h1 class="text-2xl font-bold">Polls</h1>
+      <p class="text-sm text-gray-500">Manage your polls and create new ones</p>
+    </section>
+
+    <button matButton="filled" color="primary" (click)="openPollForm()">
+      <mat-icon>add</mat-icon>
+      Add Poll
+    </button>
+  </section>
+
+  <section class="flex items-center gap-2">
+    <mat-form-field appearance="outline">
+      <mat-icon matPrefix>search</mat-icon>
+      <mat-label>Search by name</mat-label>
+      <input matInput type="text" [(ngModel)]="searchQuery" (input)="searchPolls()">
+    </mat-form-field>
+    <mat-form-field appearance="outline">
+      <mat-label>Select workspace</mat-label>
+      <mat-select [(ngModel)]="workspace">
+        @for (workspace of workspaces(); track workspace.id) {
+          <mat-option [value]="workspace.id">{{ workspace.name }}</mat-option>
+        }
+      </mat-select>
+    </mat-form-field>
+  </section>
+
+  <section class="flex flex-col gap-2">
+    <app-polls-table></app-polls-table>
+  </section>
+</section>

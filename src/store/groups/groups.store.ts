@@ -59,10 +59,12 @@ export const GroupsStore = signalStore(
           page: result.page,
           limit: result.limit,
           total: result.total,
-        }, loading: false }); 
+        }}); 
       } catch (error) {
-        patchState(store, { error: error as string, loading: false });
+        patchState(store, { error: error as string});
         snackbar.open("Failed to get groups", "Close", { duration: 3000 });
+      } finally {
+        patchState(store, { loading: false });
       }
     },
 

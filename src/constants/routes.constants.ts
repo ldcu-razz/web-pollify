@@ -1,6 +1,8 @@
 export const ROUTES = {
   MAIN: {
     BASE: 'main',
+    POLLS: 'polls',
+    POLL_DETAILS: ':id',
     GROUPS: 'groups',
     GROUP_DETAILS: ':id',
     USERS: 'users',

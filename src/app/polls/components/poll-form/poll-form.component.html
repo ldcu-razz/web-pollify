@@ -1,0 +1,42 @@
+<section class="flex flex-col gap-4 px-8 py-6 mat-bg-surface-container-lowest">
+  <section class="flex flex-col gap-2">
+    <h3 class="text-xl font-bold">{{ title() }}</h3>
+    <p class="text-sm">Fill out the fields below. The field with * are required.</p>
+  </section>
+
+  <form class="mt-4 flex flex-col gap-4">
+    <mat-form-field appearance="outline" class="w-full">
+      <mat-label>Poll Name</mat-label>
+      <input matInput type="text" [formField]="pollForm.name">
+      @if (pollForm.name().touched() && pollForm.name().required()) {
+        <mat-error>Poll name is required</mat-error>
+      }
+    </mat-form-field>
+
+    <mat-form-field appearance="outline" class="w-full">
+      <mat-label>Poll Description</mat-label>
+      <textarea matInput type="text" [formField]="pollForm.description"></textarea>
+      @if (pollForm.description().touched() && pollForm.description().required()) {
+        <mat-error>Poll description is required</mat-error>
+      }
+    </mat-form-field>
+
+    <div class="flex flex-col gap-2 -mt-4 w-full">
+      <div class="text-lg font-bold">Code:</div>
+      <div class="border-dashed rounded-lg p-4 border-2 border-(--md-sys-color-secondary) flex items-center justify-center mat-bg-surface-container-low">
+        <p class="text-xl font-extrabold">{{ generatedCode() }}</p>
+      </div>
+      <p class="text-sm text-(--md-sys-color-on-surface-variant)">The code will be used to identify the poll and allow participants to vote.</p>
+    </div>
+  </form>
+
+  <section class="flex justify-end gap-2 mt-4">
+    <button matButton="tonal" color="primary" (click)="closeDialog()">Cancel</button>
+    <button matButton="filled" color="primary" [disabled]="(pollForm().invalid() && pollForm().touched()) || formLoading()" (click)="submitForm()">
+      <div class="flex items-center gap-2">
+        <mat-icon>{{ isCreateMode() ? 'add' : 'edit' }}</mat-icon>
+        <span>{{ submitFormLabel() }}</span>
+      </div>
+    </button>
+  </section>
+</section>
