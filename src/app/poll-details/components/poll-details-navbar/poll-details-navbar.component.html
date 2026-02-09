@@ -1,4 +1,4 @@
-<nav class="flex justify-between items-center -mt-6 -mx-6 p-4 border-b border-(--mat-sys-outline-variant)">
+<nav class="flex justify-between items-center -mt-6 -mx-6 p-4 border-b border-(--mat-sys-outline-variant) mat-bg-surface-container-lowest">
   <section class="flex items-center gap-2">
     <button matButton="text" color="primary" (click)="navigateToPolls()">
       <mat-icon>arrow_back</mat-icon>
@@ -11,6 +11,29 @@
     <button matButton="text" color="primary" class="nav-item" [class.active]="isCandidatesActive()" (click)="navigateToCandidates()">Candidates</button>
     <button matButton="text" color="primary" class="nav-item" [class.active]="isPositionsActive()" (click)="navigateToPositions()">Positions</button>
     <button matButton="text" color="primary" class="nav-item" [class.active]="isParticipantsActive()" (click)="navigateToParticipants()">Participants</button>
-    <button matButton="text" color="primary" class="nav-item" [class.active]="activeNavItem() === 'results'" (click)="setActiveNavItem('results')">Results</button>
+    <button matButton="text" color="primary" class="nav-item" [class.active]="isVotingsActive()" (click)="navigateToVotings()">Votings</button>
   </section>
 </nav>
+@if (hasPollDuration() && !isPollDurationValidTodaysTimeAndDate() && !isPollExceedToEndDateToday()) {
+  <section class="w-full p-2 mat-bg-surface-container-low rounded-b-xl">
+    <section class="flex flex-col justify-center items-center max-w-2xl mx-auto gap-2 text-center">
+      <p>The poll will be conducted on <span class="font-bold">{{ pollStartDate() | date:'medium' }}</span> and ends on <span class="font-bold">{{ pollEndDate() | date:'medium' }}</span>.</p>
+    </section>
+  </section>
+}
+
+@if (hasPollDuration() && isPollPublished() && isPollDurationValidTodaysTimeAndDate()) {
+  <section class="w-full p-2 mat-bg-surface-container-low rounded-b-xl">
+    <section class="flex flex-col justify-center items-center max-w-2xl mx-auto gap-2 text-center">
+      <p>The poll is currently open for voting.</p>
+    </section>
+  </section>
+}
+
+@if (isPollClosed()) {
+  <section class="w-full p-2 mat-bg-surface-container-low rounded-b-xl">
+    <section class="flex flex-col justify-center items-center max-w-2xl mx-auto gap-2 text-center">
+      <p>The poll is already closed.</p>
+    </section>
+  </section>
+} 

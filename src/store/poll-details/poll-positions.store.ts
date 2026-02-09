@@ -5,6 +5,7 @@ import { GetPollPosition, PatchPollPosition, PostPollPosition } from "@models/po
 import { patchState, signalStore, withComputed, withMethods, withProps, withState } from "@ngrx/signals";
 import { PollPositionsService } from "@services/poll-positions.service";
 import { PollCandidatesStore } from "./poll-candidates.store";
+import { PollDetailsStore } from "./poll-details.store";
 
 interface PollPositionsState {
   pollPositions: GetPollPosition[];
@@ -34,9 +35,10 @@ export const PollPositionsStore = signalStore(
   { providedIn: 'root' },
   withState(initialState),
   withProps(() => ({
+    pollDetailsStore: inject(PollDetailsStore),
     pollPositionsService: inject(PollPositionsService),
-    snackbar: inject(MatSnackBar),
     pollCandidatesStore: inject(PollCandidatesStore),
+    snackbar: inject(MatSnackBar),
   })),
   withComputed(({ pollPositions }) => ({
     lastPositionNumber: computed(() => {
@@ -46,7 +48,7 @@ export const PollPositionsStore = signalStore(
     sortedPollPositions: computed(() => pollPositions().sort((a, b) => a.position - b.position)),
     isPollPositionNotEmpty: computed(() => pollPositions().length > 0),
   })),
-  withMethods(({ pollPositionsService, snackbar, pollCandidatesStore, ...store }) => ({
+  withMethods(({ pollDetailsStore, pollPositionsService, pollCandidatesStore, snackbar, ...store }) => ({
     getPollPositions: async (pollId: string): Promise<void> => {
       if (store.isPollPositionNotEmpty()) {
         return;
@@ -71,6 +73,7 @@ export const PollPositionsStore = signalStore(
     createPollPosition: async (payload: PostPollPosition, selectedCandidatesIds: string[]): Promise<void> => {
       patchState(store, { formLoading: true });
       try {
+        const positionLength = store.pollPositions().length;
         const result = await pollPositionsService.createPollPosition(payload);
         patchState(store, { pollPositions: [result, ...store.pollPositions()], formLoading: false });
 
@@ -78,6 +81,8 @@ export const PollPositionsStore = signalStore(
         patchState(store, { pollPositions: store.pollPositions().map(pollPosition => pollPosition.id === result.id ? { ...pollPosition, poll_candidates: modifiedCandidatesResult } : pollPosition), formLoading: false });
         selectedCandidatesIds.forEach(candidateId => pollCandidatesStore.setSelectedCandidate(candidateId, result ?? null));
         snackbar.open("Poll position created successfully", "Close", { duration: 3000 });
+
+        pollDetailsStore.udpateTotalPositions(positionLength + 1);
       } catch (error) {
         patchState(store, { error: error as string, formLoading: false });
         snackbar.open("Failed to create poll position", "Close", { duration: 3000 });
@@ -122,6 +127,7 @@ export const PollPositionsStore = signalStore(
     deletePollPosition: async (pollPositionId: string): Promise<void> => {
       patchState(store, { deletingPollPosition: true });
       try {
+        const positionLength = store.pollPositions().length;
         const pollPosition = store.pollPositions().find(pollPosition => pollPosition.id === pollPositionId);
         
         await pollPositionsService.deletePollPosition(pollPositionId);
@@ -130,6 +136,8 @@ export const PollPositionsStore = signalStore(
 
         const pollCandidates = pollPosition?.poll_candidates ?? [];
         pollCandidates.forEach(candidate => pollCandidatesStore.setSelectedCandidate(candidate.id, null));
+
+        pollDetailsStore.udpateTotalPositions(positionLength - 1);
       } catch (error) {
         patchState(store, { error: error as string, deletingPollPosition: false });
         snackbar.open("Failed to delete poll position", "Close", { duration: 3000 });

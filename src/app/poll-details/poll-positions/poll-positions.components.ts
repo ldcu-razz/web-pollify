@@ -33,6 +33,8 @@ export class PollPositionsComponent implements OnInit {
 
   public updatingPollPosition = computed(() => this.pollPositionsStore.updatingPollPosition());
 
+  public isPollDraft = computed(() => this.pollDetailsStore.isPollDraft());
+
   public ngOnInit(): void {
     this.pollPositionsStore.getPollPositions(this.pollId());
   }

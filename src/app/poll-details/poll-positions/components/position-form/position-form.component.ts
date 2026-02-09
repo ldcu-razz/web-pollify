@@ -16,6 +16,7 @@ import { PollCandidatesStore } from "@store/poll-details/poll-candidates.store";
 import { PollCandidate } from "@models/polls/poll-candidate.type";
 import { FormsModule } from "@angular/forms";
 import { COMMA, ENTER } from "@angular/cdk/keycodes";
+import { AvatarComponent } from "@components/avatar/avatar.component";
 
 interface PositionFormData {
   mode: 'create' | 'update';
@@ -36,7 +37,8 @@ interface PositionFormData {
     MatChipsModule,
     MatAutocompleteModule,
     FormField,
-    FormsModule
+    FormsModule,
+    AvatarComponent
   ]
 })
 export class PositionFormComponent {
@@ -46,6 +48,8 @@ export class PositionFormComponent {
   private readonly pollPositionsStore = inject(PollPositionsStore);
   private readonly pollCandidatesStore = inject(PollCandidatesStore);
   public readonly announcer = inject(LiveAnnouncer);
+
+  public isPollDraft = computed(() => this.pollDetailsStore.isPollDraft());
 
   public candidateInput = viewChild<MatInput>('candidateInput');
 

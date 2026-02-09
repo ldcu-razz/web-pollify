@@ -5,6 +5,7 @@ import { PatchPollCandidate, PollCandidate, PostPollCandidate } from "@models/po
 import { GetPollPosition } from "@models/polls/poll-positions.type";
 import { patchState, signalStore, withComputed, withMethods, withProps, withState } from "@ngrx/signals";
 import { PollCandidatesService } from "@services/poll-candidates.service";
+import { PollDetailsStore } from "./poll-details.store";
 
 interface PollCandidatesState {
   candidates: PollCandidate[];
@@ -34,13 +35,14 @@ export const PollCandidatesStore = signalStore(
   { providedIn: 'root' },
   withState(initialState),
   withProps(() => ({
+    pollDetailsStore: inject(PollDetailsStore),
     pollCandidatesService: inject(PollCandidatesService),
     snackbar: inject(MatSnackBar),
   })),
   withComputed(({ candidates }) => ({
     isCandidateNotEmpty: computed(() => candidates().length > 0),
   })),
-  withMethods(({ pollCandidatesService, snackbar, ...store }) => ({
+  withMethods(({ pollCandidatesService, pollDetailsStore, snackbar, ...store }) => ({
     getPollCandidates: async (pollId: string): Promise<void> => {
       if (store.isCandidateNotEmpty()) {
         return;
@@ -63,9 +65,13 @@ export const PollCandidatesStore = signalStore(
     createPollCandidate: async (pollId: string, payload: PostPollCandidate): Promise<void> => {
       patchState(store, { formLoading: true });
       try {
+        const candidateLength = store.candidates().length;
+
         const result = await pollCandidatesService.createPollCandidate(pollId, payload);
         patchState(store, { candidates: [result, ...store.candidates()], formLoading: false });
         snackbar.open("Poll candidate created successfully", "Close", { duration: 3000 });
+
+        pollDetailsStore.udpateTotalCandidates(candidateLength + 1);
       } catch (error) {
         patchState(store, { error: error as string, formLoading: false });
         snackbar.open("Failed to create poll candidate", "Close", { duration: 3000 });
@@ -87,9 +93,13 @@ export const PollCandidatesStore = signalStore(
     deletePollCandidate: async (pollCandidateId: string): Promise<void> => {
       patchState(store, { deletingCandidate: true });
       try {
+        const candidateLength = store.candidates().length;
+
         await pollCandidatesService.deletePollCandidate(pollCandidateId);
         patchState(store, { candidates: store.candidates().filter(candidate => candidate.id !== pollCandidateId), deletingCandidate: false });
         snackbar.open("Poll candidate deleted successfully", "Close", { duration: 3000 });
+
+        pollDetailsStore.udpateTotalCandidates(candidateLength - 1);
       } catch (error) {
         patchState(store, { error: error as string, deletingCandidate: false });
         snackbar.open("Failed to delete poll candidate", "Close", { duration: 3000 });

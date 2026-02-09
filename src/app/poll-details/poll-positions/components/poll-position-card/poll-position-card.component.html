@@ -15,17 +15,19 @@
           <span>{{ totalPollPositionCandidates() }}</span>
         </div>
       </div>
-      <div class="flex items-center gap-2">
-        <button mat-icon-button [matMenuTriggerFor]="menu" (click)="$event.stopPropagation()">
-          <mat-icon>more_vert</mat-icon>
-        </button>
-        <mat-menu #menu="matMenu">
-          <button mat-menu-item (click)="openDeleteConfirmationDialog()">
-            <mat-icon>delete</mat-icon>
-            <span>Delete position</span>
+      @if (isPollDraft()) {
+        <div class="flex items-center gap-2">
+          <button mat-icon-button [matMenuTriggerFor]="menu" (click)="$event.stopPropagation()">
+            <mat-icon>more_vert</mat-icon>
           </button>
-        </mat-menu>
-      </div>
+          <mat-menu #menu="matMenu">
+            <button mat-menu-item (click)="openDeleteConfirmationDialog()">
+              <mat-icon>delete</mat-icon>
+              <span>Delete position</span>
+            </button>
+          </mat-menu>
+        </div>
+      }
     </div>
   </mat-card-actions>
 </mat-card>

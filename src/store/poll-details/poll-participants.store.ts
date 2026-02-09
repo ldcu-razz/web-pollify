@@ -53,15 +53,15 @@ export const PollParticipantsStore = signalStore(
   { providedIn: 'root' },
   withState(initialState),
   withProps(() => ({
+    pollDetailsStore: inject(PollDetailsStore),
     pollParticipantsService: inject(PollParticipantsService),
     groupsService: inject(GroupsService),
     snackbar: inject(MatSnackBar),
-    pollDetailsStore: inject(PollDetailsStore),
   })),
   withComputed((store) => ({
     pollId: computed(() => store.pollDetailsStore.poll()?.id ?? ''),
   })),
-  withMethods(({ pollParticipantsService, groupsService, snackbar, ...store }) => ({
+  withMethods(({ pollDetailsStore, pollParticipantsService, groupsService, snackbar, ...store }) => ({
     getPollParticipants: async (): Promise<void> => {
       patchState(store, { loading: true });
       try {
@@ -119,9 +119,13 @@ export const PollParticipantsStore = signalStore(
     createPollParticipant: async (payload: PostPollParticipants): Promise<void> => {
       patchState(store, { formLoading: true });
       try {
+        const participantLength = store.pollParticipants().length;
+
         const result = await pollParticipantsService.postPollParticipant(payload);
         patchState(store, { pollParticipants: [result, ...store.pollParticipants()], formLoading: false });
         snackbar.open("Poll participant added successfully", "Close", { duration: 3000 });
+
+        pollDetailsStore.udpateTotalParticipants(participantLength + 1);
       } catch (error) {
         console.error(error);
         snackbar.open("Failed to add poll participant", "Close", { duration: 3000 });
@@ -133,9 +137,13 @@ export const PollParticipantsStore = signalStore(
     bulkCreatePollParticipants: async (payload: BulkPostPollParticipants): Promise<void> => {
       patchState(store, { formLoading: true });
       try {
+        const participantLength = store.pollParticipants().length;
+
         const result = await pollParticipantsService.bulkPostPollParticipants(payload);
         patchState(store, { pollParticipants: [...store.pollParticipants(), ...result], formLoading: false });
         snackbar.open("Poll participants bulk created successfully", "Close", { duration: 3000 });
+
+        pollDetailsStore.udpateTotalParticipants(participantLength + result.length);
       } catch (error) {
         console.error(error);
         snackbar.open("Failed to bulk create poll participants", "Close", { duration: 3000 });
@@ -160,9 +168,13 @@ export const PollParticipantsStore = signalStore(
     deletePollParticipant: async (pollParticipantId: string): Promise<void> => {
       patchState(store, { deletingParticipant: true });
       try {
+        const participantLength = store.pollParticipants().length;
+        
         await pollParticipantsService.deletePollParticipant(pollParticipantId);
         patchState(store, { pollParticipants: store.pollParticipants().filter(participant => participant.id !== pollParticipantId), deletingParticipant: false });
         snackbar.open("Poll participant deleted successfully", "Close", { duration: 3000 });
+
+        pollDetailsStore.udpateTotalParticipants(participantLength - 1);
       } catch (error) {
         console.error(error);
         snackbar.open("Failed to delete poll participant", "Close", { duration: 3000 });
@@ -174,10 +186,14 @@ export const PollParticipantsStore = signalStore(
     deleteBulkPollParticipants: async (payload: DeleteBulkPollParticipants): Promise<void> => {
       patchState(store, { deletingParticipant: true });
       try {
+        const participantLength = store.pollParticipants().length;
+
         const ids = payload;
         await pollParticipantsService.deleteBulkPollParticipants(ids);
         patchState(store, { pollParticipants: store.pollParticipants().filter(participant => !ids.includes(participant.id)), deletingParticipant: false });
         snackbar.open("Poll participants deleted successfully", "Close", { duration: 3000 });
+
+        pollDetailsStore.udpateTotalParticipants(participantLength - ids.length);
       } catch (error) {
         console.error(error);
         snackbar.open("Failed to delete bulk poll participants", "Close", { duration: 3000 });
@@ -206,6 +222,7 @@ export const PollParticipantsStore = signalStore(
       patchState(store, { importingGroupParticipantsLoading: true });
       try {
         const participants = await pollParticipantsService.getGroupParticipants(groupId);
+        const participantLength = store.pollParticipants().length;
         const newPollParticipants: PollParticipants[] = participants.map(participant => ({
           id: crypto.randomUUID(),
           rfid_number: participant.rfid_number,
@@ -222,6 +239,8 @@ export const PollParticipantsStore = signalStore(
         const result = await pollParticipantsService.bulkPostPollParticipants(nonExistentPollParticipants);
         patchState(store, { pollParticipants: [...store.pollParticipants(), ...result], importingGroupParticipantsLoading: false });
         snackbar.open("Poll participants imported successfully", "Close", { duration: 3000 });
+
+        pollDetailsStore.udpateTotalParticipants(participantLength + result.length);
       } catch (error) {
         console.error(error);
         snackbar.open("Failed to import poll participants", "Close", { duration: 3000 });

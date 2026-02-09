@@ -12,21 +12,30 @@
       <p class="text-sm mat-text-secondary max-w-xl">{{ poll()?.description }}</p>
     </section>
     <section class="flex items-center gap-2">
-      <button matButton="outlined" color="primary" (click)="openEditPollDialog()">
-        <mat-icon>edit</mat-icon>
-        <span>Edit poll</span>
-      </button>
-      <button matButton="filled" color="primary">
-        <mat-icon>play_arrow</mat-icon>
-        <span>Start poll</span>
-      </button>
+      @if (isPollDraft()) {
+        <button matButton="outlined" color="primary" (click)="openEditPollDialog()">
+          <mat-icon>edit</mat-icon>
+          <span>Edit poll</span>
+        </button>
+        <button matButton="filled" color="primary" (click)="openPublishPollDialog()">
+          <mat-icon>publish</mat-icon>
+          <span>Publish poll</span>
+        </button>
+      }
+
+      @if (isPollPublished()) {
+        <button matButton="outlined" color="primary" (click)="openClosePollDialog()">
+          <mat-icon>close</mat-icon>
+          <span>Close poll</span>
+        </button>
+      }
     </section>
   </section>
   
   <section class="grid grid-cols-1 md:grid-cols-12 h-full w-full gap-4">
     <section class="col-span-1 md:col-span-8 mat-bg-surface-container-low p-4 rounded-xl">
       <section class="flex flex-col">
-        <h3 class="text-lg font-bold mb-2">Poll Dates</h3>
+        <h3 class="text-lg font-bold mb-2">Poll Schedule</h3>
         <section class="flex gap-2 flex-wrap">
           <mat-form-field appearance="outline" class="flex-1 min-w-[140px]">
             <mat-label>Start Date</mat-label>
@@ -52,14 +61,16 @@
           </mat-form-field>
         </section>
       </section>
-      <section class="flex justify-end gap-2">
-        <button matButton="outlined" color="primary" (click)="resetPollDuration()">
-          <span>Reset</span>
-        </button>
-        <button matButton="filled" color="primary" (click)="setPollDuration()">
-          <span>Set poll duration</span>
-        </button>
-      </section>
+      @if (isPollDraft()) {
+        <section class="flex justify-end gap-2">
+          <button matButton="outlined" color="primary" (click)="resetPollDuration()">
+            <span>Reset</span>
+          </button>
+          <button matButton="filled" color="primary" (click)="setPollDuration()">
+            <span>Set poll schedule</span>
+          </button>
+        </section>
+      }
     </section>
     <section class="col-span-1 md:col-span-4 flex flex-col gap-4 border border-(--mat-sys-outline-variant) rounded-xl p-4">
       <section class="flex flex-col">
@@ -86,17 +97,17 @@
       <section class="col-span-1 md:col-span-1 border border-(--mat-sys-outline-variant) flex flex-col rounded-xl p-4 h-full">
         <mat-icon class="size-10! text-[38px]! mat-text-secondary">person</mat-icon>
         <h3 class="text-lg">Total Candidates:</h3>
-        <p class="text-2xl font-bold mt-auto">100</p>
+        <p class="text-2xl font-bold mt-auto">{{ poll()?.total_candidates }}</p>
       </section>
       <section class="col-span-1 md:col-span-1 border border-(--mat-sys-outline-variant) flex flex-col rounded-xl p-4 h-full">
         <mat-icon class="size-10! text-[38px]! mat-text-secondary">diversity_3</mat-icon>
         <h3 class="text-lg">Total Participants:</h3>
-        <p class="text-2xl font-bold mt-auto">100</p>
+        <p class="text-2xl font-bold mt-auto">{{ poll()?.total_participants }}</p>
       </section>
       <section class="col-span-1 md:col-span-1 border border-(--mat-sys-outline-variant) flex flex-col rounded-xl p-4 h-full">
         <mat-icon class="size-10! text-[38px]! mat-text-secondary">list_alt</mat-icon>
         <h3 class="text-lg">Total Positions:</h3>
-        <p class="text-2xl font-bold mt-auto">100</p>
+        <p class="text-2xl font-bold mt-auto">{{ poll()?.total_positions }}</p>
       </section>
       <section class="col-span-1 md:col-span-1 border border-(--mat-sys-outline-variant) flex flex-col rounded-xl p-4 h-full">
         <mat-icon class="size-10! text-[38px]! mat-text-secondary">percent</mat-icon>

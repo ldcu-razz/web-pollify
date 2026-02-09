@@ -14,6 +14,7 @@ import { PollParticipantDeleteConfirmationComponent } from "../poll-participant-
 import { MatDialog } from "@angular/material/dialog";
 import { PollPartificipantsFormComponent } from "../poll-partificipants-form/poll-partificipants-form.component";
 import { PollParticipantStatusSchema } from "@models/polls/poll-participants.schema";
+import { PollDetailsStore } from "@store/poll-details/poll-details.store";
 
 
 @Component({
@@ -34,8 +35,11 @@ import { PollParticipantStatusSchema } from "@models/polls/poll-participants.sch
   ]
 })
 export class PollParticipantsTableComponent {
+  private readonly pollDetailsStore = inject(PollDetailsStore);
   private readonly pollParticipantsStore = inject(PollParticipantsStore);
   private readonly dialog = inject(MatDialog);
+
+  public isPollDraft = computed(() => this.pollDetailsStore.isPollDraft());
 
   public participants = computed(() => this.pollParticipantsStore.pollParticipants());
 

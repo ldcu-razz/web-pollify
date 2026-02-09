@@ -24,6 +24,8 @@ export class PollParticipantsComponent implements OnInit {
   private readonly pollParticipantsStore = inject(PollParticipantsStore);
   private readonly dialog = inject(MatDialog);
 
+  public isPollDraft = computed(() => this.pollDetailsStore.isPollDraft());
+
   public searchQuery = signal('');
 
   public pollId = computed(() => this.pollDetailsStore.poll()?.id ?? '');

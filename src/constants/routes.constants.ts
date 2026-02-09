@@ -6,7 +6,7 @@ export const ROUTES = {
     POLL_DETAILS_CANDIDATES: 'candidates',
     POLL_DETAILS_POSITIONS: 'positions',
     POLL_DETAILS_PARTICIPANTS: 'participants',
-    POLL_DETAILS_SETTINGS: 'settings',
+    POLL_DETAILS_VOTINGS: 'votings',
     GROUPS: 'groups',
     GROUP_DETAILS: ':id',
     USERS: 'users',

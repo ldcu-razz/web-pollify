@@ -5,10 +5,12 @@
       <p class="text-sm text-gray-500">Manage your poll positions.</p>
     </section>
 
-    <button matButton="filled" color="primary" (click)="openCreatePositionDialog()">
-      <mat-icon>add</mat-icon>
-      Add Position
-    </button>
+    @if (isPollDraft()) {
+      <button matButton="filled" color="primary" (click)="openCreatePositionDialog()">
+        <mat-icon>add</mat-icon>
+        Add Position
+      </button>
+    }
   </section>
 
   <section class="grid grid-cols-1 md:grid-cols-4 gap-4">

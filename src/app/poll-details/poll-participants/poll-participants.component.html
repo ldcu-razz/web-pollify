@@ -5,16 +5,18 @@
       <p class="text-sm text-gray-500">Manage your poll candidates. This will be used who will vote in the poll.</p>
     </section>
 
-    <div class="flex items-center gap-2 shrink-0">
-      <button matButton="outlined" color="primary" (click)="openImportParticipantsDialog()">
-        <mat-icon>publish</mat-icon>
-        Import Participants
-      </button>
-      <button matButton="filled" color="primary" (click)="openCreateParticipantDialog()">
-        <mat-icon>add</mat-icon>
-        Add Participant
-      </button>
-    </div>
+    @if (isPollDraft()) {
+      <div class="flex items-center gap-2 shrink-0">
+        <button matButton="outlined" color="primary" (click)="openImportParticipantsDialog()">
+          <mat-icon>publish</mat-icon>
+          Import Participants
+        </button>
+        <button matButton="filled" color="primary" (click)="openCreateParticipantDialog()">
+          <mat-icon>add</mat-icon>
+          Add Participant
+        </button>
+      </div>
+    }
   </section>
 
   <section class="flex align-center gap-4">

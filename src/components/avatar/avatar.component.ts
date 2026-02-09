@@ -1,7 +1,7 @@
 import { ChangeDetectionStrategy, Component, computed, input } from "@angular/core";
 import { NgOptimizedImage } from "@angular/common";
 
-export type AvatarSize = 'xs' | 'sm' | 'md' | 'lg' | 'xl';
+export type AvatarSize = 'xxs' | 'xs' | 'sm' | 'md' | 'lg' | 'xl';
 
 @Component({
   selector: 'app-avatar',
@@ -26,6 +26,7 @@ export class AvatarComponent {
 
   protected sizeClasses = computed(() => {
     const sizeMap: Record<AvatarSize, string> = {
+      xxs: 'size-4 text-xs',
       xs: 'size-6 text-xs',
       sm: 'size-8 text-sm',
       md: 'size-10 text-base',
@@ -37,6 +38,7 @@ export class AvatarComponent {
 
   protected pixelSize = computed(() => {
     const sizeMap: Record<AvatarSize, number> = {
+      xxs: 16,
       xs: 24,
       sm: 32,
       md: 40,

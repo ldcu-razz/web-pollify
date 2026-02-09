@@ -1,0 +1,27 @@
+<section class="flex flex-col gap-4 max-w-xl mx-auto">
+  <section class="flex justify-between items-center">
+    <section class="flex flex-col gap-1">
+      <h1 class="text-2xl font-bold">Poll Votings</h1>
+      <p>
+        Votings and result are displayed here.
+      </p>
+    </section>
+    @if (!isVotingPositionsResultEmpty()) {
+      <button matButton="filled" color="primary">
+        <mat-icon>download</mat-icon>
+        Download Tally
+      </button>
+    }
+  </section>
+
+  <section class="flex flex-col gap-6">
+    @for (result of votingPositionResults(); track result.position.id) {
+      <app-poll-vote-card [pollVotingPositionResult]="result"></app-poll-vote-card>
+    } @empty {
+      <div class="flex flex-col items-center gap-2 mt-3 border border-(--mat-sys-outline-variant) border-dashed rounded-lg p-4">
+        <mat-icon>search_off</mat-icon>
+        <p class="text-sm text-gray-500">No voting positions result found</p>
+      </div>
+    }
+  </section>
+</section>

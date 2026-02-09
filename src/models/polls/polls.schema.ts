@@ -1,7 +1,7 @@
 import { PaginationSchema } from "@models/common/common.schema";
 import z from "zod";
 
-export const PollStatusSchema = z.enum(['active', 'draft', 'closed']);
+export const PollStatusSchema = z.enum(['published', 'draft', 'closed']);
 
 export const PollSchema = z.object({
   id: z.uuid(),
@@ -16,7 +16,11 @@ export const PollSchema = z.object({
   updated_at: z.string(),
 });
 
-export const GetPollSchema = PollSchema;
+export const GetPollSchema = PollSchema.extend({
+  total_candidates: z.number(),
+  total_participants: z.number(),
+  total_positions: z.number(),
+});
 
 export const GetPollsPaginationSchema = PaginationSchema.extend({
   data: z.array(GetPollSchema),

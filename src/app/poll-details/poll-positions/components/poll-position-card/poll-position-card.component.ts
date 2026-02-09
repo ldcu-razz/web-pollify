@@ -9,6 +9,7 @@ import { GetPollPosition } from "@models/polls/poll-positions.type";
 import { PollPositionDeleteConfirmationComponent } from "../poll-position-delete-confirmation/poll-position-delete-confirmation.component";
 import { MatDialog } from "@angular/material/dialog";
 import { PositionFormComponent } from "../position-form/position-form.component";
+import { PollDetailsStore } from "@store/poll-details/poll-details.store";
 
 @Component({
   selector: 'app-poll-position-card',
@@ -18,7 +19,10 @@ import { PositionFormComponent } from "../position-form/position-form.component"
 })
 export class PollPositionCardComponent {
   private readonly dialog = inject(MatDialog);
-  
+  private readonly pollDetailsStore = inject(PollDetailsStore);
+
+  public isPollDraft = computed(() => this.pollDetailsStore.isPollDraft());
+
   public pollPosition = input.required<GetPollPosition>();
 
   public pollPositionCandidates = computed(() => this.pollPosition()?.poll_candidates ?? []);

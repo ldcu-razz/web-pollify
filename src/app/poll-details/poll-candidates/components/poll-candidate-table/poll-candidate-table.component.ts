@@ -11,14 +11,17 @@ import { DatePipe } from "@angular/common";
 import { PollCandidateDeleteConfirmationComponent } from "../poll-candidate-delete-confirmation/poll-candidate-delete-confirmation.component";
 import { MatDialog } from "@angular/material/dialog";
 import { PollCandidateFormComponent } from "../poll-candidate-form/poll-candidate-form.component";
+import { PollDetailsStore } from "@store/poll-details/poll-details.store";
+import { AvatarComponent } from "@components/avatar/avatar.component";
 
 @Component({
   selector: 'app-poll-candidate-table',
   templateUrl: './poll-candidate-table.component.html',
   styleUrls: ['./poll-candidate-table.component.scss'],
-  imports: [MatTableModule, MatPaginatorModule, MatSortModule, DatePipe, MatIconModule, MatButtonModule, MatMenuModule, MatProgressSpinnerModule]
+  imports: [MatTableModule, MatPaginatorModule, MatSortModule, DatePipe, MatIconModule, MatButtonModule, MatMenuModule, MatProgressSpinnerModule, AvatarComponent]
 })
 export class PollCandidateTableComponent {
+  private readonly pollDetailsStore = inject(PollDetailsStore);
   private readonly pollCandidatesStore = inject(PollCandidatesStore);
   private readonly dialog = inject(MatDialog);
 
@@ -27,6 +30,8 @@ export class PollCandidateTableComponent {
   public pagination = computed(() => this.pollCandidatesStore.pagination());
 
   public loading = computed(() => this.pollCandidatesStore.loading());
+
+  public isPollDraft = computed(() => this.pollDetailsStore.isPollDraft());
 
   public displayedColumns = ['avatar', 'name', 'description', 'position', 'updated_at', 'actions'];
 

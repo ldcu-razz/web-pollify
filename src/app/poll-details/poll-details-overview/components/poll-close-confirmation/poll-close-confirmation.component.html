@@ -1,0 +1,15 @@
+<section class="flex flex-col gap-4 px-8 py-6 mat-bg-surface-container-lowest">
+  <h2 class="text-2xl font-bold">Are you sure you want to close this poll?</h2>
+  <p>This will publish the poll and make it visible to all participants on the given schedule.</p>
+  <section class="flex justify-end gap-2">
+    <button matButton="filled" color="primary" (click)="closePoll()" [disabled]="closingPollLoading()">
+      <div class="flex items-center gap-2">
+        @if (closingPollLoading()) {
+          <mat-progress-spinner mode="indeterminate" diameter="20"></mat-progress-spinner>
+        }
+        <span>Close Poll</span>
+      </div>
+    </button>
+    <button matButton="tonal" color="primary" (click)="closeDialog()">Cancel</button>
+  </section>
+</section>

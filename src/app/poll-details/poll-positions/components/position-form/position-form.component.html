@@ -26,7 +26,10 @@
       <mat-chip-grid #selectedCandidatesGrid aria-label="Candidate selection">
         @for (candidate of selectedCandidates(); track $index) {
           <mat-chip-row (removed)="removeCandidate(candidate)">
-            <span class="text-sm">{{candidate.name}}</span>
+            <div class="flex items-center gap-2">
+              <app-avatar [avatar]="candidate.avatar" [name]="candidate.name" [size]="'xxs'"></app-avatar>
+              <span class="text-sm">{{candidate.name}}</span>
+            </div>
             <button matChipRemove [attr.aria-label]="'remove ' + candidate.name">
               <mat-icon>cancel</mat-icon>
             </button>
@@ -44,7 +47,12 @@
       />
       <mat-autocomplete #candidateAutocomplete="matAutocomplete" (optionSelected)="selectCandidate($event); candidateInput.value = ''">
         @for (candidate of filteredCandidates(); track candidate.id) {
-          <mat-option [value]="candidate">{{candidate.name}}</mat-option>
+          <mat-option [value]="candidate">
+            <div class="flex items-center gap-2">
+              <app-avatar [avatar]="candidate.avatar" [name]="candidate.name" [size]="'sm'"></app-avatar>
+              <span>{{candidate.name}}</span>
+            </div>
+          </mat-option>
         }
       </mat-autocomplete>
     </mat-form-field>
@@ -52,16 +60,18 @@
 
   <section class="flex justify-end gap-2">
     <button matButton="tonal" color="primary" (click)="closeDialog()">Cancel</button>
-    <button matButton="filled" color="primary" [disabled]="(isFormInvalid() && isFormTouched()) || formLoading() || updatingPollPosition()" (click)="submitForm()">
-      <div class="flex items-center gap-2">
-        @if (formLoading() || updatingPollPosition()) {
-          <mat-progress-spinner mode="indeterminate" diameter="18"></mat-progress-spinner>
-        }
-        @else {
-          <mat-icon>{{ mode() === "create" ? "add" : "edit" }}</mat-icon>
-        }
-        <span>{{ submitFormLabel() }}</span>
-      </div>
-    </button>
+    @if (isPollDraft()) {
+      <button matButton="filled" color="primary" [disabled]="(isFormInvalid() && isFormTouched()) || formLoading() || updatingPollPosition()" (click)="submitForm()">
+        <div class="flex items-center gap-2">
+          @if (formLoading() || updatingPollPosition()) {
+            <mat-progress-spinner mode="indeterminate" diameter="18"></mat-progress-spinner>
+          }
+          @else {
+            <mat-icon>{{ mode() === "create" ? "add" : "edit" }}</mat-icon>
+          }
+          <span>{{ submitFormLabel() }}</span>
+        </div>
+      </button>
+    }
   </section>
 </section>

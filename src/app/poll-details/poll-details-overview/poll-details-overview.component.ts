@@ -12,6 +12,8 @@ import { DatePipe } from "@angular/common";
 import { TextTransformPipe } from "@pipes/text-transform.pipe";
 import { MatDialog } from "@angular/material/dialog";
 import { PollFormComponent } from "src/app/polls/components/poll-form/poll-form.component";
+import { PollPublishConfirmationComponent } from "./components/poll-publish-confirmation/poll-publish-confirmation.component";
+import { PollCloseConfirmationComponent } from "./components/poll-close-confirmation/poll-close-confirmation.component";
 
 @Component({
   selector: 'app-poll-details-overview',
@@ -39,6 +41,10 @@ export class PollDetailsOverviewComponent {
   public poolLoading = computed(() => this.pollDetailsStore.loading());
 
   public poll = computed(() => this.pollDetailsStore.poll());
+
+  public isPollPublished = computed(() => this.pollDetailsStore.isPollPublished());
+  public isPollClosed = computed(() => this.pollDetailsStore.isPollClosed());
+  public isPollDraft = computed(() => this.pollDetailsStore.isPollDraft());
 
   public startDate = signal<Date | null>(null);
   public startTime = signal<string>('09:00');
@@ -114,5 +120,25 @@ export class PollDetailsOverviewComponent {
     this.startTime.set('09:00');
     this.endDate.set(null);
     this.endTime.set('17:00');
+  }
+
+  public openPublishPollDialog(): void {
+    this.dialog.open(PollPublishConfirmationComponent, {
+      width: '100%',
+      maxWidth: '600px',
+      data: {
+        pollId: this.poll()?.id ?? '',
+      },
+    });
+  }
+
+  public openClosePollDialog(): void {
+    this.dialog.open(PollCloseConfirmationComponent, {
+      width: '100%',
+      maxWidth: '600px',
+      data: {
+        pollId: this.poll()?.id ?? '',
+      },
+    });
   }
 }

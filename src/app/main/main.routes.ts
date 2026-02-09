@@ -14,6 +14,7 @@ import { PollDetailsOverviewComponent } from "../poll-details/poll-details-overv
 import { PollCandidatesComponent } from "../poll-details/poll-candidates/poll-candidates.component";
 import { PollPositionsComponent } from "../poll-details/poll-positions/poll-positions.components";
 import { PollParticipantsComponent } from "../poll-details/poll-participants/poll-participants.component";
+import { PollVotingsComponent } from "../poll-details/poll-votings/poll-votings.component";
 
 export const mainRoutes: Routes = [
   {
@@ -46,6 +47,10 @@ export const mainRoutes: Routes = [
           {
             path: ROUTES_CONSTANTS.MAIN.POLL_DETAILS_PARTICIPANTS,
             component: PollParticipantsComponent,
+          },
+          {
+            path: ROUTES_CONSTANTS.MAIN.POLL_DETAILS_VOTINGS,
+            component: PollVotingsComponent,
           },
         ],
       },

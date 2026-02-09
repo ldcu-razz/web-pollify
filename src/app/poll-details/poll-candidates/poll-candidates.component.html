@@ -5,10 +5,12 @@
       <p class="text-sm text-gray-500">Manage your poll candidates.</p>
     </section>
 
-    <button matButton="filled" color="primary" (click)="openCreateCandidateDialog()">
-      <mat-icon>add</mat-icon>
-      Add Candidate
-    </button>
+    @if (isPollDraft()) {
+      <button matButton="filled" color="primary" (click)="openCreateCandidateDialog()">
+        <mat-icon>add</mat-icon>
+        Add Candidate
+      </button>
+    }
   </section>
 
   <app-poll-candidate-table></app-poll-candidate-table>

@@ -22,6 +22,8 @@ export class PollCandidatesComponent implements OnInit {
   private readonly pollCandidatesStore = inject(PollCandidatesStore);
 
   public pollId = computed(() => this.pollDetailsStore.poll()?.id ?? '');
+  
+  public isPollDraft = computed(() => this.pollDetailsStore.isPollDraft());
 
   public ngOnInit(): void {
     this.pollCandidatesStore.getPollCandidates(this.pollId());
