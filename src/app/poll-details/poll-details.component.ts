@@ -13,6 +13,7 @@ import { PollDetailsNavbarComponent } from "./components/poll-details-navbar/pol
 import { ActivatedRoute, RouterOutlet } from "@angular/router";
 import { PollPositionsStore } from "@store/poll-details/poll-positions.store";
 import { PollCandidatesStore } from "@store/poll-details/poll-candidates.store";
+import { PollParticipantsStore } from "@store/poll-details/poll-participants.store";
 
 @Component({
   selector: 'app-poll-details',
@@ -36,6 +37,7 @@ export class PollDetailsComponent implements OnInit, OnDestroy {
   private readonly pollDetailsStore = inject(PollDetailsStore);
   private readonly pollPositionsStore = inject(PollPositionsStore);
   private readonly pollCandidatesStore = inject(PollCandidatesStore);
+  private readonly pollParticipantsStore = inject(PollParticipantsStore);
   
   private readonly route = inject(ActivatedRoute);
 
@@ -53,5 +55,6 @@ export class PollDetailsComponent implements OnInit, OnDestroy {
     this.pollDetailsStore.resetPollDetails();
     this.pollPositionsStore.resetPollPositions();
     this.pollCandidatesStore.resetPollCandidates();
+    this.pollParticipantsStore.resetPollParticipants();
   }
 }

@@ -74,6 +74,16 @@ export class ParticipantsController {
     return response;
   }
 
+  public async getAllParticipants(groupId: string): Promise<GetParticipant[]> {
+    const supabase = await this.supabaseService.supabaseClient();
+    const { data, error } = await supabase.from(this.participantsTable).select('*,workspace:workspace_id(id,name),group:group_id(id,name)').eq('group_id', groupId);
+
+    if (error) {
+      throw error;
+    }
+    return data;
+  }
+
   public async getParticipant(participantId: string): Promise<GetParticipant> {
     const supabase = await this.supabaseService.supabaseClient();
     const { data, error } = await supabase.from(this.participantsTable).select('*,workspace:workspace_id(id,name),group:group_id(id,name)')

@@ -1,0 +1,54 @@
+<section class="flex flex-col gap-4 px-8 py-6 mat-bg-surface-container-lowest">
+  <section class="flex flex-col gap-2">
+    <h3 class="text-xl font-bold">Import Participants</h3>
+    <p class="text-sm">Choose a group to import participants</p>
+  </section>
+
+  <section class="flex flex-col gap-2">
+    <mat-form-field appearance="outline" class="w-full">
+      <mat-label>Search group name</mat-label>
+      <input matInput type="text" [(ngModel)]="searchQuery" (input)="searchGroups()" />
+    </mat-form-field>
+  </section>
+  
+  @if (groupsSearchLoading()) {
+    <div class="flex justify-center items-center gap-2">
+      <mat-progress-spinner mode="indeterminate" diameter="24"></mat-progress-spinner>
+      <span>Searching groups...</span>
+    </div>
+  } @else {
+    @if (isGroupsSearchEmpty()) {
+      <div class="flex justify-center items-center gap-2">
+        <span>No groups found</span>
+      </div>
+    } @else {
+      <form class="-mt-8!">
+        <mat-selection-list #groupList [formField]="groupListForm.groupId" name="groups" [multiple]="false">
+          @for (group of groups(); track group.id) {
+            <mat-list-option [value]="group.id" [disabled]="group.total_participants === 0">
+              <div class="flex items-center gap-2">
+                <span>{{group.name}}</span>
+                <div class="flex items-center gap-1">
+                  <mat-icon class="text-[16px]! size-[16px]! mat-text-secondary">person</mat-icon>
+                  <span class="text-sm text-gray-500">({{group.total_participants}} participants)</span>
+                </div>
+              </div>
+            </mat-list-option>
+          }
+        </mat-selection-list>
+      </form>
+    }
+  }
+  
+  <section class="flex justify-end items-center gap-2">
+    <button matButton="outlined" color="primary" (click)="closeDialog()">Cancel</button>
+    <button matButton="filled" color="primary" (click)="importParticipants()" [disabled]="isFormInvalid() || importingGroupParticipantsLoading()">
+      <div class="flex items-center gap-2">
+        @if (importingGroupParticipantsLoading()) {
+          <mat-progress-spinner mode="indeterminate" diameter="24"></mat-progress-spinner>
+        }
+        <span>Import Group</span>
+      </div>
+    </button>
+  </section>
+</section>

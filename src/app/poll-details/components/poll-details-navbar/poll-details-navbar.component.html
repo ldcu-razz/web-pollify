@@ -10,7 +10,7 @@
     <button matButton="text" color="primary" class="nav-item" [class.active]="isOverviewActive()" (click)="navigateToOverview()">Overview</button>
     <button matButton="text" color="primary" class="nav-item" [class.active]="isCandidatesActive()" (click)="navigateToCandidates()">Candidates</button>
     <button matButton="text" color="primary" class="nav-item" [class.active]="isPositionsActive()" (click)="navigateToPositions()">Positions</button>
-    <button matButton="text" color="primary" class="nav-item" [class.active]="activeNavItem() === 'participants'" (click)="setActiveNavItem('participants')">Participants</button>
+    <button matButton="text" color="primary" class="nav-item" [class.active]="isParticipantsActive()" (click)="navigateToParticipants()">Participants</button>
     <button matButton="text" color="primary" class="nav-item" [class.active]="activeNavItem() === 'results'" (click)="setActiveNavItem('results')">Results</button>
   </section>
 </nav>

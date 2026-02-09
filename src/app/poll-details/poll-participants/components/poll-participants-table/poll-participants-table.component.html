@@ -1,0 +1,82 @@
+<div class="table-container">
+  <table mat-table [dataSource]="participants()">
+    <ng-container matColumnDef="rfid_number">
+      <th mat-header-cell *matHeaderCellDef> RFID Number </th>
+      <td mat-cell *matCellDef="let element"> {{element.rfid_number}} </td>
+    </ng-container>
+
+    <ng-container matColumnDef="name">
+      <th mat-header-cell *matHeaderCellDef> Name </th>  
+      <td mat-cell *matCellDef="let element"> {{element.name}} </td>
+    </ng-container>
+
+    <ng-container matColumnDef="department">
+      <th mat-header-cell *matHeaderCellDef> Department </th>
+      <td mat-cell *matCellDef="let element">
+        <div class="max-w-[280px] line-clamp-2 text-ellipsis overflow-hidden">
+          {{element.department}}
+        </div>
+      </td>
+    </ng-container>
+
+    <ng-container matColumnDef="poll_status">
+      <th mat-header-cell *matHeaderCellDef> Status </th>
+      <td mat-cell *matCellDef="let element">
+        <mat-chip>
+          <div class="flex items-center gap-2">
+            @if (element.poll_status === pollParticipantStatus.pending) {
+              <mat-icon class="text-[16px]! size-[16px]! mat-text-secondary">schedule</mat-icon>
+            }
+            @if (element.poll_status === pollParticipantStatus.done) {
+              <mat-icon class="text-[16px]! size-[16px]! mat-text-secondary">check</mat-icon>
+            }
+            <span class="font-bold">{{element.poll_status | textTransform}}</span>
+          </div>
+        </mat-chip>
+      </td>
+    </ng-container>
+
+    <ng-container matColumnDef="updated_at">
+      <th mat-header-cell *matHeaderCellDef> Updated At </th>
+      <td mat-cell *matCellDef="let element"> {{element.updated_at | date:'medium'}} </td>
+    </ng-container>
+
+    <ng-container matColumnDef="actions">
+      <th mat-header-cell *matHeaderCellDef> Actions </th>
+      <td mat-cell *matCellDef="let element">
+        <button mat-icon-button [matMenuTriggerFor]="candidateMenu" (click)="$event.stopPropagation()"><mat-icon>more_vert</mat-icon></button>
+        <mat-menu #candidateMenu="matMenu">
+          <button mat-menu-item (click)="openEditParticipantDialog(element.id)">
+            <mat-icon>edit</mat-icon>
+            <span>Edit participant</span>
+          </button>
+          <button mat-menu-item (click)="openDeleteParticipantConfirmationDialog(element.id)">
+            <mat-icon>delete</mat-icon>
+            <span>Delete participant</span>
+          </button>
+        </mat-menu>
+      </td>
+    </ng-container>
+
+    <ng-container matColumnDef="loading">
+      <td mat-footer-cell *matFooterCellDef [attr.colspan]="displayedColumns.length">
+        <div class="flex justify-center items-center py-4 gap-2">
+          <mat-spinner diameter="24"></mat-spinner>
+          <span>Loading...</span>
+        </div>
+      </td>
+    </ng-container>
+
+    <tr mat-header-row *matHeaderRowDef="displayedColumns"></tr>
+    <tr mat-row *matRowDef="let row; columns: displayedColumns" [class.hidden]="loading() || searchLoading()"></tr>
+    <tr mat-footer-row *matFooterRowDef="['loading']" [class.hidden]="!loading() && !searchLoading()"></tr>
+    <tr class="mat-row" *matNoDataRow [class.hidden]="loading() || searchLoading()">
+      <td class="mat-cell text-center py-8" [attr.colspan]="displayedColumns.length">
+        <div class="flex justify-center items-center py-8 gap-2">
+          <mat-icon>search_off</mat-icon>
+          <span>No polls found</span>
+        </div>
+      </td>
+    </tr>
+  </table>
+</div>

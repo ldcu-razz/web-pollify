@@ -1,0 +1,33 @@
+<section class="w-full flex flex-col h-full">
+  <section class="flex justify-between items-center gap-6 mb-6">
+    <section class="flex flex-col gap-2">
+      <h1 class="text-2xl font-bold">Participants</h1>
+      <p class="text-sm text-gray-500">Manage your poll candidates. This will be used who will vote in the poll.</p>
+    </section>
+
+    <div class="flex items-center gap-2 shrink-0">
+      <button matButton="outlined" color="primary" (click)="openImportParticipantsDialog()">
+        <mat-icon>publish</mat-icon>
+        Import Participants
+      </button>
+      <button matButton="filled" color="primary" (click)="openCreateParticipantDialog()">
+        <mat-icon>add</mat-icon>
+        Add Participant
+      </button>
+    </div>
+  </section>
+
+  <section class="flex align-center gap-4">
+    <div class="flex items-center gap-2 max-w-sm w-full">
+      <mat-form-field appearance="outline" class="w-full">
+        <mat-icon matPrefix>search</mat-icon>
+        <mat-label>Search by name, RFID number</mat-label>
+        <input matInput type="text" [(ngModel)]="searchQuery" (input)="searchPollParticipants()">
+      </mat-form-field>
+    </div>
+  </section>
+
+  <section class="flex flex-col gap-2">
+    <app-poll-participants-table></app-poll-participants-table>
+  </section>
+</section>
