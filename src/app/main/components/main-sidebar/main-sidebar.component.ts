@@ -16,7 +16,7 @@ export class MainSidebarComponent {
     {
       label: 'Dashboard',
       icon: 'home',
-      path: '/home',
+      path: `${ROUTES_CONSTANTS.MAIN.DASHBOARD}`,
     },
     {
       label: 'Polls',

@@ -15,6 +15,7 @@ import { PollCandidatesComponent } from "../poll-details/poll-candidates/poll-ca
 import { PollPositionsComponent } from "../poll-details/poll-positions/poll-positions.components";
 import { PollParticipantsComponent } from "../poll-details/poll-participants/poll-participants.component";
 import { PollVotingsComponent } from "../poll-details/poll-votings/poll-votings.component";
+import { DashboardComponent } from "../dashboard/dashboard.component";
 
 export const mainRoutes: Routes = [
   {
@@ -27,6 +28,10 @@ export const mainRoutes: Routes = [
       {
         path: ROUTES_CONSTANTS.MAIN.POLLS,
         component: PollsComponent,
+      },
+      {
+        path: ROUTES_CONSTANTS.MAIN.DASHBOARD,
+        component: DashboardComponent,
       },
       {
         path: `${ROUTES_CONSTANTS.MAIN.POLLS}/${ROUTES_CONSTANTS.MAIN.POLL_DETAILS}`,
