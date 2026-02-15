@@ -1,14 +1,14 @@
 import { computed, inject } from '@angular/core';
 import { MatSnackBar } from '@angular/material/snack-bar';
 import { Pagination } from '@models/common/common.type';
-import { GetPaginatedWorkspacesFilters, PostWorkspace, PutWorkspace, Workspace } from '@models/workspace/workspace.type';
+import { GetPaginatedWorkspacesFilters, GetWorkspace, PostWorkspace, PutWorkspace, Workspace } from '@models/workspace/workspace.type';
 import { signalStore, withProps, withState, withMethods, patchState, withComputed } from '@ngrx/signals';
 import { rxMethod } from '@ngrx/signals/rxjs-interop';
 import { WorkspacesService } from '@services/workspaces.service';
 import { debounceTime, distinctUntilChanged, pipe, switchMap, tap } from 'rxjs';
 
 interface WorkspaceState {
-  workspaces: Workspace[];
+  workspaces: GetWorkspace[];
   pagination: Pagination;
   loading: boolean;
   searchQuery: string;
