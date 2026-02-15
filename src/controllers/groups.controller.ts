@@ -23,7 +23,8 @@ export class GroupsController {
     const getGroupsQuery = supabase
       .from(this.groupsTable)
       .select('*, total_participants:participants(count)')
-      .range((page - 1) * limit, (page * limit) - 1);
+      .range((page - 1) * limit, (page * limit) - 1)
+      .order('created_at', { ascending: false });
     
     if (query) {
       getGroupsQuery.filter('name', 'ilike', `%${query}%`);

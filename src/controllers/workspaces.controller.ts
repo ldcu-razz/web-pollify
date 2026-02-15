@@ -19,7 +19,10 @@ export class WorkspacesController {
     const supabase = await this.supabase.supabaseClient();
     const query = filters.q ?? null;
   
-    const getWorkspacesQuery = supabase.from(this.workspacesTable).select(this.getWorkspaceSelectQuery).range((pagination.page - 1) * pagination.limit, pagination.page * pagination.limit);
+    const getWorkspacesQuery = supabase.from(this.workspacesTable)
+      .select(this.getWorkspaceSelectQuery)
+      .range((pagination.page - 1) * pagination.limit, pagination.page * pagination.limit)
+      .order('createdAt', { ascending: false });
     if (query) {
       getWorkspacesQuery.filter('name', 'ilike', `%${query}%`);
     }

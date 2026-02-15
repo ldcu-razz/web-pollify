@@ -117,7 +117,7 @@ export const GroupsStore = signalStore(
       patchState(store, { formLoading: true });
       try {
         const result = await groupsService.createGroup(group);
-        patchState(store, { groups: [...store.groups(), result], loading: false });
+        patchState(store, { groups: [result, ...store.groups()], loading: false });
         snackbar.open("Group created successfully", "Close", { duration: 3000 });
       } catch (error) {
         patchState(store, { error: error as string, formLoading: false });

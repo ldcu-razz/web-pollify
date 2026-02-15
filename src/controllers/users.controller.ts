@@ -18,7 +18,7 @@ export class UsersController {
     const role = filters.role ?? null;
 
     const getUsersQuery = supabase.from(this.usersTable).select('*')
-      .range((pagination.page - 1) * pagination.limit, (pagination.page * pagination.limit) - 1);
+      .range((pagination.page - 1) * pagination.limit, (pagination.page * pagination.limit) - 1).order('createdAt', { ascending: false });
     if (query) {
       getUsersQuery.or(`email.ilike.%${query}%,first_name.ilike.%${query}%,last_name.ilike.%${query}%`);
     }
