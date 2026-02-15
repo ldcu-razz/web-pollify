@@ -1,7 +1,7 @@
 import { PaginationSchema } from "@models/common/common.schema";
 import z from "zod";
 
-export const PollParticipantStatusSchema = z.enum(['pending', 'done']);
+export const PollParticipantStatusSchema = z.enum(['pending', 'voted']);
 
 export const PollParticipantsSchema = z.object({
   id: z.string(),

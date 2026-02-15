@@ -7,21 +7,30 @@
       </p>
     </section>
     @if (!isVotingPositionsResultEmpty()) {
-      <button matButton="filled" color="primary">
+      <button matButton="filled" color="primary" (click)="downloadTallyCsv()">
         <mat-icon>download</mat-icon>
         Download Tally
       </button>
     }
   </section>
 
-  <section class="flex flex-col gap-6">
-    @for (result of votingPositionResults(); track result.position.id) {
-      <app-poll-vote-card [pollVotingPositionResult]="result"></app-poll-vote-card>
-    } @empty {
-      <div class="flex flex-col items-center gap-2 mt-3 border border-(--mat-sys-outline-variant) border-dashed rounded-lg p-4">
-        <mat-icon>search_off</mat-icon>
-        <p class="text-sm text-gray-500">No voting positions result found</p>
-      </div>
-    }
-  </section>
+  @if (loading()) {
+    <div class="flex justify-center items-center gap-4 mt-12 h-full">
+      <mat-progress-spinner mode="indeterminate" diameter="24"></mat-progress-spinner>
+      <span>Loading votings...</span>
+    </div>
+  }
+
+  @if (!loading()) {
+    <section class="flex flex-col gap-6">
+      @for (result of votingPositionResults(); track result.position.id) {
+        <app-poll-vote-card [pollVotingPositionResult]="result" [totalVotings]="totalVotings()"></app-poll-vote-card>
+      } @empty {
+        <div class="flex flex-col items-center gap-2 mt-3 border border-(--mat-sys-outline-variant) border-dashed rounded-lg p-4">
+          <mat-icon>search_off</mat-icon>
+          <p class="text-sm text-gray-500">No voting positions result found</p>
+        </div>
+      }
+    </section>
+  }
 </section>

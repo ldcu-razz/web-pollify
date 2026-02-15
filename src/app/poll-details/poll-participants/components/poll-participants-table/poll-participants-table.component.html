@@ -27,7 +27,7 @@
             @if (element.poll_status === pollParticipantStatus.pending) {
               <mat-icon class="text-[16px]! size-[16px]! mat-text-secondary">schedule</mat-icon>
             }
-            @if (element.poll_status === pollParticipantStatus.done) {
+            @if (element.poll_status === pollParticipantStatus.voted) {
               <mat-icon class="text-[16px]! size-[16px]! mat-text-secondary">check</mat-icon>
             }
             <span class="font-bold">{{element.poll_status | textTransform}}</span>

@@ -1,0 +1,18 @@
+:host ::ng-deep .voted-option.mdc-list-item--disabled {
+  --mat-list-list-item-disabled-label-text-opacity: 1;
+  --mat-list-list-item-disabled-leading-icon-opacity: 1;
+  --mat-list-list-item-disabled-trailing-icon-opacity: 1;
+  --mat-list-list-item-disabled-state-layer-opacity: 0;
+  opacity: 1 !important;
+
+  &::before {
+    opacity: 0 !important;
+  }
+
+  .mdc-list-item__start,
+  .mdc-list-item__content,
+  .mdc-list-item__end,
+  .mdc-list-item__primary-text {
+    opacity: 1 !important;
+  }
+}

@@ -1,0 +1,14 @@
+<div class="flex flex-col h-full">
+  <app-participant-navbar></app-participant-navbar>
+
+  <div class="px-6">
+    @if (pollParticipantLoading()) {
+      <div class="flex justify-center items-center gap-4 mt-12 h-full">
+        <mat-progress-spinner mode="indeterminate" diameter="24"></mat-progress-spinner>
+        <span>Loading poll participant...</span>
+      </div>
+    } @else {
+      <router-outlet></router-outlet>
+    }
+  </div>
+</div>

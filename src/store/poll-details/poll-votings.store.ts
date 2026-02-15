@@ -6,10 +6,12 @@ import { signalStore, withState, withProps, withMethods, patchState, withCompute
 import { PollVotingsService } from "@services/poll-votings.service";
 import { PollPositionsStore } from "./poll-positions.store";
 import { PollCandidatesStore } from "./poll-candidates.store";
+import { PollDetailsStore } from "./poll-details.store";
 
 interface PollVotingsState {
   votings: GetPollVoting[];
   pagination: Pagination;
+  totalVotings: number;
   loading: boolean;
   formLoading: boolean;
   error: string | null;
@@ -20,9 +22,10 @@ const initialState: PollVotingsState = {
   votings: [],
   pagination: {
     page: 1,
-    limit: 10_000,
+    limit: 100_000,
     total: 0,
   },
+  totalVotings: 0,
   loading: false,
   formLoading: false,
   error: null,
@@ -33,12 +36,13 @@ export const PollVotingsStore = signalStore(
   { providedIn: 'root' },
   withState(initialState),
   withProps(() => ({
+    pollDetailsStore: inject(PollDetailsStore),
     pollPositionsStore: inject(PollPositionsStore),
     pollCandidatesStore: inject(PollCandidatesStore),
     pollVotingsService: inject(PollVotingsService),
     snackbar: inject(MatSnackBar),
   })),
-  withComputed(({ pollPositionsStore, pollCandidatesStore }) => ({
+  withComputed(({ pollPositionsStore, pollCandidatesStore, votings }) => ({
     sortedPollPositions: computed(() => pollPositionsStore.sortedPollPositions()),
     votingPositionResults: computed(() => {
       const candidates = pollCandidatesStore.candidates();
@@ -53,24 +57,19 @@ export const PollVotingsStore = signalStore(
             id: candidate.id,
             name: candidate.name,
           })),
-          votings: [],
+          votings: votings().filter((voting) => voting.poll_position_id === position.id),
         }
       });
 
       return results;
     }),
   })),
-  withMethods(({ pollVotingsService, snackbar, ...store }) => ({
-
+  withMethods(({ pollVotingsService, pollDetailsStore, snackbar, ...store }) => ({
     getPollVotings: async (pollId: string): Promise<void> => {
       patchState(store, { loading: true });
       try {
         const result = await pollVotingsService.getPollVotings(pollId, store.pagination());
-        patchState(store, { votings: result.data, pagination: {
-          page: result.page,
-          limit: result.limit,
-          total: result.total,
-        }, loading: false });
+        patchState(store, { votings: result.data, totalVotings: result.total_votings, loading: false });
       } catch (error) {
         patchState(store, { error: error as string, loading: false });
         snackbar.open("Failed to get poll votings", "Close", { duration: 3000 });
@@ -109,6 +108,17 @@ export const PollVotingsStore = signalStore(
       } catch (error) {
         patchState(store, { error: error as string, formLoading: false });
         snackbar.open("Failed to bulk create poll votings", "Close", { duration: 3000 });
+      }
+    },
+
+    downloadTallyCsv: async (): Promise<void> => {
+      try {
+        const pollName = pollDetailsStore.poll()?.name ?? '';
+        const filename = `${pollName}-tally-${new Date().toISOString().split('T')[0]}`;
+        await pollVotingsService.dowmloadTallyCsv(filename, store.votingPositionResults());
+      } catch (error) {
+        patchState(store, { error: error as string, formLoading: false });
+        snackbar.open("Failed to download tally csv", "Close", { duration: 3000 });
       }
     },
   })),

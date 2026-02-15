@@ -9,7 +9,8 @@ import { SupabaseService } from "@services/supabase.service";
 export class PollVotingsController {
   private readonly supabase = inject(SupabaseService);
   private readonly pollVotingsTable = 'poll_votings';
-  private readonly pollVotingsSelectQuery = '*,poll_participant:poll_participants(id,name,poll_status), poll_candidate:poll_candidates(id,name), poll_position:poll_positions(id,name)';
+  private readonly pollParticipantsTable = 'poll_participants';
+  private readonly pollVotingsSelectQuery = '*,poll_participant:poll_participants(id,name,poll_status,rfid_number), poll_candidate:poll_candidates(id,name), poll_position:poll_positions(id,name)';
 
   public async getPollVotings(pollId: string, pagination: Pagination): Promise<GetPollVotingsPaginated> {
     const supabase = await this.supabase.supabaseClient();
@@ -27,11 +28,19 @@ export class PollVotingsController {
     }
     const total = count ?? 0;
 
+    const totalPollParticipantsQuery = supabase.from(this.pollParticipantsTable).select('*', { count: 'exact' }).eq('poll_id', pollId);
+    const { count: totalParticipantsCount, error: totalParticipantsError } = await totalPollParticipantsQuery;
+    if (totalParticipantsError) {
+      throw totalParticipantsError;
+    }
+    const totalParticipants = totalParticipantsCount ?? 0;
+
     const response: GetPollVotingsPaginated = {
       data,
       page: pagination.page,
       limit: pagination.limit,
       total,
+      total_votings: totalParticipants,
     }
     return response;
   }

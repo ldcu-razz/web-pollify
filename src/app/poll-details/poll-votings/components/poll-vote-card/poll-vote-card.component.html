@@ -7,15 +7,16 @@
   <mat-card-content>
     <div class="flex flex-col items-center gap-4 mt-3">
       @for (candidate of candidates(); track candidate.id; let index = $index) {
+        @let progressValue = mapCandidatesWithVotings()[index].totalVotings / totalVotings() * 100;
         <div class="flex flex-col gap-2 w-full">
           <div class="flex items-center justify-between gap-2">
             <div class="flex items-center gap-2">
               <app-avatar [name]="candidate.name" [size]="'xs'"></app-avatar>
               <div class="text-lg">{{ candidate.name }}</div>
             </div>
-            <div class="text-sm">100 / 205 votes</div>
+            <div class="text-sm">{{ mapCandidatesWithVotings()[index].totalVotings }} / {{ totalVotings() }} votes</div>
           </div>
-          <mat-progress-bar mode="determinate" value="40"></mat-progress-bar>
+          <mat-progress-bar mode="determinate" [value]="progressValue"></mat-progress-bar>
         </div>
       } @empty {
         <div class="flex flex-col items-center gap-4 mt-3">

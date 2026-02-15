@@ -15,7 +15,13 @@
         <input matInput type="text" formControlName="code">
       </mat-form-field>
 
-      <button matButton="filled" color="primary" type="submit">Login</button>
+      <button matButton="filled" color="primary" type="submit" [disabled]="logginInLoading()" (click)="login()">
+        @if (logginInLoading()) {
+          <mat-spinner diameter="20"></mat-spinner>
+        } @else {
+          Login
+        }
+      </button>
     </form>
   </mat-card-content>
 </mat-card>

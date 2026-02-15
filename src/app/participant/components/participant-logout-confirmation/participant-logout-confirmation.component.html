@@ -1,0 +1,10 @@
+<section class="flex flex-col gap-4 px-8 py-6 mat-bg-surface-container-lowest">
+  <h2 class="text-2xl font-bold">Are you sure you want to logout?</h2>
+  <p>You will be logged out of your account and redirected to the login page.</p>
+  <section class="flex justify-end gap-2">
+    <button matButton="filled" color="primary" (click)="logout()">
+      <span>Logout</span>
+    </button>
+    <button matButton="tonal" color="primary" (click)="closeDialog()">Cancel</button>
+  </section>
+</section>

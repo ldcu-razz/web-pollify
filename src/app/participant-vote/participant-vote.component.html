@@ -1,0 +1,80 @@
+@if (loading()) {
+  <div class="flex justify-center items-center gap-4 mt-12 h-full">
+    <mat-progress-spinner mode="indeterminate" diameter="24"></mat-progress-spinner>
+    <span>Loading poll details...</span>
+  </div>
+}
+
+@if (!loading()) {
+  <section class="flex flex-col max-w-xl mx-auto mt-6 gap-2 pb-16">
+    @if (isPollDraft() || isPollNotYetStarted()) {
+      <section class="text-md text-center min-h-26 border-dashed rounded-lg p-4 border border-(--md-sys-color-secondary) flex flex-col gap-3 items-center justify-center mat-bg-surface-container-lowest">
+        <mat-icon>info</mat-icon>
+        Poll is draft or not yet started. Contact the administrator to if this is an error.
+      </section>
+    }
+    @if (isPollPublished() && !isPollExceedToEndDateToday()) {
+      <section class="text-sm text-center border-dashed rounded-lg p-4 border border-(--md-sys-color-secondary) flex flex-wrap items-center justify-center mat-bg-surface-container-lowest">
+        Poll is going: Remaining time to vote: <span class="font-bold ml-2">{{ remainingTime() }}</span>
+      </section>
+    }
+    @if (isPollPublished() && isPollExceedToEndDateToday()) {
+      <section class="text-md text-center min-h-26 border-dashed rounded-lg p-4 border border-(--md-sys-color-secondary) flex flex-col gap-3 items-center justify-center mat-bg-surface-container-lowest">
+        <mat-icon>info</mat-icon>
+        Poll has ended. You can no longer vote.
+      </section>
+    }
+    @if (isPollClosed()) {
+      <section class="text-md text-center min-h-26 border-dashed rounded-lg p-4 border border-(--md-sys-color-secondary) flex flex-col gap-3 items-center justify-center mat-bg-surface-container-lowest">
+        <mat-icon>info</mat-icon>
+        Poll is closed. Contact the administrator to if this is an error.
+      </section>
+    }
+    <section class="flex flex-col gap-2 mt-8">
+      <h1 class="text-2xl font-bold">{{ poll()?.name }}</h1>
+      <p>
+        {{ poll()?.description }}
+      </p>
+    </section>
+     
+    @if (isPollPublished() && !participantDoneVoting() && !isPollExceedToEndDateToday()) {
+      <p class="text-sm text-(--md-sys-color-on-surface-variant) mt-1">
+        Select one of the following positions to vote for your choosen candidate.
+      </p>
+
+      <section class="flex flex-col gap-4 mt-3">
+        @for (pollPositionWithCandidate of pollPositionsWithCandidates(); track pollPositionWithCandidate.position.id; let i = $index) { 
+          <app-vote-card
+            [pollPositionWithCandidate]="pollPositionWithCandidate"
+            (pollPositionWithCandidateChange)="updatePollPositionAt(i, $event)">
+          </app-vote-card>
+        }
+      </section>
+
+      <section class="flex justify-end mt-4">
+        <button matButton="filled" color="primary" class="w-full" (click)="onSubmitVote()" [disabled]="submitVoteLoading()">
+          @if (submitVoteLoading()) {
+            <mat-progress-spinner mode="indeterminate" diameter="24"></mat-progress-spinner>
+          }
+          @else {
+            Submit Vote
+          }
+        </button>
+      </section>
+    }
+
+    @if (participantDoneVoting()) {
+      <section class="flex flex-col justify-center items-center text-center gap-2 mt-8 mb-2">
+        <h2 class="text-2xl font-bold">Thank you for voting!</h2>
+        <p class="text-sm text-(--md-sys-color-on-surface-variant)">
+          Your vote has been recorded. See the details of your vote below.
+        </p>
+      </section>
+      <section class="flex flex-col gap-4">
+        @for (pollVoting of participantVotings(); track pollVoting.id) {
+          <app-voted-card [pollVoting]="pollVoting"></app-voted-card>
+        }
+      </section>
+    }
+  </section>
+}

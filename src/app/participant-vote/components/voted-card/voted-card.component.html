@@ -1,0 +1,21 @@
+<mat-card appearance="outlined" class="mat-bg-surface-container-lowest">
+  <mat-card-header>
+    <mat-card-title>
+      <span class="font-bold">{{ position().name }}</span>
+    </mat-card-title>
+  </mat-card-header>
+  <mat-card-content>
+    <mat-selection-list #votings [multiple]="false" class="mt-3!">
+      <mat-list-option class="mb-2 voted-option" [selected]="true" disabled>
+        <div class="flex items-baseline gap-2">
+          <div class="shrink-0">
+            <app-avatar [name]="candidate().name" [avatar]="null" [size]="'xs'"></app-avatar>
+          </div>
+          <div class="flex flex-col gap-1">
+            <span class="font-medium">{{ candidate().name }}</span>
+          </div>
+        </div>
+      </mat-list-option>
+    </mat-selection-list>
+  </mat-card-content>
+</mat-card>

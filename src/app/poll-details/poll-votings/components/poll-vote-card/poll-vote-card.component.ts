@@ -16,8 +16,16 @@ import { AvatarComponent } from "@components/avatar/avatar.component";
 })
 export class PollVoteCardComponent {
   public pollVotingPositionResult = input.required<VotingPositionResult>();
+  public totalVotings = input.required<number>();
 
   public position = computed(() => this.pollVotingPositionResult()?.position);
   public candidates = computed(() => this.pollVotingPositionResult()?.candidates);
   public votings = computed(() => this.pollVotingPositionResult()?.votings);
+
+  public mapCandidatesWithVotings = computed(() => this.candidates()?.map((candidate) => {
+    return {
+      ...candidate,
+      totalVotings: this.votings()?.filter((voting) => voting.poll_candidate_id === candidate.id).length,
+    }
+  }));
 }

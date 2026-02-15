@@ -1,8 +1,10 @@
-import { Component, signal } from "@angular/core";
+import { Component, inject, signal } from "@angular/core";
 import { MatListModule } from "@angular/material/list";
 import { MatIconModule } from "@angular/material/icon";
 import { ROUTES as ROUTES_CONSTANTS } from "@constants/routes.constants";
 import { RouterLink, RouterLinkActive } from "@angular/router";
+import { LogoutConfirmationDialogComponent } from "../logout-confirmation-dialog/logout-confirmation-dialog.component";
+import { MatDialog } from "@angular/material/dialog";
 
 @Component({
   selector: 'app-main-sidebar',
@@ -11,6 +13,7 @@ import { RouterLink, RouterLinkActive } from "@angular/router";
   imports: [MatListModule, MatIconModule, RouterLink, RouterLinkActive]
 })
 export class MainSidebarComponent {
+  private readonly dialog = inject(MatDialog);
 
   public navigations = signal([
     {
@@ -39,4 +42,11 @@ export class MainSidebarComponent {
       path: `${ROUTES_CONSTANTS.MAIN.WORKSPACES}`,
     }
   ])
+
+  public openLogoutConfirmationDialog(): void {
+    this.dialog.open(LogoutConfirmationDialogComponent, {
+      width: '100%',
+      maxWidth: '600px',
+    });
+  }
 }

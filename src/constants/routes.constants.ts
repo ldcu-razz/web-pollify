@@ -1,4 +1,8 @@
 export const ROUTES = {
+  AUTH: {
+    LOGIN: '/login',
+    PARTICIPANTS: '/login/participants',
+  },
   MAIN: {
     BASE: 'main',
     DASHBOARD: 'dashboard',
@@ -15,8 +19,8 @@ export const ROUTES = {
     WORKSPACES: 'workspaces',
     WORKSPACE_DETAILS: ':id',
   },
-  AUTH: {
-    LOGIN: '/login',
-    PARTICIPANTS: '/login/participants',
+  PARTICIPANT: {
+    BASE: 'participant',
+    VOTE: 'vote',
   },
-};  
+};    

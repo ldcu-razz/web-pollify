@@ -15,13 +15,14 @@ export const PollVotingsSchema = z.object({
 });
 
 export const GetPollVotingSchema = PollVotingsSchema.extend({
-  poll_participant: PollParticipantsSchema.pick({ id: true, name: true, poll_status: true }),
+  poll_participant: PollParticipantsSchema.pick({ id: true, name: true, poll_status: true, rfid_number: true }),
   poll_candidate: PollCandidateSchema.pick({ id: true, name: true}),
   poll_position: PollPositionsSchema.pick({ id: true, name: true}),
 });
 
 export const GetPollVotingsPaginatedSchema = PaginationSchema.extend({
   data: z.array(GetPollVotingSchema),
+  total_votings: z.number(),
 });
 
 export const PostPollVotingSchema = PollVotingsSchema;
@@ -32,5 +33,5 @@ export const DeletePollVotingSchema = z.object({ id: z.uuid() });
 export const VotingPositionResultSchema = z.object({
   position: PollPositionsSchema.pick({ id: true, name: true }),
   candidates: z.array(PollCandidateSchema.pick({ id: true, name: true })),
-  votings: z.array(PollVotingsSchema),
+  votings: z.array(GetPollVotingSchema),
 });

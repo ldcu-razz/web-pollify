@@ -1,7 +1,8 @@
-import { GetPollParticipantsPaginationSchema, GetPollParticipantFiltersSchema, PollParticipantsSchema, GetPollParticipantSchema, PostPollParticipantsSchema, PatchPollParticipantsSchema, DeletePollParticipantsSchema, DeleteBulkPollParticipantsSchema, BulkPostPollParticipantsSchema } from "./poll-participants.schema";
+import { GetPollParticipantsPaginationSchema, GetPollParticipantFiltersSchema, PollParticipantsSchema, GetPollParticipantSchema, PostPollParticipantsSchema, PatchPollParticipantsSchema, DeletePollParticipantsSchema, DeleteBulkPollParticipantsSchema, BulkPostPollParticipantsSchema, PollParticipantStatusSchema } from "./poll-participants.schema";
 import { z } from "zod";
 
 export type PollParticipants = z.infer<typeof PollParticipantsSchema>;
+export type PollParticipantStatus = z.infer<typeof PollParticipantStatusSchema>;
 export type GetPollParticipant = z.infer<typeof GetPollParticipantSchema>;
 export type PostPollParticipants = z.infer<typeof PostPollParticipantsSchema>;
 export type BulkPostPollParticipants = z.infer<typeof BulkPostPollParticipantsSchema>;
