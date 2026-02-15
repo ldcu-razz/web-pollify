@@ -9,5 +9,4 @@ export type PostWorkspace = z.infer<typeof PostWorkspaceSchema>;
 export type PutWorkspace = z.infer<typeof PutWorkspaceSchema>;
 export type PatchWorkspace = z.infer<typeof PatchWorkspaceSchema>;
 export type DeleteWorkspace = z.infer<typeof DeleteWorkspaceSchema>;
-
 export type WorkspaceUserRole = z.infer<typeof WorkspaceUserRolesSchema>;

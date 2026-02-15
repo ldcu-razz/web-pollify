@@ -11,6 +11,17 @@ export class AuthService {
   private readonly authController = inject(AuthController);
   private readonly snackbar = inject(MatSnackBar);
 
+
+  public async loginAdmin(email: string, password: string): Promise<AuthAccessToken> {
+    return this.authController.loginAdmin(email, password).catch((error) => {
+      this.snackbar.open(error.message, 'Close', {
+        duration: 6000,
+        panelClass: 'error-snackbar',
+      });
+      throw error;
+    });
+  }
+  
   public async loginParticipants(rfidNumber: string, code: string): Promise<AuthAccessToken> {
     return this.authController.loginParticipants(rfidNumber, code).catch((error) => {
       this.snackbar.open(error.message, 'Close', {

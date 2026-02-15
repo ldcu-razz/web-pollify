@@ -102,6 +102,38 @@ export const WorkspaceStore = signalStore(
       )
     ),
 
+    getWorkspaceUsers: async (workspaceId: string) => {
+      try { 
+        const result = await workspaceService.getWorkspaceUsers(workspaceId);
+        return result;
+      } catch (error) {
+        patchState(store, { error: error as string });
+        snackBar.open("Failed to get workspace users", "Close", { duration: 3000 });
+        throw error;
+      }
+    },
+
+    getWorkspacePolls: async (workspaceId: string) => {
+      try {
+        const result = await workspaceService.getWorkspacePolls(workspaceId);
+        return result;
+      } catch (error) {
+        patchState(store, { error: error as string });
+        snackBar.open("Failed to get workspace polls", "Close", { duration: 3000 });
+        throw error;
+      }
+    },
+
+    removeWorkspaceUser: async (workspaceId: string, userId: string) => {
+      try {
+        await workspaceService.removeWorkspaceUser(workspaceId, userId);
+        snackBar.open("User removed from workspace successfully", "Close", { duration: 3000 });
+      } catch (error) {
+        patchState(store, { error: error as string });
+        snackBar.open("Failed to remove user from workspace", "Close", { duration: 3000 });
+      }
+    },
+
     resetCurrentWorkspace: () => {
       patchState(store, { currentWorkspace: null });
     },

@@ -1,5 +1,7 @@
 import { inject, Injectable } from "@angular/core";
 import { Pagination } from "@models/common/common.type";
+import { GetPoll } from "@models/polls/polls.type";
+import { GetUser } from "@models/users/users.type";
 import { GetPaginatedWorkspaces, GetPaginatedWorkspacesFilters, GetWorkspace, PostWorkspace, PutWorkspace } from "@models/workspace/workspace.type";
 import { SupabaseService } from "src/services/supabase.service";
 
@@ -8,14 +10,16 @@ import { SupabaseService } from "src/services/supabase.service";
 })
 export class WorkspacesController {
   private readonly supabase = inject(SupabaseService);
-
   private readonly workspacesTable = 'workspaces';
+  private readonly usersTable = 'users';
+  private readonly pollsTable = 'polls';
+  private readonly getWorkspaceSelectQuery = '*, total_users:users(count), total_polls:polls(count)';
 
   public async getWorkspaces(pagination: Pagination, filters: GetPaginatedWorkspacesFilters): Promise<GetPaginatedWorkspaces> {
     const supabase = await this.supabase.supabaseClient();
     const query = filters.q ?? null;
   
-    const getWorkspacesQuery = supabase.from(this.workspacesTable).select('*').range((pagination.page - 1) * pagination.limit, pagination.page * pagination.limit);
+    const getWorkspacesQuery = supabase.from(this.workspacesTable).select(this.getWorkspaceSelectQuery).range((pagination.page - 1) * pagination.limit, pagination.page * pagination.limit);
     if (query) {
       getWorkspacesQuery.filter('name', 'ilike', `%${query}%`);
     }
@@ -24,9 +28,16 @@ export class WorkspacesController {
     if (error) {
       throw error;
     }
+
     if (!data) {
       throw new Error('Workspaces not found');
     }
+
+    const workspaces = data.map((workspace) => ({
+      ...workspace,
+      total_users: workspace.total_users[0]?.count ?? 0,
+      total_polls: workspace.total_polls[0]?.count ?? 0,
+    }));
 
     const totalWorkspacesQuery = supabase.from(this.workspacesTable).select('*', { count: 'exact' });
     if (query) {
@@ -39,7 +50,7 @@ export class WorkspacesController {
     const total = count ?? 0;
 
     const response: GetPaginatedWorkspaces = {
-      data,
+      data: workspaces,
       page: pagination.page,
       limit: pagination.limit,
       total,
@@ -96,6 +107,43 @@ export class WorkspacesController {
       throw error;
     }
     
+    return true;
+  }
+
+  public async getWorkspaceUsers(workspaceId: string): Promise<GetUser[]> {
+    const supabase = await this.supabase.supabaseClient();
+    const { data, error } = await supabase.from(this.usersTable).select('*').eq('workspace_id', workspaceId);
+    if (error) {
+      throw error;
+    }
+
+    if (!data) {
+      throw new Error('Users not found');
+    }
+
+    return data;
+  }
+
+  public async getWorkspacePolls(workspaceId: string): Promise<GetPoll[]> {
+    const supabase = await this.supabase.supabaseClient();
+    const { data, error } = await supabase.from(this.pollsTable).select('*').eq('workspace_id', workspaceId);
+    if (error) {
+      throw error;
+    }
+
+    if (!data) {
+      throw new Error('Polls not found');
+    }
+
+    return data;
+  }
+
+  public async removeWorkspaceUser(workspaceId: string, userId: string): Promise<boolean> {
+    const supabase = await this.supabase.supabaseClient();
+    const { error } = await supabase.from(this.usersTable).update({ workspace_id: null }).eq('id', userId).eq('workspace_id', workspaceId);
+    if (error) {
+      throw error;
+    }
     return true;
   }
 }

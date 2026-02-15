@@ -3,7 +3,7 @@ import { MAT_DIALOG_DATA, MatDialogRef } from "@angular/material/dialog";
 import { MatFormFieldModule } from "@angular/material/form-field";
 import { MatInputModule } from "@angular/material/input";
 import { MatButtonModule } from "@angular/material/button";
-import { email, form, FormField, required, validate } from "@angular/forms/signals";
+import { disabled, email, form, FormField, required, validate } from "@angular/forms/signals";
 import { MatIconModule } from "@angular/material/icon";
 import { MatProgressSpinnerModule } from "@angular/material/progress-spinner";
 import { MatDialogModule } from "@angular/material/dialog";
@@ -13,6 +13,7 @@ import { TextTransformPipe } from "@pipes/text-transform.pipe";
 import { UserStore } from "@store/users/users.store";
 import { PostUser, UserRoles, UserStatus } from "@models/users/users.type";
 import { WorkspaceStore } from "@store/workspaces/workspace.store";
+import { AuthAdminStore } from "@store/auth/auth-admin.store";
 
 interface UserFormDialogData {
   mode?: "create" | "update";
@@ -40,7 +41,8 @@ export class UserFormComponent {
   public dialogData = inject<UserFormDialogData>(MAT_DIALOG_DATA, { optional: true });
   public userStore = inject(UserStore);
   public workspaceStore = inject(WorkspaceStore);
-
+  public authAdminStore = inject(AuthAdminStore);
+  
   public mode = signal(this.dialogData?.mode ?? "create");
   public statusOptions = signal(UserStatusSchema.options);
   public roleOptions = signal(UserRolesSchema.options);
@@ -54,7 +56,7 @@ export class UserFormComponent {
     password: "",
     confirmPassword: "",
     role: this.roleOptions()[0],
-    workspace_id: "",
+    workspace_id: this.authAdminStore.isAdmin() ? this.authAdminStore.workspaceId() ?? '' : '',
   });
 
   public userForm = form(this.userFormData, (schemaPath) => {
@@ -78,6 +80,9 @@ export class UserFormComponent {
       }
       return null;
     });
+    if (this.authAdminStore.isAdmin()) {
+      disabled(schemaPath.workspace_id);
+    }
   });
   
   public hasPasswordMatchError = computed(() => 

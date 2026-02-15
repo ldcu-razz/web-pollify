@@ -1,4 +1,4 @@
-import { Component, computed, inject, OnInit, signal } from "@angular/core";
+import { Component, computed, inject, signal } from "@angular/core";
 import { MatFormFieldModule } from "@angular/material/form-field";
 import { MatInputModule } from "@angular/material/input";
 import { MatSelectModule } from "@angular/material/select";
@@ -24,7 +24,7 @@ interface GroupParticipantFormProps {
   styleUrls: ['./group-participant-form.component.scss'],
   imports: [MatFormFieldModule, MatInputModule, MatSelectModule, MatButtonModule, MatIconModule, MatProgressSpinnerModule, FormField]
 })
-export class GroupParticipantFormComponent implements OnInit {
+export class GroupParticipantFormComponent {
   private readonly dialogRef = inject(MatDialogRef);
   private readonly data = inject<GroupParticipantFormProps>(MAT_DIALOG_DATA);
   private readonly groupDetailsStore = inject(GroupDetailsStore);
@@ -62,13 +62,6 @@ export class GroupParticipantFormComponent implements OnInit {
   public departments = computed(() => DepartmentsTypeSchema.options);
 
   public workspaces = computed(() => this.workspaceStore.workspaces());
-
-
-  public ngOnInit(): void {
-    // this.mode.set(this.data.mode);
-    // TODO: add logic to get participants
-    console.log('group participant form');
-  }
 
   public closeDialog(): void {
     this.dialogRef.close();

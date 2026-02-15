@@ -1,26 +1,39 @@
 <mat-card class="mat-bg-surface-container-lowest" appearance="outlined">
   <mat-card-content class="p-2!"> 
     <section class="flex flex-col gap-2">
-      <section class="flex justify-between items-center">
-        <section class="flex items-center gap-2 px-3 py-2">
-          <img matListAvatar src="https://picsum.photos/200/300" alt="User Avatar" class="w-8 h-8 rounded-full">
-          <span matListItemTitle>John Doe</span>
-        </section>
-        <section class="flex gap-2 items-center">
-
-          <div class="text-xs font-bold py-2 px-4 rounded-md bg-gray-200">Admin</div>
-          <button matIconButton [matMenuTriggerFor]="userMenu" aria-label="Example icon-button with a menu">
-            <mat-icon>more_vert</mat-icon>
-          </button>
-  
-          <mat-menu #userMenu="matMenu">
-            <button mat-menu-item>
-              <mat-icon>delete</mat-icon>
-              <span>Remove user from workspace</span>
-            </button>
-          </mat-menu>
-        </section>
-      </section>
+      @if (loading()) {
+        <div class="flex justify-center items-center">
+          <mat-progress-spinner mode="indeterminate" diameter="24"></mat-progress-spinner>
+        </div>
+      } @else {
+        @for (user of users(); track user.id) {
+          @let fullName = user.first_name + ' ' + user.last_name;
+          <section class="flex justify-between items-center">
+            <section class="flex items-center gap-2 px-3 py-2">
+              <app-avatar [avatar]="user.avatar" [name]="fullName" size="sm"></app-avatar>
+              <span matListItemTitle>{{ fullName }}</span>
+            </section>
+            <section class="flex gap-2 items-center">
+    
+              <div class="text-xs font-bold py-2 px-4 rounded-md bg-gray-200">{{ user.role | textTransform }}</div>
+              <button matIconButton [matMenuTriggerFor]="userMenu" aria-label="Example icon-button with a menu">
+                <mat-icon>more_vert</mat-icon>
+              </button>
+      
+              <mat-menu #userMenu="matMenu">
+                <button mat-menu-item (click)="openRemoveUserConfirmationDialog(user.id)">
+                  <mat-icon>delete</mat-icon>
+                  <span>Remove user from workspace</span>
+                </button>
+              </mat-menu>
+            </section>
+          </section>
+        } @empty {
+          <div class="flex justify-center items-center py-6">
+            <span>No users under this workspace</span>
+          </div>
+        }
+      }
     </section>
   </mat-card-content>
 </mat-card>

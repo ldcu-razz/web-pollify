@@ -1,18 +1,30 @@
 <mat-card class="mat-bg-surface-container-lowest" appearance="outlined">
   <mat-card-content class="p-2!"> 
     <section class="flex flex-col gap-2">
-      <section class="flex justify-between items-center">
-        <section class="flex items-center gap-2 px-3 py-2">
-          <span matListItemTitle>Poll Title 1</span>
-        </section>
-        <section class="flex gap-2 items-center">
-
-          <div class="text-xs font-bold py-2 px-4 rounded-md bg-gray-200">Active</div>
-          <button matButton="tonal" color="primary">
-            <span>view poll</span>
-          </button>
-        </section>
-      </section>
+      @if (loading()) {
+        <div class="flex justify-center items-center">
+          <mat-progress-spinner mode="indeterminate" diameter="24"></mat-progress-spinner>
+        </div>
+      } @else {
+        @for (poll of polls(); track poll.id) {
+          <section class="flex justify-between items-center">
+            <section class="flex items-center gap-2 px-3 py-2">
+              <span matListItemTitle>{{ poll.name }}</span>
+            </section>
+            <section class="flex gap-2 items-center">
+    
+              <div class="text-xs font-bold py-2 px-4 rounded-md bg-gray-200">{{ poll.status | textTransform }}</div>
+              <button matButton="tonal" color="primary" (click)="navigateToPollDetails(poll.id)">
+                <span>view poll</span>
+              </button>
+            </section>
+          </section>
+        } @empty {
+          <div class="flex justify-center items-center py-6">
+            <span>No polls under this workspace</span>
+          </div>
+        }
+      }
     </section>
   </mat-card-content>
 </mat-card>

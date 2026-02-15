@@ -16,7 +16,15 @@
         </button>
       </mat-form-field>
 
-      <button matButton="filled" color="primary" type="submit">Login</button>
+      <button matButton="filled" color="primary" type="submit" (click)="login()" [disabled]="logginInLoading()">
+        <div class="flex items-center gap-2">
+          @if (logginInLoading()) {
+            <mat-spinner diameter="20"></mat-spinner>
+          } @else {
+            Login
+          }
+        </div>
+      </button>
       <button matButton="text" color="primary" type="button" (click)="navigateToParticipants()">Sign in as participant</button>
     </form>
   </mat-card-content>

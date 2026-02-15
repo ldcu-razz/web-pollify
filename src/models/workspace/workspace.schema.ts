@@ -12,9 +12,12 @@ export const WorkspaceSchema = z.object({
   updatedAt: z.string(),
 });
 
-export const GetWorkspaceSchema = WorkspaceSchema;
+export const GetWorkspaceSchema = WorkspaceSchema.extend({
+  total_users: z.number(),
+  total_polls: z.number(),
+});
 export const GetPaginatedWorkspacesSchema = PaginationSchema.extend({
-  data: z.array(WorkspaceSchema),
+  data: z.array(GetWorkspaceSchema),
 });
 export const GetPaginatedWorkspacesFilters = z.object({
   q: z.string().optional(),

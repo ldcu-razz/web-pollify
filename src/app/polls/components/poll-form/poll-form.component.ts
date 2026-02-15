@@ -14,6 +14,7 @@ import { GetPoll, PatchPoll, PostPoll } from "@models/polls/polls.type";
 import { PollStatusSchema } from "@models/polls/polls.schema";
 import { PollDetailsStore } from "@store/poll-details/poll-details.store";
 import { MatProgressSpinnerModule } from "@angular/material/progress-spinner";
+import { AuthAdminStore } from "@store/auth/auth-admin.store";
 
 interface PollFormData {
   mode: 'create' | 'update';
@@ -42,6 +43,9 @@ export class PollFormComponent {
   private readonly data = inject<PollFormData>(MAT_DIALOG_DATA);
   private readonly pollsStore = inject(PollStore);
   private readonly pollDetailsStore = inject(PollDetailsStore);
+  private readonly authAdminStore = inject(AuthAdminStore);
+
+  public workspaceId = computed(() => this.authAdminStore.workspaceId());
 
   public formMode = computed(() => this.data.mode ?? 'create');
   public isCreateMode = computed(() => this.formMode() === 'create');
@@ -98,7 +102,7 @@ export class PollFormComponent {
       description: this.pollFormData().description,
       code: this.generatedCode(),
       status: PollStatusSchema.enum.draft,
-      workspace_id: null,
+      workspace_id: this.workspaceId() ?? '',
       date_time_start: null,
       date_time_end: null,
       created_at: new Date().toISOString(),

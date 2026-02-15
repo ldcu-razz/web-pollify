@@ -16,15 +16,24 @@ import { PollPositionsComponent } from "../poll-details/poll-positions/poll-posi
 import { PollParticipantsComponent } from "../poll-details/poll-participants/poll-participants.component";
 import { PollVotingsComponent } from "../poll-details/poll-votings/poll-votings.component";
 import { DashboardComponent } from "../dashboard/dashboard.component";
+import { authAdminResolver } from "@resolvers/auth-admin.resolver";
+import { authAdminGuard } from "src/guards/auth-admin.guard";
 
 export const mainRoutes: Routes = [
   {
     path: ROUTES_CONSTANTS.MAIN.BASE,
     component: MainComponent,
     resolve: {
+      authAdmin: authAdminResolver,
       workspaces: workspacesResolver,
     },
+    canActivate: [authAdminGuard],
     children: [
+      {
+        path: '',
+        redirectTo: ROUTES_CONSTANTS.MAIN.DASHBOARD,
+        pathMatch: 'full',
+      },
       {
         path: ROUTES_CONSTANTS.MAIN.POLLS,
         component: PollsComponent,

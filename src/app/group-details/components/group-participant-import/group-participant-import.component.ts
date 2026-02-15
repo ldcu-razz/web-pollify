@@ -46,8 +46,6 @@ export class GroupParticipantImportComponent {
     if (!this.selectedFile) {
       return;
     }
-
-    console.log('Importing participants from file:', this.selectedFile);
   }
 
   public onFileChange(event: Event): void {

@@ -1,6 +1,6 @@
-import { Component, inject, input } from "@angular/core";
+import { Component, computed, inject, input } from "@angular/core";
 import { MatCardModule } from "@angular/material/card";
-import { Workspace } from "@models/workspace/workspace.type";
+import { GetWorkspace } from "@models/workspace/workspace.type";
 import { MatButtonModule } from "@angular/material/button";
 import { MatChipsModule } from "@angular/material/chips";
 import { MatIconModule } from "@angular/material/icon";
@@ -18,7 +18,11 @@ import { AvatarComponent } from "@components/avatar/avatar.component";
 export class WorkspaceCardComponent {
   private router = inject(Router);
 
-  public workspace = input<Workspace>();
+  public workspace = input.required<GetWorkspace>();
+
+  public totalUsers = computed(() => this.workspace().total_users);
+
+  public totalPolls = computed(() => this.workspace().total_polls);
 
   public navigateToWorkspaceDetails(): void {
     this.router.navigate([

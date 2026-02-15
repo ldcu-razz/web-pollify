@@ -1,4 +1,4 @@
-import { Component, computed, inject, OnInit } from "@angular/core";
+import { Component, computed, inject } from "@angular/core";
 import { MatIconModule } from "@angular/material/icon";
 import { MatListModule } from "@angular/material/list";
 import { MatButtonModule } from "@angular/material/button";
@@ -18,7 +18,7 @@ import { MatProgressSpinner } from "@angular/material/progress-spinner";
   styleUrls: ['./workspaces.component.scss'],
   imports: [MatListModule, MatIconModule, MatButtonModule, MatInputModule, FormsModule, ReactiveFormsModule, WorkspaceCardComponent, MatDialogModule, MatProgressSpinner],
 })
-export class WorkspacesComponent implements OnInit {
+export class WorkspacesComponent {
   private readonly router = inject(Router);
   private readonly dialog = inject(MatDialog);
   private readonly workspaceStore = inject(WorkspaceStore);
@@ -32,11 +32,6 @@ export class WorkspacesComponent implements OnInit {
   public workspacePagination = computed(() => this.workspaceStore.pagination());
   
   public searchLoading = computed(() => this.workspaceStore.searchLoading());
-
-  public ngOnInit(): void {
-    // TODO: Implement ngOnInit
-    console.log('WorkspacesComponent ngOnInit');
-  }
   
   public openDeleteWorkspaceDialog(): void {
     this.dialog.open(WorkspaceFormComponent, {
