@@ -1,0 +1,5 @@
+# Load nvm so node is available when running from GUI (VS Code, etc.)
+export NVM_DIR="$HOME/.nvm"
+[ -s "$NVM_DIR/nvm.sh" ] && \. "$NVM_DIR/nvm.sh"
+
+node_modules/.bin/commitlint --edit "$1"
