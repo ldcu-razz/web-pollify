@@ -7,7 +7,7 @@ import { MAT_DIALOG_DATA, MatDialogModule, MatDialogRef } from "@angular/materia
 import { MatProgressSpinnerModule } from "@angular/material/progress-spinner";
 import { PollPositionsStore } from "@store/poll-details/poll-positions.store";
 import { GetPollPosition, PatchPollPosition, PostPollPosition } from "@models/polls/poll-positions.type";
-import { form, FormField, required } from "@angular/forms/signals";
+import { disabled, form, FormField, required } from "@angular/forms/signals";
 import { PollDetailsStore } from "@store/poll-details/poll-details.store";
 import { MatChipsModule } from "@angular/material/chips";
 import { MatAutocompleteModule, MatAutocompleteSelectedEvent } from "@angular/material/autocomplete";
@@ -103,6 +103,7 @@ export class PositionFormComponent {
 
   public positionForm = form(this.positionFormData, (schemaPath) => {
     required(schemaPath.position, { message: 'Position is required' });
+    disabled(schemaPath.position);
     required(schemaPath.name, { message: 'Name is required' });
   });
 

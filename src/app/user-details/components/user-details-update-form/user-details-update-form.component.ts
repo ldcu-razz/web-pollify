@@ -48,6 +48,8 @@ export class UserDetailsUpdateFormComponent {
 
   public currentUser = computed(() => this.userStore.currentUser());
 
+  public submitButtonLabel = computed(() => this.fieldUpdateType() === 'password' ? 'Update Password' : 'Update User');
+
   public userFirstAndLastName = signal({
     first_name: this.currentUser()?.first_name ?? '',
     last_name: this.currentUser()?.last_name ?? '',

@@ -1,3 +1,11 @@
 /* You can add global styles to this file, and also import other style files */
 
 @import "tailwindcss";
+
+/* Theme variables – one of .light, .dark, .light-medium-contrast, etc. should be applied to html */
+@import "./styles/light.css";
+@import "./styles/light-mc.css";
+@import "./styles/light-hc.css";
+@import "./styles/dark.css";
+@import "./styles/dark-mc.css";
+@import "./styles/dark-hc.css";
