@@ -1,7 +1,11 @@
-<section class="flex flex-col items-center justify-center h-72 bg-linear-120 to-rose-400 from-rose-800">
-  <h2 class="text-5xl font-extrabold text-white">Welcome to Pollify</h2>
-</section>
+<main class="flex flex-col h-screen">
+  <section class="flex flex-col items-center justify-center h-72 bg-linear-120 to-rose-400 from-rose-800">
+    <h2 class="text-5xl font-extrabold text-white">Welcome to Pollify</h2>
+  </section>
+  
+  <div class="max-w-xl mx-auto w-full -mt-12">
+    <app-participants-login-form></app-participants-login-form>
+  </div>
 
-<div class="max-w-xl mx-auto -mt-12">
-  <app-participants-login-form></app-participants-login-form>
-</div>
+  <app-footer></app-footer>
+</main>

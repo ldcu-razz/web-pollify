@@ -23,6 +23,6 @@ export class ParticipantLogoutConfirmationComponent {
   public async logout(): Promise<void> {
     await this.authParticipantsStore.logout();
     this.dialogRef.close();
-    this.router.navigate([ROUTES_CONSTANTS.AUTH.LOGIN]);
+    this.router.navigate([ROUTES_CONSTANTS.AUTH.PARTICIPANTS]);
   }
 }

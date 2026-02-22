@@ -58,14 +58,6 @@ export class AuthController {
 
   public async loginParticipants(rfidNumber: string, code: string): Promise<AuthAccessToken> {
     const supabase = await this.supabase.supabaseClient();
-    const { data: participantData, error } = await supabase.from(this.pollParticipantsTable).select('*').eq('rfid_number', rfidNumber).maybeSingle();
-    if (error) {
-      throw error;
-    }
-
-    if (!participantData) {
-      throw new Error('Invalid RFID number or code');
-    }
 
     const { data: pollData, error: pollError } = await supabase.from(this.pollsTable).select('*').eq('code', code).maybeSingle();
     if (pollError) {
@@ -73,6 +65,15 @@ export class AuthController {
     }
 
     if (!pollData) {
+      throw new Error('Invalid RFID number or code');
+    }
+
+    const { data: participantData, error } = await supabase.from(this.pollParticipantsTable).select('*').eq('rfid_number', rfidNumber).eq('poll_id', pollData.id).maybeSingle();
+    if (error) {
+      throw error;
+    }
+
+    if (!participantData) {
       throw new Error('Invalid RFID number or code');
     }
 

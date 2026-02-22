@@ -1,4 +1,4 @@
-import { Component, computed, inject, OnInit, signal } from "@angular/core";
+import { Component, computed, inject, signal } from "@angular/core";
 import { MatCardModule } from "@angular/material/card";
 import { MatFormFieldModule } from "@angular/material/form-field";
 import { MatInputModule } from "@angular/material/input";
@@ -17,7 +17,7 @@ import { MatProgressSpinnerModule } from "@angular/material/progress-spinner";
   styleUrls: ['./login-form.component.css'],
   imports: [FormsModule, ReactiveFormsModule, MatCardModule, MatFormFieldModule, MatInputModule, MatIconModule, MatButtonModule, MatProgressSpinnerModule]
 })
-export class LoginFormComponent implements OnInit {
+export class LoginFormComponent {
   private readonly router = inject(Router);
   private readonly authAdminStore = inject(AuthAdminStore);
 
@@ -32,11 +32,6 @@ export class LoginFormComponent implements OnInit {
 
   public togglePasswordVisibility(): void {
     this.hidePassword.set(!this.hidePassword());
-  }
-
-  public ngOnInit(): void {
-    // TODO: add logic to login
-    console.log('login form');
   }
 
   public async login(): Promise<void> {

@@ -74,14 +74,14 @@ export const PollStore = signalStore(
       }
     },
 
-    searchPolls: rxMethod<string>(
+    searchPolls: rxMethod<GetPollsFilter>(
       pipe(
         debounceTime(300),
         distinctUntilChanged(),
-        tap((query) => patchState(store, { searchQuery: query, searchLoading: true })),
-        switchMap(async (query) => {
+        tap((filters) => patchState(store, { searchQuery: filters.q ?? '', searchLoading: true })),
+        switchMap(async (filters) => {
           const isSuperAdmin = authAdminStore.isSuperAdmin();
-          const modifiedFilters = isSuperAdmin ? { q: query } : { q: query, workspace_id: authAdminStore.workspaceId() ?? undefined };
+          const modifiedFilters = isSuperAdmin ? filters : { ...filters, workspace_id: authAdminStore.workspaceId() ?? undefined };
 
           const result = await pollsService.getPolls(store.pagination(), modifiedFilters);
           patchState(store, { polls: result.data, pagination: {

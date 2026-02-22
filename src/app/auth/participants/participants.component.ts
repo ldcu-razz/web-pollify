@@ -1,16 +1,12 @@
-import { Component, OnInit } from "@angular/core";
+import { Component } from "@angular/core";
 import { ParticipantsLoginFormComponent } from "./participants-login-form/participants-login-form.component";
+import { FooterComponent } from "@components/footer/footer.component";
 
 @Component({
   selector: 'app-participants',
   templateUrl: './participants.component.html',
   styleUrls: ['./participants.component.css'],
-  imports: [ParticipantsLoginFormComponent]
+  imports: [ParticipantsLoginFormComponent, FooterComponent]
 })
-export class ParticipantsComponent implements OnInit {
-
-  public ngOnInit(): void {
-    // TODO: add logic to get participants
-    console.log('participants');
-  }
+export class ParticipantsComponent {
 }

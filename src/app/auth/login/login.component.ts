@@ -1,16 +1,12 @@
-import { Component, OnInit } from '@angular/core';
+import { Component } from '@angular/core';
 import { LoginFormComponent } from './login-form/login-form.component';
+import { FooterComponent } from '@components/footer/footer.component';
 
 @Component({
   selector: 'app-login',
   templateUrl: './login.component.html',
   styleUrls: ['./login.component.css'],
-  imports: [LoginFormComponent]
+  imports: [LoginFormComponent, FooterComponent]
 })
-export class LoginComponent implements OnInit {
-
-  public ngOnInit(): void {
-    // TODO: add logic to get login
-    console.log('login');
-  }
+export class LoginComponent {
 }

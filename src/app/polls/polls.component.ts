@@ -65,7 +65,7 @@ export class PollsComponent implements OnInit {
   }
 
   public searchPolls(): void {
-    this.pollsStore.searchPolls(this.searchQuery());
+    this.pollsStore.searchPolls({ q: this.searchQuery(), workspace_id: this.workspace() ?? undefined });
   }
 
   public filterPolls(): void {
@@ -73,7 +73,12 @@ export class PollsComponent implements OnInit {
       return;
     }
 
-    this.pollsStore.filterPoll({ workspace_id: this.workspace() ?? undefined });
+    this.pollsStore.filterPoll({ q: this.searchQuery(), workspace_id: this.workspace() ?? undefined });
+  }
+
+  public clearWorkspace(): void {
+    this.workspace.set('');
+    this.pollsStore.filterPoll({ q: this.searchQuery(), workspace_id: this.workspace() });
   }
 
   public openPollForm(): void {
