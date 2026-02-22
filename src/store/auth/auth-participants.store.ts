@@ -1,6 +1,6 @@
 import { computed, inject } from "@angular/core";
 import { decodeJwt } from "jose";
-import { AuthParticipantSession } from "@models/auth/auth.type";
+import { AuthAccessToken, AuthParticipantSession } from "@models/auth/auth.type";
 import { signalStore, withState, withProps, patchState, withMethods, withComputed } from "@ngrx/signals";
 import { AuthService } from "@services/auth.service";
 import { GetPollParticipant, PollParticipantStatus } from "@models/polls/poll-participants.type";
@@ -36,14 +36,16 @@ export const AuthParticipantsStore = signalStore(
     pollParticipantStatus: computed(() => store.pollParticipant()?.poll_status ?? null),
   })),
   withMethods((store) => ({
-    loginParticipants: async (rfidNumber: string, code: string): Promise<void> => {
+    loginParticipants: async (rfidNumber: string, code: string): Promise<AuthAccessToken> => {
       patchState(store, { logginInLoading: true });
       try {
         const accessToken = await store.authService.loginParticipants(rfidNumber, code);
         sessionStorage.setItem('accessToken', accessToken.access_token);
         patchState(store, { accessToken: accessToken.access_token });
+        return accessToken;
       } catch (error) {
         console.error(error);
+        throw error;
       } finally {
         patchState(store, { logginInLoading: false });
       }

@@ -21,7 +21,7 @@ export class LoginFormComponent implements OnInit {
   private readonly router = inject(Router);
   private readonly authAdminStore = inject(AuthAdminStore);
 
-  public hidePassword = signal(false);
+  public hidePassword = signal(true);
 
   public logginInLoading = computed(() => this.authAdminStore.logginInLoading());
 

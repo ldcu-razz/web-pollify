@@ -18,6 +18,9 @@ import { PollVotingsComponent } from "../poll-details/poll-votings/poll-votings.
 import { DashboardComponent } from "../dashboard/dashboard.component";
 import { authAdminResolver } from "@resolvers/auth-admin.resolver";
 import { authAdminGuard } from "src/guards/auth-admin.guard";
+import { authIsSuperAdminGuard } from "src/guards/auth-is-super-admin.guard";
+import { HomeComponent } from "../home/home.component";
+import { ProfileComponent } from "../profile/profile.component";
 
 export const mainRoutes: Routes = [
   {
@@ -31,16 +34,26 @@ export const mainRoutes: Routes = [
     children: [
       {
         path: '',
+        redirectTo: ROUTES_CONSTANTS.MAIN.HOME,
+        pathMatch: 'full',
+      },
+      {
+        path: '',
         redirectTo: ROUTES_CONSTANTS.MAIN.DASHBOARD,
         pathMatch: 'full',
       },
       {
-        path: ROUTES_CONSTANTS.MAIN.POLLS,
-        component: PollsComponent,
+        path: ROUTES_CONSTANTS.MAIN.HOME,
+        component: HomeComponent,
       },
       {
         path: ROUTES_CONSTANTS.MAIN.DASHBOARD,
         component: DashboardComponent,
+        canActivate: [authIsSuperAdminGuard],
+      },
+      {
+        path: ROUTES_CONSTANTS.MAIN.POLLS,
+        component: PollsComponent,
       },
       {
         path: `${ROUTES_CONSTANTS.MAIN.POLLS}/${ROUTES_CONSTANTS.MAIN.POLL_DETAILS}`,
@@ -69,10 +82,6 @@ export const mainRoutes: Routes = [
         ],
       },
       {
-        path: `${ROUTES_CONSTANTS.MAIN.USERS}/${ROUTES_CONSTANTS.MAIN.USER_DETAILS}`,
-        component: UserDetailsComponent,
-      },
-      {
         path: ROUTES_CONSTANTS.MAIN.GROUPS,
         component: GroupsComponent
       },
@@ -83,15 +92,27 @@ export const mainRoutes: Routes = [
       {
         path: ROUTES_CONSTANTS.MAIN.USERS,
         component: UsersComponent,
+        canActivate: [authIsSuperAdminGuard],
+      },
+      {
+        path: `${ROUTES_CONSTANTS.MAIN.USERS}/${ROUTES_CONSTANTS.MAIN.USER_DETAILS}`,
+        component: UserDetailsComponent,
+        canActivate: [authIsSuperAdminGuard],
       },
       {
         path: ROUTES_CONSTANTS.MAIN.WORKSPACES,
         component: WorkspacesComponent,
+        canActivate: [authIsSuperAdminGuard],
       },
       {
         path: `${ROUTES_CONSTANTS.MAIN.WORKSPACES}/${ROUTES_CONSTANTS.MAIN.WORKSPACE_DETAILS}`,
         component: WorkspaceDetailsComponent,
-      }
+        canActivate: [authIsSuperAdminGuard],
+      },
+      {
+        path: ROUTES_CONSTANTS.MAIN.PROFILE,
+        component: ProfileComponent,
+      },
     ]
   }
 ];

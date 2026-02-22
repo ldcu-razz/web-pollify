@@ -1,0 +1,16 @@
+<mat-card appearance="outlined">
+  <mat-card-header>
+    <mat-card-title>
+      <div class="flex items-center gap-2">
+        <mat-icon>{{ icon() }}</mat-icon>
+        <span class="font-bold">{{ title() }}</span>
+      </div>
+    </mat-card-title>
+  </mat-card-header>
+  <mat-card-content>
+    <div class="flex flex-col gap-2 mt-3">
+      <span class="font-bold text-2xl">{{ value() }}</span>
+      <p class="text-sm text-gray-500">{{ description() }}</p>
+    </div>
+  </mat-card-content>
+</mat-card>

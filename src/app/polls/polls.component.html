@@ -17,14 +17,16 @@
       <mat-label>Search by name</mat-label>
       <input matInput type="text" [(ngModel)]="searchQuery" (input)="searchPolls()">
     </mat-form-field>
-    <mat-form-field appearance="outline">
-      <mat-label>Select workspace</mat-label>
-      <mat-select [(ngModel)]="workspace">
-        @for (workspace of workspaces(); track workspace.id) {
-          <mat-option [value]="workspace.id">{{ workspace.name }}</mat-option>
-        }
-      </mat-select>
-    </mat-form-field>
+    @if (!disabledWorkspaceSelectField()) {
+      <mat-form-field appearance="outline">
+        <mat-label>Select workspace</mat-label> 
+        <mat-select [(ngModel)]="workspace" (selectionChange)="filterPolls()" [disabled]="disabledWorkspaceSelectField()">
+          @for (workspace of workspaces(); track workspace.id) {
+            <mat-option [value]="workspace.id">{{ workspace.name }}</mat-option>
+          }
+        </mat-select>
+      </mat-form-field>
+    }
   </section>
 
   <section class="flex flex-col gap-2">

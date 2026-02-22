@@ -3,7 +3,7 @@
     <div class="flex justify-center mb-4">
       <img src="/assets/images/pollify-logo.svg" alt="Pollify" class="w-32 h-16">
     </div>
-    <form class="flex flex-col gap-2" [formGroup]="loginForm">
+    <form class="flex flex-col gap-2" [formGroup]="loginForm" (ngSubmit)="login()">
       <mat-form-field appearance="outline">
         <mat-label>Email</mat-label>
         <input matInput type="email" formControlName="email">

@@ -29,8 +29,10 @@ export class ParticipantsLoginFormComponent {
 
   public async login(): Promise<void> {
     try {
-      await this.authParticipantsStore.loginParticipants(this.loginForm.value.rfid_number ?? '', this.loginForm.value.code ?? '');
-      this.router.navigate([ROUTES_CONSTANTS.PARTICIPANT.BASE]);
+      const result = await this.authParticipantsStore.loginParticipants(this.loginForm.value.rfid_number ?? '', this.loginForm.value.code ?? '');
+      if (result) {
+        this.router.navigate([ROUTES_CONSTANTS.PARTICIPANT.BASE]);
+      }
     } catch (error) {
       console.error(error);
     }

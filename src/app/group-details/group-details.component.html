@@ -30,7 +30,7 @@
 
   <section class="flex flex-col gap-1">
     <div class="flex items-center gap-4">
-      <mat-form-field appearance="outline">
+      <mat-form-field appearance="outline" class="max-w-md w-full">
         <mat-icon matPrefix>search</mat-icon>
         <mat-label>Search by name, RFID number</mat-label>
         <input matInput type="text" [(ngModel)]="searchQuery" (input)="searchGroupParticipants()">

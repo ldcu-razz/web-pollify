@@ -10,6 +10,7 @@ import { PollFormComponent } from "./components/poll-form/poll-form.component";
 import { MatDialog } from "@angular/material/dialog";
 import { PollStore } from "@store/polls/polls.store";
 import { PollsTableComponent } from "./components/polls-table/polls-table.component";
+import { AuthAdminStore } from "@store/auth/auth-admin.store";
 
 @Component({
   selector: 'app-polls',
@@ -29,7 +30,8 @@ export class PollsComponent implements OnInit {
   private readonly dialog = inject(MatDialog);
   private readonly workspaceStore = inject(WorkspaceStore); 
   private readonly pollsStore = inject(PollStore);
-  
+  private readonly authAdminStore = inject(AuthAdminStore);
+
   public searchQuery = signal('');
 
   public workspace = signal<string>('');
@@ -44,16 +46,34 @@ export class PollsComponent implements OnInit {
 
   public searchLoading = computed(() => this.pollsStore.searchLoading());
 
+  public isSuperAdmin = computed(() => this.authAdminStore.isSuperAdmin());
+
+  public workspaceId = computed(() => this.authAdminStore.workspaceId());
+
+  public disabledWorkspaceSelectField = computed(() => !this.isSuperAdmin());
+
   public ngOnInit(): void {
     this.pollsStore.getPolls({
       page: this.pagination().page,
       limit: this.pagination().limit,
       total: this.pagination().total,
     }, {});
+
+    if (!this.isSuperAdmin() && this.workspaceId()) {
+      this.workspace.set(this.workspaceId() ?? '');
+    }
   }
 
   public searchPolls(): void {
     this.pollsStore.searchPolls(this.searchQuery());
+  }
+
+  public filterPolls(): void {
+    if (!this.isSuperAdmin()) {
+      return;
+    }
+
+    this.pollsStore.filterPoll({ workspace_id: this.workspace() ?? undefined });
   }
 
   public openPollForm(): void {

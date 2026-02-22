@@ -17,7 +17,8 @@ export class PollsController {
     const workspaceId = filters.workspace_id ?? null;
 
     const getPollsQuery = supabase.from(this.pollsTable).select('*')
-      .range((pagination.page - 1) * pagination.limit, (pagination.page * pagination.limit) - 1);
+      .range((pagination.page - 1) * pagination.limit, (pagination.page * pagination.limit) - 1)
+      .order('created_at', { ascending: false });
 
     if (query) {
       getPollsQuery.filter('name', 'ilike', `%${query}%`);

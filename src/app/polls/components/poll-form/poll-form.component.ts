@@ -61,11 +61,11 @@ export class PollFormComponent {
     const uuid = crypto.randomUUID().replace(/-/g, '');
     const chars = '0123456789ABCDEFGHIJKLMNOPQRSTUVWXYZ';
     let result = '';
-    for (let i = 0; i < 15; i++) {
+    for (let i = 0; i < 8; i++) {
       const idx = parseInt(uuid.slice(i * 2, i * 2 + 2), 16) % 36;
       result += chars[idx];
     }
-    return `${result.slice(0, 5)}-${result.slice(5, 10)}-${result.slice(10, 15)}`;
+    return `${result.slice(0, 4)}-${result.slice(4, 8)}`;
   });
 
   public pollFormData = signal({

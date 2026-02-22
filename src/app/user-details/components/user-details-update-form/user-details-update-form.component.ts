@@ -15,7 +15,7 @@ import bcrypt from "bcryptjs";
 import { WorkspaceStore } from "@store/workspaces/workspace.store";
 
 interface UserDetailsUpdateFormDialogData {
-  userId: string;
+  userId?: string;
   fieldUpdateType: 'full_name' | 'email' | 'status' | 'role' | 'workspace_id' | 'password';
 }
 
@@ -206,7 +206,8 @@ export class UserDetailsUpdateFormComponent {
       return;
     }
 
-    await this.userStore.updateUser(this.currentUser()?.id ?? '', {
+    const userId = this.dialogData?.userId ?? this.currentUser()?.id ?? '';
+    await this.userStore.updateUser(userId, {
       password: bcrypt.hashSync(this.userPasswordForm.newPassword().value(), 10),
     });
     this.closeDialog();

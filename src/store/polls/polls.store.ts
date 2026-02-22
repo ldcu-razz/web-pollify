@@ -5,6 +5,7 @@ import { GetPollsFilter, PatchPoll, Poll, PostPoll } from "@models/polls/polls.t
 import { patchState, signalStore, withMethods, withProps, withState } from "@ngrx/signals";
 import { rxMethod } from "@ngrx/signals/rxjs-interop";
 import { PollsService } from "@services/polls.service";
+import { AuthAdminStore } from "@store/auth/auth-admin.store";
 import { pipe } from "rxjs";
 import { debounceTime, distinctUntilChanged, switchMap, tap } from "rxjs/operators";
 
@@ -41,13 +42,16 @@ export const PollStore = signalStore(
   withState(initialState),
   withProps(() => ({
     pollsService: inject(PollsService),
+    authAdminStore: inject(AuthAdminStore),
     snackbar: inject(MatSnackBar),
   })),
-  withMethods(({ pollsService, snackbar, ...store }) => ({
+  withMethods(({ pollsService, authAdminStore, snackbar, ...store }) => ({
     getPolls: async (pagination: Pagination, filters: GetPollsFilter) => {
       patchState(store, { loading: true });
       try {
-        const result = await pollsService.getPolls(pagination, filters);
+        const isSuperAdmin = authAdminStore.isSuperAdmin();
+        const modifiedFilters = isSuperAdmin ? filters : { ...filters, workspace_id: authAdminStore.workspaceId() ?? undefined };
+        const result = await pollsService.getPolls(pagination, modifiedFilters);
         patchState(store, { polls: result.data, pagination: {
           page: result.page,
           limit: result.limit,
@@ -76,7 +80,10 @@ export const PollStore = signalStore(
         distinctUntilChanged(),
         tap((query) => patchState(store, { searchQuery: query, searchLoading: true })),
         switchMap(async (query) => {
-          const result = await pollsService.getPolls(store.pagination(), { q: query });
+          const isSuperAdmin = authAdminStore.isSuperAdmin();
+          const modifiedFilters = isSuperAdmin ? { q: query } : { q: query, workspace_id: authAdminStore.workspaceId() ?? undefined };
+
+          const result = await pollsService.getPolls(store.pagination(), modifiedFilters);
           patchState(store, { polls: result.data, pagination: {
             page: result.page,
             limit: result.limit,
@@ -85,6 +92,21 @@ export const PollStore = signalStore(
         })
       )
     ),
+
+    filterPoll: async (filters: GetPollsFilter) => {
+      patchState(store, { loading: true });
+      try {
+        const result = await pollsService.getPolls(store.pagination(), filters);
+        patchState(store, { polls: result.data, pagination: {
+          page: result.page,
+          limit: result.limit,
+          total: result.total,
+        }, loading: false });
+      } catch (error) {
+        patchState(store, { error: error as string, loading: false });
+        snackbar.open("Failed to filter polls", "Close", { duration: 3000 });
+      }
+    },
 
     createPoll: async (poll: PostPoll) => {
       patchState(store, { formLoading: true });

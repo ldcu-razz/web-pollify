@@ -5,6 +5,7 @@ export const ROUTES = {
   },
   MAIN: {
     BASE: 'main',
+    HOME: 'home',
     DASHBOARD: 'dashboard',
     POLLS: 'polls',
     POLL_DETAILS: ':id',
@@ -18,6 +19,7 @@ export const ROUTES = {
     USER_DETAILS: ':id',
     WORKSPACES: 'workspaces',
     WORKSPACE_DETAILS: ':id',
+    PROFILE: 'profile',
   },
   PARTICIPANT: {
     BASE: 'participant',

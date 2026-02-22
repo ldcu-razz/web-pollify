@@ -1,0 +1,68 @@
+@if (!session()) {
+  <div class="flex justify-center items-center gap-2 mt-16">
+    <mat-progress-spinner mode="indeterminate" diameter="40"></mat-progress-spinner>
+    <span>Loading profile...</span>
+  </div>
+} @else {
+  <section class="flex flex-col gap-4 mt-8 max-w-3xl mx-auto">
+    <section class="flex justify-between items-center">
+      <section class="flex items-center gap-4">
+        <app-avatar [avatar]="userAvatar()" [name]="userName()" size="lg"></app-avatar>
+        <h2 class="text-2xl font-bold">{{ userName() }}</h2>
+      </section>
+    </section>
+
+    <section class="flex flex-col gap-1">
+      <div class="flex items-center gap-6 px-6 py-6 rounded-md mat-bg-surface-container-low rounded-t-3xl">
+        <mat-icon>person</mat-icon>
+        <div class="flex flex-col">
+          <span class="text-md font-bold">Full name</span>
+          <span>{{ userName() }}</span>
+        </div>
+      </div>
+      <div class="flex items-center gap-6 px-6 py-6 rounded-md mat-bg-surface-container-low">
+        <mat-icon>email</mat-icon>
+        <div class="flex flex-col">
+          <span class="text-md font-bold">Email</span>
+          <span>{{ session()?.email }}</span>
+        </div>
+      </div>
+      <div class="flex items-center gap-6 px-6 py-6 rounded-md mat-bg-surface-container-low">
+        <mat-icon>check_circle</mat-icon>
+        <div class="flex flex-col">
+          <span class="text-md font-bold">Status</span>
+          <span>{{ session()?.status | textTransform }}</span>
+        </div>
+      </div>
+      <div class="flex items-center gap-6 px-6 py-6 rounded-md mat-bg-surface-container-low">
+        <mat-icon>person_book</mat-icon>
+        <div class="flex flex-col">
+          <span class="text-md font-bold">Role</span>
+          <span>{{ session()?.role | textTransform }}</span>
+        </div>
+      </div>
+      <div
+        class="flex items-center gap-6 px-6 py-6 rounded-md mat-bg-surface-container-low cursor-pointer hover:bg-(--md-sys-color-surface-container-high)!"
+        role="button"
+        tabindex="0"
+        (click)="openChangePasswordDialog()"
+        (keydown.enter)="openChangePasswordDialog()"
+        (keydown.space)="openChangePasswordDialog(); $event.preventDefault()"
+      >
+        <mat-icon>lock</mat-icon>
+        <div class="flex flex-col flex-1">
+          <span class="text-md font-bold">Password</span>
+          <span>********</span>
+        </div>
+        <mat-icon class="text-[1.25rem]">edit</mat-icon>
+      </div>
+      <div class="flex items-center gap-6 px-6 py-6 rounded-md mat-bg-surface-container-low rounded-b-3xl">
+        <mat-icon>computer</mat-icon>
+        <div class="flex flex-col">
+          <span class="text-md font-bold">Workspace</span>
+          <span>{{ workspaceName() }}</span>
+        </div>
+      </div>
+    </section>
+  </section>
+}

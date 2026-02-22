@@ -6,6 +6,7 @@ import { GroupsService } from "@services/groups.service";
 import { MatSnackBar } from "@angular/material/snack-bar";
 import { debounceTime, distinctUntilChanged, pipe, switchMap, tap } from "rxjs";
 import { rxMethod } from "@ngrx/signals/rxjs-interop";
+import { AuthAdminStore } from "@store/auth/auth-admin.store";
 
 interface GroupsState {
   groups: GetGroup[];
@@ -43,6 +44,7 @@ export const GroupsStore = signalStore(
   { providedIn: 'root' },
   withState(initialState),
   withProps(() => ({
+    authAdminStore: inject(AuthAdminStore),
     groupsService: inject(GroupsService),
     snackbar: inject(MatSnackBar),
   })),
@@ -50,11 +52,13 @@ export const GroupsStore = signalStore(
     groupMap: computed(() => new Map(store.groups().map(group => [group.id, group]))),
     groupsLengthReached: computed(() => store.groups().length >= store.pagination().total),
   })),
-  withMethods(({ groupsService, snackbar, ...store }) => ({
+  withMethods(({ groupsService, authAdminStore, snackbar, ...store }) => ({
     getGroups: async (pagination: Pagination, filters: GetGroupsFilter) => {
       patchState(store, { loading: true });
       try {
-        const result = await groupsService.getGroups(pagination, filters);
+        const isSuperAdmin = authAdminStore.isSuperAdmin();
+        const modifiedFilters = isSuperAdmin ? filters : { ...filters, workspace_id: authAdminStore.workspaceId() ?? undefined };
+        const result = await groupsService.getGroups(pagination, modifiedFilters);
         patchState(store, { groups: result.data, pagination: {
           page: result.page,
           limit: result.limit,
@@ -74,7 +78,9 @@ export const GroupsStore = signalStore(
         distinctUntilChanged(),
         tap((query) => patchState(store, { searchQuery: query, searchLoading: true })),
         switchMap(async (query) => {
-          const result = await groupsService.getGroups(store.pagination(), { q: query });
+          const isSuperAdmin = authAdminStore.isSuperAdmin();
+          const modifiedFilters = isSuperAdmin ? { q: query } : { q: query, workspace_id: authAdminStore.workspaceId() ?? undefined };
+          const result = await groupsService.getGroups(store.pagination(), modifiedFilters);
           patchState(store, { groups: result.data, pagination: {
             page: result.page,
             limit: result.limit,
