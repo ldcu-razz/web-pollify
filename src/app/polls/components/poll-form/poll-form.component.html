@@ -15,7 +15,7 @@
 
     <mat-form-field appearance="outline" class="w-full">
       <mat-label>Poll Description</mat-label>
-      <textarea matInput type="text" [formField]="pollForm.description"></textarea>
+      <textarea matInput cdkTextareaAutosize style="resize: vertical; min-height: 50px; max-height: 250px; overflow-y: auto;" [formField]="pollForm.description"></textarea>
       @if (pollForm.description().touched() && pollForm.description().required()) {
         <mat-error>Poll description is required</mat-error>
       }
