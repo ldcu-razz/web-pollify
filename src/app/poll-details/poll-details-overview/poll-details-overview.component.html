@@ -39,7 +39,7 @@
         <section class="flex gap-2 flex-wrap">
           <mat-form-field appearance="outline" class="flex-1 min-w-[140px]">
             <mat-label>Start Date</mat-label>
-            <input matInput [matDatepicker]="startDatePicker" [min]="minDate()" [(ngModel)]="startDate">
+            <input matInput [matDatepicker]="startDatePicker" [min]="minDate()" [(ngModel)]="startDate" placeholder="{{ minDate() | date:'MM/dd/yyyy' }}" readonly>
             <mat-datepicker-toggle matSuffix [for]="startDatePicker"></mat-datepicker-toggle>
             <mat-datepicker #startDatePicker></mat-datepicker>
           </mat-form-field>
@@ -51,7 +51,7 @@
         <section class="flex gap-2 flex-wrap">
           <mat-form-field appearance="outline" class="flex-1 min-w-[140px]">
             <mat-label>End Date</mat-label>
-            <input matInput [matDatepicker]="endDatePicker" [min]="startDate()" [(ngModel)]="endDate">
+            <input matInput [matDatepicker]="endDatePicker" [min]="startDate()" [(ngModel)]="endDate" readonly>
             <mat-datepicker-toggle matSuffix [for]="endDatePicker"></mat-datepicker-toggle>
             <mat-datepicker #endDatePicker></mat-datepicker>
           </mat-form-field>
