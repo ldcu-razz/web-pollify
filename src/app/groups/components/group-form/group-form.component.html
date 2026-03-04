@@ -15,7 +15,7 @@
 
     <mat-form-field appearance="outline" class="w-full">
       <mat-label>Group Description</mat-label>
-      <textarea matInput type="text" [formField]="groupForm.description"></textarea>
+      <textarea matInput cdkTextareaAutosize style="resize: vertical; min-height: 50px; max-height: 250px; overflow-y: auto;" [formField]="groupForm.description"></textarea>
       @if (groupForm.description().touched() && groupForm.description().required()) {
         <mat-error>Group description is required</mat-error>
       }

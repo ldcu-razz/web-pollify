@@ -15,7 +15,7 @@
 
     <mat-form-field appearance="outline" class="w-full">
       <mat-label>Workspace Description</mat-label>
-      <textarea matInput type="text" [formField]="workspaceForm.description" placeholder="Workspace Description"></textarea>
+      <textarea matInput cdkTextareaAutosize style="resize: vertical; min-height: 50px; max-height: 250px; overflow-y: auto;"[formField]="workspaceForm.description" placeholder="Workspace Description"></textarea>
       @if (workspaceForm.description().touched() && workspaceForm.description().required()) {
         <mat-error>Workspace description is required</mat-error>
       }
