@@ -1,7 +1,7 @@
 import { PaginationSchema } from "@models/common/common.schema";
 import { z } from "zod";
 
-export const UserRolesSchema = z.enum(['super_admin', 'admin', 'participant']);
+export const UserRolesSchema = z.enum(['super_admin', 'admin']);
 export const UserStatusSchema = z.enum(['active', 'inactive', 'needs_verification']);
 
 export const UserSchema = z.object({
