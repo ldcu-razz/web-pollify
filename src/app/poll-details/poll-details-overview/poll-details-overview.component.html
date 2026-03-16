@@ -39,25 +39,25 @@
         <section class="flex gap-2 flex-wrap">
           <mat-form-field appearance="outline" class="flex-1 min-w-[140px]">
             <mat-label>Start Date</mat-label>
-            <input matInput [matDatepicker]="startDatePicker" [min]="minDate()" [(ngModel)]="startDate" placeholder="{{ minDate() | date:'MM/dd/yyyy' }}" readonly>
-            <mat-datepicker-toggle matSuffix [for]="startDatePicker"></mat-datepicker-toggle>
+            <input matInput [matDatepicker]="startDatePicker" [min]="minDate()" [(ngModel)]="startDate" placeholder="{{ minDate() | date:'MM/dd/yyyy' }}" readonly  [disabled]="!isPollDraft()">
+            <mat-datepicker-toggle matSuffix [for]="startDatePicker" [disabled]="!isPollDraft()"></mat-datepicker-toggle>
             <mat-datepicker #startDatePicker></mat-datepicker>
           </mat-form-field>
           <mat-form-field appearance="outline" class="w-40">
             <mat-label>Start Time</mat-label>
-            <input matInput type="time" [(ngModel)]="startTime" style="overflow: visible; padding-bottom: 4px;">
+            <input matInput type="time" [(ngModel)]="startTime" style="overflow: visible; padding-bottom: 4px;" [disabled]="!isPollDraft()">
           </mat-form-field>
         </section>
         <section class="flex gap-2 flex-wrap">
           <mat-form-field appearance="outline" class="flex-1 min-w-[140px]">
             <mat-label>End Date</mat-label>
-            <input matInput [matDatepicker]="endDatePicker" [min]="startDate()" [(ngModel)]="endDate" readonly>
-            <mat-datepicker-toggle matSuffix [for]="endDatePicker"></mat-datepicker-toggle>
+            <input matInput [matDatepicker]="endDatePicker" [min]="startDate()" [(ngModel)]="endDate" readonly [disabled]="!isPollDraft()">
+            <mat-datepicker-toggle matSuffix [for]="endDatePicker" [disabled]="!isPollDraft()"></mat-datepicker-toggle>
             <mat-datepicker #endDatePicker></mat-datepicker>
           </mat-form-field>
           <mat-form-field appearance="outline" class="w-40">
             <mat-label>End Time</mat-label>
-            <input matInput type="time" [min]="startTime()" [(ngModel)]="endTime" style="overflow: visible; padding-bottom: 4px;">
+            <input matInput type="time" [min]="startTime()" [(ngModel)]="endTime" style="overflow: visible; padding-bottom: 4px;" [disabled]="!isPollDraft()">
           </mat-form-field>
         </section>
       </section>
