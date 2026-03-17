@@ -16,7 +16,7 @@
 
       <mat-form-field appearance="outline" class="w-full">
         <mat-label>Description</mat-label>
-        <textarea matInput type="text" [formField]="candidateForm.description"></textarea>
+        <textarea matInput cdkTextareaAutosize style="resize: vertical; min-height: 50px; max-height: 250px; overflow-y: auto;" [formField]="candidateForm.description"></textarea>
         @if (candidateForm.description().touched() && candidateForm.description().required()) {
           <mat-error>Description is required</mat-error>
         }
