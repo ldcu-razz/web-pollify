@@ -4,7 +4,7 @@ import { MatButtonModule } from "@angular/material/button";
 import { MatFormFieldModule } from "@angular/material/form-field";
 import { Component, computed, inject, signal } from "@angular/core";
 import { GetPollParticipant, PatchPollParticipants, PostPollParticipants } from "@models/polls/poll-participants.type";
-import { form, FormField, required } from "@angular/forms/signals";
+import { form, FormField, required, validate } from "@angular/forms/signals";
 import { MatIconModule } from "@angular/material/icon";
 import { MatProgressSpinner } from "@angular/material/progress-spinner";
 import { MatSelectModule } from "@angular/material/select";
@@ -24,6 +24,8 @@ interface PollPartificipantsFormData {
   imports: [MatFormFieldModule, MatInputModule, MatButtonModule, MatDialogModule, MatIconModule, MatProgressSpinner, MatSelectModule, FormField]
 })
 export class PollPartificipantsFormComponent {
+  public readonly rfidMaxLength = 5;
+
   private readonly dialogRef = inject(MatDialogRef<PollPartificipantsFormComponent>);
   private readonly data = inject<PollPartificipantsFormData>(MAT_DIALOG_DATA);
   private readonly pollDetailsStore = inject(PollDetailsStore);
@@ -48,8 +50,28 @@ export class PollPartificipantsFormComponent {
   public participantForm = form(this.participantFormData, (schemaPath) => {
     required(schemaPath.name, { message: 'Name is required' });
     required(schemaPath.rfid_number, { message: 'RFID number is required' });
+    validate(schemaPath.rfid_number, (ctx) => {
+      const value = (ctx.value() as string).trim();
+
+      if (value.length === 0) {
+        return null;
+      }
+
+      if (value.length > this.rfidMaxLength) {
+        return {
+          kind: 'rfidMaxLength',
+          message: `RFID number must not exceed ${this.rfidMaxLength} characters`,
+        };
+      }
+
+      return null;
+    });
     required(schemaPath.department, { message: 'Department is required' });
   });
+
+  public hasRfidMaxLengthError = computed(() =>
+    this.participantForm.rfid_number().errors().some((error: { kind: string }) => error.kind === 'rfidMaxLength')
+  );
 
   public isFormInvalid = computed(() => this.participantForm().invalid());
   public isFormTouched = computed(() => this.participantForm().touched());
@@ -59,6 +81,23 @@ export class PollPartificipantsFormComponent {
   public formLoading = computed(() => false);
 
   public departments = computed(() => DepartmentsTypeSchema.options);
+
+  public onRfidInput(event: Event): void {
+    const input = event.target as HTMLInputElement;
+    const value = input.value ?? '';
+
+    if (value.length <= this.rfidMaxLength) {
+      return;
+    }
+
+    const trimmedValue = value.slice(0, this.rfidMaxLength);
+    input.value = trimmedValue;
+
+    this.participantFormData.update((current) => ({
+      ...current,
+      rfid_number: trimmedValue,
+    }));
+  }
 
   public submitForm(): void {
     if (this.isCreatedMode()) {
@@ -101,4 +140,4 @@ export class PollPartificipantsFormComponent {
   public closeDialog(): void {
     this.dialogRef.close();
   }
-} 
+}
