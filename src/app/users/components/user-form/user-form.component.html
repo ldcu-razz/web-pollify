@@ -31,6 +31,8 @@
           <mat-error>Email is required</mat-error>
         } @else if (userForm.email().touched() && hasEmailInvalidError()) {
           <mat-error>Your email address is invalid</mat-error>
+        } @else if (userForm.email().touched() && hasDuplicateEmailError()) {
+          <mat-error>Your email address is already in use</mat-error>
         }
       </mat-form-field>
 
