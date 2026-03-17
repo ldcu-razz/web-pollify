@@ -64,6 +64,12 @@ export class UserFormComponent {
     required(schemaPath.last_name, {message: "Last name is required"});
     required(schemaPath.email, {message: "Email is required"});
     email(schemaPath.email, {message: "Your email address is invalid"});
+    validate(schemaPath.email, (ctx) => { const emailExists = this.userStore.users().some((user) => user.email === ctx.value());
+    if (emailExists) {
+      return { kind: "duplicateEmail", message: "Your email is already in use" };
+    }
+      return null;
+    });
     required(schemaPath.password, {message: "Password is required"});
     required(schemaPath.status, {message: "Status is required"});
     required(schemaPath.role, {message: "Role is required"});
@@ -84,6 +90,10 @@ export class UserFormComponent {
       disabled(schemaPath.workspace_id);
     }
   });
+
+  public hasDuplicateEmailError = computed(() =>
+    this.userForm.email().errors().some((error: { kind: string }) => error.kind === "duplicateEmail")
+  )
   
   public hasPasswordMatchError = computed(() => 
     this.userForm.confirmPassword().errors().some((error: { kind: string }) => error.kind === "passwordMatch")
@@ -115,6 +125,7 @@ export class UserFormComponent {
   }
 
   public submitForm(): void {
+    this.userForm.email().markAsTouched();
     if (this.isFormInvalid()) return;
     if (this.mode() === "create") {
       this.createUser();
