@@ -103,7 +103,7 @@ export class PositionFormComponent {
 
   public positionForm = form(this.positionFormData, (schemaPath) => {
     required(schemaPath.position, { message: 'Position is required' });
-    disabled(schemaPath.position);
+    disabled(schemaPath.position, () => !this.isPollDraft() || this.pollPositionsStore.pollPositions().length === 0);
     required(schemaPath.name, { message: 'Name is required' });
   });
 
