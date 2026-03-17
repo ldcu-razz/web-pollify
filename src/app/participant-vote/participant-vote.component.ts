@@ -79,45 +79,49 @@ export class ParticipantVoteComponent implements OnInit, OnDestroy {
     const remainingMs = endTime.getTime() - now.getTime();
 
     if (Number.isNaN(remainingMs) || remainingMs <= 0) {
-      return '0 hour 0 minute and 0 second';
+      return '0 day 0 hour 0 minute and 0 second';
     }
 
-    const hours = Math.floor(remainingMs / (1000 * 60 * 60));
+    const days = Math.floor(remainingMs / (1000 * 60 * 60 * 24));
+    const hours = Math.floor((remainingMs % (1000 * 60 * 60 * 24)) / (1000 * 60 * 60));
     const minutes = Math.floor((remainingMs % (1000 * 60 * 60)) / (1000 * 60));
     const seconds = Math.floor((remainingMs % (1000 * 60)) / 1000);
 
+    const daysStr = days > 0 ? `${days} day${days !== 1 ? 's' : ''}, ` : '';
     const hoursStr = hours < 10 ? `0${hours}` : `${hours}`;
     const hourLabel = hours === 1 ? 'hour' : 'hours';
     const minuteLabel = minutes === 1 ? 'minute' : 'minutes';
     const secondLabel = seconds === 1 ? 'second' : 'seconds';
 
-    return `${hoursStr} ${hourLabel}, ${minutes} ${minuteLabel} and ${seconds} ${secondLabel}`;
+    return `${daysStr}${hoursStr} ${hourLabel}, ${minutes} ${minuteLabel} and ${seconds} ${secondLabel}`.trim();
   });
 
   public timeUntilStart = computed(() => {
     this.tick(); // Triggers recomputation every second
     const dateTimeStart = this.poll()?.date_time_start;
     if (!dateTimeStart) {
-      return '0 hour 0 minute and 0 second';
+      return '0 day 0 hour 0 minute and 0 second';
     }
     const now = new Date();
     const startTime = new Date(dateTimeStart);
     const remainingMs = startTime.getTime() - now.getTime();
 
     if (Number.isNaN(remainingMs) || remainingMs <= 0) {
-      return '0 hour 0 minute and 0 second';
+      return '0 day 0 hour 0 minute and 0 second';
     }
 
-    const hours = Math.floor(remainingMs / (1000 * 60 * 60));
+    const days = Math.floor(remainingMs / (1000 * 60 * 60 * 24));
+    const hours = Math.floor((remainingMs % (1000 * 60 * 60 * 24)) / (1000 * 60 * 60));
     const minutes = Math.floor((remainingMs % (1000 * 60 * 60)) / (1000 * 60));
     const seconds = Math.floor((remainingMs % (1000 * 60)) / 1000);
 
+    const daysStr = days > 0 ? `${days} day${days !== 1 ? 's' : ''}, ` : '';
     const hoursStr = hours < 10 ? `0${hours}` : `${hours}`;
     const hourLabel = hours === 1 ? 'hour' : 'hours';
     const minuteLabel = minutes === 1 ? 'minute' : 'minutes';
     const secondLabel = seconds === 1 ? 'second' : 'seconds';
 
-    return `${hoursStr} ${hourLabel}, ${minutes} ${minuteLabel} and ${seconds} ${secondLabel}`;
+    return `${daysStr}${hoursStr} ${hourLabel}, ${minutes} ${minuteLabel} and ${seconds} ${secondLabel}`.trim();
   });
 
   public async ngOnInit(): Promise<void> {
