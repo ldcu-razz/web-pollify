@@ -7,7 +7,7 @@ import { MatIconModule } from "@angular/material/icon";
 import { MatProgressSpinnerModule } from "@angular/material/progress-spinner";
 import { MAT_DIALOG_DATA } from "@angular/material/dialog";
 import { MatDialogRef } from "@angular/material/dialog";
-import { form, FormField, required } from "@angular/forms/signals";
+import { form, FormField, required, validate } from "@angular/forms/signals";
 import { GroupDetailsStore } from "@store/groups/group-details.store";
 import { DepartmentsTypeSchema } from "@models/departments/departments.schema";
 import { WorkspaceStore } from "@store/workspaces/workspace.store";
@@ -25,6 +25,8 @@ interface GroupParticipantFormProps {
   imports: [MatFormFieldModule, MatInputModule, MatSelectModule, MatButtonModule, MatIconModule, MatProgressSpinnerModule, FormField]
 })
 export class GroupParticipantFormComponent {
+  public readonly rfidMaxLength = 5;
+
   private readonly dialogRef = inject(MatDialogRef);
   private readonly data = inject<GroupParticipantFormProps>(MAT_DIALOG_DATA);
   private readonly groupDetailsStore = inject(GroupDetailsStore);
@@ -50,8 +52,28 @@ export class GroupParticipantFormComponent {
   public groupParticipantForm = form(this.groupParticipantData, (schemaPath) => {
     required(schemaPath.name, { message: 'Name is required' });
     required(schemaPath.rfid_number, { message: 'RFID number is required' });
+    validate(schemaPath.rfid_number, (ctx) => {
+      const value = (ctx.value() as string).trim();
+
+      if (value.length === 0) {
+        return null;
+      }
+
+      if (value.length > this.rfidMaxLength) {
+        return {
+          kind: 'rfidMaxLength',
+          message: `RFID number must not exceed ${this.rfidMaxLength} characters`,
+        };
+      }
+
+      return null;
+    });
     required(schemaPath.department, { message: 'Department is required' });
   })
+
+  public hasRfidMaxLengthError = computed(() =>
+    this.groupParticipantForm.rfid_number().errors().some((error: { kind: string }) => error.kind === 'rfidMaxLength')
+  );
 
   public isFormInvalid = computed(() => this.groupParticipantForm().invalid());
   public isFormTouched = computed(() => this.groupParticipantForm().touched());
@@ -62,6 +84,32 @@ export class GroupParticipantFormComponent {
   public departments = computed(() => DepartmentsTypeSchema.options);
 
   public workspaces = computed(() => this.workspaceStore.workspaces());
+
+  public onRfidKeydown(event: KeyboardEvent): void {
+    const allowedKeys = ['Backspace', 'Delete', 'ArrowLeft', 'ArrowRight', 'Tab'];
+    const isNumber = /^[0-9]$/.test(event.key);
+
+    if (!isNumber && !allowedKeys.includes(event.key)) {
+      event.preventDefault();
+    }
+  }
+
+  public onRfidInput(event: Event): void {
+    const input = event.target as HTMLInputElement;
+    const value = input.value ?? '';
+
+    if (value.length <= this.rfidMaxLength) {
+      return;
+    }
+
+    const trimmedValue = value.slice(0, this.rfidMaxLength);
+    input.value = trimmedValue;
+
+    this.groupParticipantData.update((current) => ({
+      ...current,
+      rfid_number: trimmedValue,
+    }));
+  }
 
   public closeDialog(): void {
     this.dialogRef.close();
