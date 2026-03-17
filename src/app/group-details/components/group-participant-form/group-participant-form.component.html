@@ -7,9 +7,13 @@
   <form class="mt-4 flex flex-col gap-4">
     <mat-form-field appearance="outline" class="w-full">
       <mat-label>RFID Number</mat-label>
-      <input matInput type="text" [formField]="groupParticipantForm.rfid_number">
+      <input matInput type="text" [formField]="groupParticipantForm.rfid_number"
+        (input)="onRfidInput($event)">
       @if (groupParticipantForm.rfid_number().touched() && groupParticipantForm.rfid_number().required()) {
         <mat-error>RFID number is required</mat-error>
+      }
+      @if (groupParticipantForm.rfid_number().touched() && hasRfidMaxLengthError()) {
+        <mat-error>RFID number must not exceed {{ rfidMaxLength }} characters</mat-error>
       }
     </mat-form-field>
 
@@ -45,7 +49,7 @@
       }
     </mat-form-field>
   </form>
-  
+
   <section class="flex justify-end gap-2">
     <button matButton="tonal" color="primary" (click)="closeDialog()">Cancel</button>
     <button matButton="filled" color="primary" [disabled]="(isFormInvalid() && isFormTouched()) || formLoading()" (click)="submitForm()">
