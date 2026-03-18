@@ -30,6 +30,10 @@ export const PollDetailsStore = signalStore(
     isPollPublished: computed(() => store.poll()?.status === PollStatusSchema.enum.published),
     isPollClosed: computed(() => store.poll()?.status === PollStatusSchema.enum.closed),
     isPollDraft: computed(() => store.poll()?.status === PollStatusSchema.enum.draft),
+    hasValidConfig: computed(() => {
+      const p = store.poll();
+      return p ? p.total_positions > 0 && p.total_candidates > 0 : false;
+    }),
     isPollExceedToEndDateToday: computed(() => {
       const end = store.poll()?.date_time_end;
       if (!end) {
@@ -140,6 +144,11 @@ export const PollDetailsStore = signalStore(
     },
 
     publishPoll: async (pollId: string): Promise<void> => {
+      const poll = store.poll();
+      if (!poll || poll.total_positions === 0 || poll.total_candidates === 0) {
+        snackbar.open('Cannot publish poll. Please add at least one position and one candidate assigned to a position.', 'Close', { duration: 5000 });
+        return;
+      }
       patchState(store, { updatingPoll: true });
       try {
         const result = await pollDetailsService.updatePoll(pollId, {
@@ -147,6 +156,7 @@ export const PollDetailsStore = signalStore(
           updated_at: new Date().toISOString(),
         });
         patchState(store, { poll: result });
+        snackbar.open('Poll published successfully', 'Close', { duration: 3000 });
       } catch (error) {
         console.error(error);
         snackbar.open('Failed to publish poll', 'Close', { duration: 3000 });
