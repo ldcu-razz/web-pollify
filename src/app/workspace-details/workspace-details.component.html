@@ -14,11 +14,11 @@
   @else {
     <section class="flex flex-col gap-2">
       <div class="flex justify-between items-start">
-        <div class="flex gap-4">
+        <div class="flex gap-4 min-w-0">
           <app-avatar [avatar]="currentWorkspace()?.avatar ?? null" [name]="currentWorkspace()?.name ?? ''" size="lg"></app-avatar>
-          <div class="flex flex-col gap-1">
+          <div class="flex flex-col gap-1  min-w-0">
             <h1 class="text-3xl font-bold">{{ currentWorkspace()?.name }}</h1>
-            <p class="text-sm text-gray-500 max-w-md">
+            <p class="text-sm text-gray-500 max-w-md break-all">
               {{ currentWorkspace()?.description }}
             </p>
           </div>
