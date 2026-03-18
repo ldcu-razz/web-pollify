@@ -82,7 +82,7 @@ export class PollsController {
   public async updatePoll(id: string, poll: PatchPoll): Promise<GetPoll> {
     const supabase = await this.supabase.supabaseClient();
 
-    // Fetch current poll status
+   
     const { data: currentData, error: currentError } = await supabase
       .from(this.pollsTable)
       .select('status')
@@ -96,7 +96,7 @@ export class PollsController {
     const newStatus = (poll as any).status;
 
     if (currentStatus !== 'published' && newStatus === 'published') {
-      // Validate at least one position and one assigned candidate
+     
       const { count: positionsCount, error: positionsError } = await supabase
         .from('poll_positions')
         .select('*', { count: 'exact', head: true })
