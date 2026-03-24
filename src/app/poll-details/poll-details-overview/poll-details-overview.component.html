@@ -66,7 +66,7 @@
           <button matButton="outlined" color="primary" (click)="resetPollDuration()">
             <span>Reset</span>
           </button>
-          <button matButton="filled" color="primary" (click)="setPollDuration()">
+          <button matButton="filled" color="primary" (click)="setPollDuration()" [disabled]="isScheduleInvalid()">
             <span>Set poll schedule</span>
           </button>
         </section>

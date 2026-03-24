@@ -50,6 +50,7 @@ export class PollDetailsOverviewComponent {
   public startTime = signal<string>('09:00');
   public endDate = signal<Date | null>(null);
   public endTime = signal<string>('17:00');
+  public isScheduleInvalid = computed(() => this.endTime() === this.startTime());
   public minDate = computed(() => new Date());
 
   public startDateTime = computed(() => {
