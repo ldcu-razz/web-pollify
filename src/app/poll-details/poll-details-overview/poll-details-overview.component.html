@@ -51,7 +51,7 @@
         <section class="flex gap-2 flex-wrap">
           <mat-form-field appearance="outline" class="flex-1 min-w-[140px]">
             <mat-label>End Date</mat-label>
-            <input matInput [matDatepicker]="endDatePicker" [min]="startDate()" [(ngModel)]="endDate" readonly [disabled]="!isPollDraft()">
+            <input matInput [matDatepicker]="endDatePicker" [min]="minDate()" [(ngModel)]="endDate" readonly [disabled]="!isPollDraft()">
             <mat-datepicker-toggle matSuffix [for]="endDatePicker" [disabled]="!isPollDraft()"></mat-datepicker-toggle>
             <mat-datepicker #endDatePicker></mat-datepicker>
           </mat-form-field>
