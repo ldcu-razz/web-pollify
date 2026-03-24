@@ -110,9 +110,9 @@
         <p class="text-2xl font-bold mt-auto">{{ poll()?.total_positions }}</p>
       </section>
       <section class="col-span-1 md:col-span-1 border border-(--mat-sys-outline-variant) flex flex-col rounded-xl p-4 h-full">
-        <mat-icon class="size-10! text-[38px]! mat-text-secondary">percent</mat-icon>
-        <h3 class="text-lg">Percentage of Votes:</h3>
-        <p class="text-2xl font-bold mt-auto">100%</p>
+        <mat-icon class="size-10! text-[38px]! mat-text-secondary">poll</mat-icon>
+        <h3 class="text-lg">Total Votes:</h3>
+        <p class="text-2xl font-bold mt-auto">{{ ((poll()?.total_positions ?? 0) * (poll()?.total_candidates ?? 0)) * (poll()?.total_participants ?? 0) }}</p>
       </section>
     </section>
   

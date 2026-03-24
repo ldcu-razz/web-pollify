@@ -5,6 +5,15 @@
   </section>
 
   <form class="mt-4 flex flex-col gap-4">
+    <section class="flex items-center gap-2">
+      <app-avatar
+        [avatar]="candidateFormData().avatar"
+        [name]="candidateFormData().name"
+        [editable]="true"
+        [size]="'xxl'"
+        (savedImage)="onAvatarSaved($event)"
+      ></app-avatar>
+    </section>
     <section class="grid grid-cols-1 gap-4">
       <mat-form-field appearance="outline" class="w-full">
         <mat-label>Name</mat-label>

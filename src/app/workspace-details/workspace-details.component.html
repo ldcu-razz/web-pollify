@@ -18,7 +18,7 @@
           <app-avatar class="shrink-0" [avatar]="currentWorkspace()?.avatar ?? null" [name]="currentWorkspace()?.name ?? ''" size="lg"></app-avatar>
           <div class="flex flex-col gap-1 min-w-0 overflow-hidden">
             <h1 class="text-3xl font-bold">{{ currentWorkspace()?.name }}</h1>
-            <p class="text-sm text-gray-500 max-w-full break-all">
+            <p class="text-sm text-gray-500 max-w-full break-word">
               {{ currentWorkspace()?.description }}
             </p>
           </div>

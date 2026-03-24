@@ -9,6 +9,7 @@ import { form, FormField, required } from "@angular/forms/signals";
 import { MatProgressSpinnerModule } from "@angular/material/progress-spinner";
 import { PollCandidatesStore } from "@store/poll-details/poll-candidates.store";
 import { PollDetailsStore } from "@store/poll-details/poll-details.store";
+import { AvatarComponent } from "@components/avatar/avatar.component";
 
 interface PollCandidateFormData {
   mode: 'create' | 'update';
@@ -19,7 +20,7 @@ interface PollCandidateFormData {
   selector: 'app-poll-candidate-form',
   templateUrl: './poll-candidate-form.component.html',
   styleUrls: ['./poll-candidate-form.component.scss'],
-  imports: [MatFormFieldModule, MatInputModule, MatButtonModule, MatIconModule, MatDialogModule, MatProgressSpinnerModule, FormField]
+  imports: [MatFormFieldModule, MatInputModule, MatButtonModule, MatIconModule, MatDialogModule, MatProgressSpinnerModule, FormField, AvatarComponent]
 })
 export class PollCandidateFormComponent {
   private readonly dialogRef = inject(MatDialogRef<PollCandidateFormComponent>);
@@ -88,6 +89,13 @@ export class PollCandidateFormComponent {
 
     this.pollCandidatesStore.updatePollCandidate(this.candidate()?.id ?? '', payload);
     this.closeDialog();
+  }
+
+  public onAvatarSaved(avatar: string): void {
+    this.candidateFormData.set({
+      ...this.candidateFormData(),
+      avatar,
+    });
   }
 
   public closeDialog(): void {
