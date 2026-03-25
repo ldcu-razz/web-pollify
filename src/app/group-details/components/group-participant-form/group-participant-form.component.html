@@ -9,11 +9,14 @@
       <mat-label>RFID Number</mat-label>
       <input matInput type="text" [formField]="groupParticipantForm.rfid_number"
         (input)="onRfidInput($event)">
-      @if (groupParticipantForm.rfid_number().touched() && groupParticipantForm.rfid_number().required()) {
+      @if (groupParticipantForm.rfid_number().touched() && hasRfidRequiredError()) {
         <mat-error>RFID number is required</mat-error>
       }
       @if (groupParticipantForm.rfid_number().touched() && hasRfidMaxLengthError()) {
         <mat-error>RFID number must not exceed {{ rfidMaxLength }} characters</mat-error>
+      }
+      @if (groupParticipantForm.rfid_number().touched() && hasRfidDuplicateError()) {
+        <mat-error>This RFID number is already used by another participant in this group</mat-error>
       }
     </mat-form-field>
 

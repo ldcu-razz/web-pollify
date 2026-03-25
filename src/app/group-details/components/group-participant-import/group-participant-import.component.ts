@@ -142,6 +142,37 @@ export class GroupParticipantImportComponent {
         participant.department !== ''
       );
 
+      // Validate RFID uniqueness within imported data
+      const rfidCounts = new Map<string, number>();
+      const duplicateRfidsInImport = new Set<string>();
+      participants.forEach(p => {
+        if (p.rfid_number) {
+          const count = rfidCounts.get(p.rfid_number) ?? 0;
+          rfidCounts.set(p.rfid_number, count + 1);
+          if (count > 0) {
+            duplicateRfidsInImport.add(p.rfid_number);
+          }
+        }
+      });
+
+      if (duplicateRfidsInImport.size > 0) {
+        const duplicateList = Array.from(duplicateRfidsInImport).join(', ');
+        console.warn(`Duplicate RFID numbers found in imported file: ${duplicateList}`);
+        alert(`The following RFID numbers appear multiple times in the uploaded file:\n\n${duplicateList}\n\nPlease ensure each RFID number is unique within the file.`);
+        return;
+      }
+
+      // Validate RFID uniqueness against existing participants in the group
+      const existingRfids = this.groupDetailsStore.participants().map(p => p.rfid_number);
+      const duplicateRfidsWithExisting = participants.filter(p => p.rfid_number && existingRfids.includes(p.rfid_number));
+
+      if (duplicateRfidsWithExisting.length > 0) {
+        const duplicateList = duplicateRfidsWithExisting.map(p => p.rfid_number).join(', ');
+        console.warn(`RFID numbers already exist in the group: ${duplicateList}`);
+        alert(`The following RFID numbers are already used by participants in this group:\n\n${duplicateList}\n\nPlease use unique RFID numbers.`);
+        return;
+      }
+
       this.importGroupParticipants(participants);
     };
 
