@@ -1,0 +1,9 @@
+<div class="flex flex-col p-8 max-w-lg mx-auto h-[400px] relative bg-white">
+  <h2 class="text-2xl font-bold mb-6">Description</h2>
+  <div class="flex-1">
+    <p class="text-(--mat-sys-on-surface-variant) whitespace-pre-wrap max-h-[300px] overflow-hidden">{{ data.candidate.description }}</p>
+  </div>
+  <button mat-button class="absolute bottom-4 right-4 px-3 py-1 text-error border border-solid border-current rounded-[5px] hover:bg-(--mat-sys-error-container)" (click)="close()">
+    Close
+  </button>
+</div>
