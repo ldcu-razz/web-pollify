@@ -102,6 +102,14 @@ export const WorkspaceStore = signalStore(
       )
     ),
 
+    resetSearch: () => {
+      patchState(store, { 
+        searchQuery: '', 
+        workspaces: [], 
+        searchLoading: false 
+      });
+    },
+
     getWorkspaceUsers: async (workspaceId: string) => {
       try { 
         const result = await workspaceService.getWorkspaceUsers(workspaceId);

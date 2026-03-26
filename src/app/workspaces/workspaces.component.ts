@@ -1,4 +1,4 @@
-import { Component, computed, inject } from "@angular/core";
+import { Component, OnInit, computed, inject } from "@angular/core";
 import { MatIconModule } from "@angular/material/icon";
 import { MatListModule } from "@angular/material/list";
 import { MatButtonModule } from "@angular/material/button";
@@ -18,7 +18,7 @@ import { MatProgressSpinner } from "@angular/material/progress-spinner";
   styleUrls: ['./workspaces.component.scss'],
   imports: [MatListModule, MatIconModule, MatButtonModule, MatInputModule, FormsModule, ReactiveFormsModule, WorkspaceCardComponent, MatDialogModule, MatProgressSpinner],
 })
-export class WorkspacesComponent {
+export class WorkspacesComponent implements OnInit {
   private readonly router = inject(Router);
   private readonly dialog = inject(MatDialog);
   private readonly workspaceStore = inject(WorkspaceStore);
@@ -50,5 +50,13 @@ export class WorkspacesComponent {
       ROUTES_CONSTANTS.MAIN.WORKSPACES,
       workspaceId,
     ]);
+  }
+
+  public ngOnInit(): void {
+    this.searchWorkspace.setValue('');
+    this.workspaceStore.resetSearch();
+    // Load full list - assuming resolver or auto-load, but ensure
+    const pagination = this.workspaceStore.pagination();
+    this.workspaceStore.getWorkspaces(pagination, {});
   }
 }
