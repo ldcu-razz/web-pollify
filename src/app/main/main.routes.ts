@@ -21,6 +21,7 @@ import { authAdminGuard } from "src/guards/auth-admin.guard";
 import { authIsSuperAdminGuard } from "src/guards/auth-is-super-admin.guard";
 import { HomeComponent } from "../home/home.component";
 import { ProfileComponent } from "../profile/profile.component";
+import { PollPartylistComponent } from "../poll-details/poll-partylist/poll-partylist.component";
 
 export const mainRoutes: Routes = [
   {
@@ -62,6 +63,10 @@ export const mainRoutes: Routes = [
           {
             path: '',
             component: PollDetailsOverviewComponent,
+          },
+          {
+            path: ROUTES_CONSTANTS.MAIN.POLL_DETAILS_PARTYLISTS,
+            component: PollPartylistComponent,
           },
           {
             path: ROUTES_CONSTANTS.MAIN.POLL_DETAILS_CANDIDATES,

@@ -14,6 +14,7 @@ import { ActivatedRoute, RouterOutlet } from "@angular/router";
 import { PollPositionsStore } from "@store/poll-details/poll-positions.store";
 import { PollCandidatesStore } from "@store/poll-details/poll-candidates.store";
 import { PollParticipantsStore } from "@store/poll-details/poll-participants.store";
+import { PollPartylistStore } from "@store/poll-details/poll-partylist.store";
 
 @Component({
   selector: 'app-poll-details',
@@ -38,6 +39,7 @@ export class PollDetailsComponent implements OnInit, OnDestroy {
   private readonly pollPositionsStore = inject(PollPositionsStore);
   private readonly pollCandidatesStore = inject(PollCandidatesStore);
   private readonly pollParticipantsStore = inject(PollParticipantsStore);
+  private readonly pollPartylistStore = inject(PollPartylistStore);
   
   private readonly route = inject(ActivatedRoute);
 
@@ -47,6 +49,7 @@ export class PollDetailsComponent implements OnInit, OnDestroy {
 
   public async ngOnInit(): Promise<void> {
     await this.pollDetailsStore.getPollDetails(this.pollId());
+    await this.pollPartylistStore.getPollPartylists(this.pollId());
     await this.pollPositionsStore.getPollPositions(this.pollId());
     await this.pollCandidatesStore.getPollCandidates(this.pollId());
   }
@@ -54,6 +57,7 @@ export class PollDetailsComponent implements OnInit, OnDestroy {
   public ngOnDestroy(): void {
     this.pollDetailsStore.resetPollDetails();
     this.pollPositionsStore.resetPollPositions();
+    this.pollPartylistStore.resetPollPartylists();
     this.pollCandidatesStore.resetPollCandidates();
     this.pollParticipantsStore.resetPollParticipants();
   }

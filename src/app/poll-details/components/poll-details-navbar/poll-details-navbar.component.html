@@ -8,6 +8,7 @@
   </section>
   <section class="flex items-center gap-2">
     <button matButton="text" color="primary" class="nav-item" [class.active]="isOverviewActive()" (click)="navigateToOverview()">Overview</button>
+    <button matButton="text" color="primary" class="nav-item" [class.active]="isPartylistsActive()" (click)="navigateToPartylists()">Partylists</button>
     <button matButton="text" color="primary" class="nav-item" [class.active]="isCandidatesActive()" (click)="navigateToCandidates()">Candidates</button>
     <button matButton="text" color="primary" class="nav-item" [class.active]="isPositionsActive()" (click)="navigateToPositions()">Positions</button>
     <button matButton="text" color="primary" class="nav-item" [class.active]="isParticipantsActive()" (click)="navigateToParticipants()">Participants</button>
@@ -29,7 +30,14 @@
     </section>
   </section>
 
-} @else if (hasPollDuration() && isPollPublished() && !isPollDurationValidTodaysTimeAndDate()) {
+} @else if (hasPollDuration() && isPollPublished() && isPollNotYetStartedToday()) {
+  <section class="w-full p-2 bg-(--mat-sys-secondary-container) rounded-b-xl">
+    <section class="flex flex-col justify-center items-center max-w-2xl mx-auto gap-2 text-center">
+      <p>The poll has not started yet. Voting opens on <span class="font-bold">{{ pollStartDate() | date:'medium' }}</span>.</p>
+    </section>
+  </section>
+
+} @else if (hasPollDuration() && isPollPublished() && isPollExceedToEndDateToday()) {
   <section class="w-full p-2 bg-(--mat-sys-secondary-container) rounded-b-xl">
     <section class="flex flex-col justify-center items-center max-w-2xl mx-auto gap-2 text-center">
       <p>The poll has already ended.</p>

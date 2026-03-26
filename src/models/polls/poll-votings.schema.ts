@@ -1,8 +1,9 @@
 import z from "zod";
 import { PollParticipantsSchema } from "./poll-participants.schema";
-import { PollCandidateSchema } from "./poll-candidate.schema";
+import { PollCandidateWithPartylistSchema } from "./poll-candidate.schema";
 import { PollPositionsSchema } from "./poll-positions.schema";
 import { PaginationSchema } from "@models/common/common.schema";
+import { PollPartylistSchema } from "./poll-partylist.schema";
 
 export const PollVotingsSchema = z.object({
   id: z.uuid(),
@@ -16,7 +17,7 @@ export const PollVotingsSchema = z.object({
 
 export const GetPollVotingSchema = PollVotingsSchema.extend({
   poll_participant: PollParticipantsSchema.pick({ id: true, name: true, poll_status: true, rfid_number: true }),
-  poll_candidate: PollCandidateSchema.pick({ id: true, name: true}),
+  poll_candidate: PollCandidateWithPartylistSchema.pick({ id: true, name: true, poll_partylist: true}),
   poll_position: PollPositionsSchema.pick({ id: true, name: true}),
 });
 
@@ -32,6 +33,10 @@ export const DeletePollVotingSchema = z.object({ id: z.uuid() });
 
 export const VotingPositionResultSchema = z.object({
   position: PollPositionsSchema.pick({ id: true, name: true }),
-  candidates: z.array(PollCandidateSchema.pick({ id: true, name: true })),
+  candidates: z.array(z.object({
+    id: z.uuid(),
+    name: z.string(),
+    poll_partylist: PollPartylistSchema.nullable(),
+  })),
   votings: z.array(GetPollVotingSchema),
 });
