@@ -3,7 +3,7 @@
   <div class="flex-1">
     <p class="text-(--mat-sys-on-surface-variant) whitespace-pre-wrap max-h-[300px] overflow-hidden">{{ data.candidate.description }}</p>
   </div>
-  <button mat-button class="absolute bottom-4 right-4 px-3 py-1 text-error border border-solid border-current rounded-[5px] hover:bg-(--mat-sys-error-container)" (click)="close()">
+  <button mat-button class="absolute bottom-4 left-1/2 -translate-x-1/2 px-6 py-2 text-(--mat-sys-error) bg-(--mat-sys-error-container) border-2 border-solid border-(--mat-sys-error) text-white hover:bg-(--mat-sys-error) shadow-md rounded-xl" (click)="close()">
     Close
   </button>
 </div>
