@@ -1,4 +1,6 @@
 import { CommonModule } from "@angular/common";
+import { CUSTOM_ELEMENTS_SCHEMA } from '@angular/core';
+import { MatIconModule } from "@angular/material/icon";
 import { Component, computed, inject, model } from "@angular/core";
 import { MatButtonModule } from "@angular/material/button";
 import { MatCardModule } from "@angular/material/card";
@@ -13,7 +15,8 @@ import { CandidateInfoDialogComponent } from "src/app/poll-details/poll-candidat
   selector: 'app-vote-card',
   templateUrl: './vote-card.component.html',
   styleUrls: ['./vote-card.component.scss'],
-  imports: [CommonModule, MatCardModule, MatListModule, AvatarComponent, MatButtonModule]
+  imports: [CommonModule, MatCardModule, MatListModule, AvatarComponent, MatButtonModule, MatIconModule],
+  schemas: [CUSTOM_ELEMENTS_SCHEMA]
 })
 export class VoteCardComponent {
   public pollPositionWithCandidate = model.required<PollPositionWithCandidate>();
