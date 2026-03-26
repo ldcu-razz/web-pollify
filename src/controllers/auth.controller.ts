@@ -31,6 +31,10 @@ export class AuthController {
       throw new Error('Invalid email or password');
     }
 
+    if (data.status !== 'active') {
+      throw new Error('Your account is inactive. Please contact your administrator.');
+    }
+
     const expiresAt = new Date(Date.now() + 1000 * 60 * 60 * 24 * 7).toISOString(); // 7 days;
     const authAdminSession: AuthAdminSession = {
       id: data.id,
