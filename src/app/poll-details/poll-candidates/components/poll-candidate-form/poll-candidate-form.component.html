@@ -5,12 +5,33 @@
   </section>
 
   <form class="mt-4 flex flex-col gap-4">
+    <section class="flex items-center gap-2">
+      <app-avatar
+        [avatar]="candidateFormData().avatar"
+        [name]="candidateFormData().name"
+        [editable]="true"
+        [size]="'xxl'"
+        (savedImage)="onAvatarSaved($event)"
+      ></app-avatar>
+    </section>
     <section class="grid grid-cols-1 gap-4">
       <mat-form-field appearance="outline" class="w-full">
         <mat-label>Name</mat-label>
         <input matInput type="text" [formField]="candidateForm.name">
         @if (candidateForm.name().touched() && candidateForm.name().required()) {
           <mat-error>Name is required</mat-error>
+        }
+      </mat-form-field>
+
+      <mat-form-field appearance="outline" class="w-full">
+        <mat-label>Partylist</mat-label>
+        <mat-select [formField]="candidateForm.pollPartylistId">
+          @for (partylist of partylists(); track partylist.id) {
+            <mat-option [value]="partylist.id">{{ partylist.name }}</mat-option>
+          }
+        </mat-select>
+        @if (candidateForm.pollPartylistId().touched() && candidateForm.pollPartylistId().required()) {
+          <mat-error>Partylist is required</mat-error>
         }
       </mat-form-field>
 

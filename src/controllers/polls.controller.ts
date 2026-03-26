@@ -81,7 +81,41 @@ export class PollsController {
 
   public async updatePoll(id: string, poll: PatchPoll): Promise<GetPoll> {
     const supabase = await this.supabase.supabaseClient();
-    const { data, error } = await supabase.from(this.pollsTable).update(poll).eq('id', id).select().single();
+
+   
+    const { data: currentData, error: currentError } = await supabase
+      .from(this.pollsTable)
+      .select('status')
+      .eq('id', id)
+      .single();
+    if (currentError || !currentData) {
+      throw new Error('Poll not found');
+    }
+
+    const currentStatus = currentData.status as string;
+    const newStatus = (poll as any).status;
+
+    if (currentStatus !== 'published' && newStatus === 'published') {
+     
+      const { count: positionsCount, error: positionsError } = await supabase
+        .from('poll_positions')
+        .select('*', { count: 'exact', head: true })
+        .eq('poll_id', id);
+      if (positionsError) throw positionsError;
+
+      const { count: candidatesCount, error: candidatesError } = await supabase
+        .from('poll_candidates')
+        .select('*', { count: 'exact', head: true })
+        .eq('poll_id', id)
+        .not('poll_position_id', 'is', null);
+      if (candidatesError) throw candidatesError;
+
+      if ((positionsCount ?? 0) === 0 || (candidatesCount ?? 0) === 0) {
+        throw new Error('Poll must have at least one position and at least one candidate assigned to a position before it can be published.');
+      }
+    }
+
+    const { data, error } = await supabase.from(this.pollsTable).update(poll).eq('id', id).select('*').single();
     if (error) {
       throw error;
     }

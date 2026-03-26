@@ -40,18 +40,26 @@
         #candidateInput
         name="currentCandidate"
         placeholder="Add a candidate..."
-        [ngModel]="currentCandidateQuery"
+        [(ngModel)]="currentCandidateQuery"
         [matChipInputFor]="selectedCandidatesGrid"
         [matAutocomplete]="candidateAutocomplete"
         [matChipInputSeparatorKeyCodes]="separatorKeysCodes"
       />
-      <mat-autocomplete #candidateAutocomplete="matAutocomplete" (optionSelected)="selectCandidate($event); candidateInput.value = ''">
+      <mat-autocomplete
+        #candidateAutocomplete="matAutocomplete"
+        (optionSelected)="selectCandidate($event); currentCandidateQuery.set(''); candidateInput.value = ''"
+      >
         @for (candidate of filteredCandidates(); track candidate.id) {
           <mat-option [value]="candidate">
             <div class="flex items-center gap-2">
               <app-avatar [avatar]="candidate.avatar" [name]="candidate.name" [size]="'sm'"></app-avatar>
               <span>{{candidate.name}}</span>
             </div>
+          </mat-option>
+        }
+        @if (filteredCandidates().length === 0) {
+          <mat-option disabled>
+            <span class="text-sm opacity-70">No candidate found</span>
           </mat-option>
         }
       </mat-autocomplete>

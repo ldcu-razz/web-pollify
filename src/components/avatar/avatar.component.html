@@ -1,12 +1,111 @@
-@if (avatar()) {
-  <img
-    [ngSrc]="avatar()!"
-    [alt]="alt()"
-    [width]="pixelSize()"
-    [height]="pixelSize()"
-    class="size-full object-cover"
-  />
-} @else {
-  <span aria-hidden="true">{{ initial() }}</span>
-  <span class="sr-only">{{ name() || 'Unknown user' }}</span>
+<div [class]="avatarClasses()">
+  @if (avatar()) {
+    <img
+      [ngSrc]="avatar()!"
+      [alt]="alt()"
+      [width]="pixelSize()"
+      [height]="pixelSize()"
+      class="size-full object-cover"
+    />
+  } @else {
+    <span aria-hidden="true">{{ initial() }}</span>
+    <span class="sr-only">{{ name() || 'Unknown user' }}</span>
+  }
+</div>
+
+@if (editable()) {
+  <button
+    type="button"
+    class="absolute -right-1 -bottom-1 inline-flex size-6 items-center justify-center rounded-full border border-(--mat-sys-outline) bg-(--mat-sys-surface) text-(--mat-sys-on-surface) shadow-sm"
+    aria-label="Upload avatar image"
+    (click)="openFileDialog()"
+  >
+    <svg viewBox="0 0 24 24" class="size-4 fill-current" aria-hidden="true">
+      <path d="M3 17.25V21h3.75L17.8 9.94l-3.75-3.75L3 17.25zm2.92 2.33H5v-.92l9.06-9.06.92.92L5.92 19.58zM20.71 5.63a1 1 0 0 0 0-1.41l-1.93-1.93a1 1 0 0 0-1.41 0l-1.5 1.5 3.75 3.75 1.09-1.09z"/>
+    </svg>
+  </button>
+}
+
+<input
+  #fileInput
+  type="file"
+  accept="image/*"
+  class="hidden"
+  (change)="onFileSelected($event)"
+/>
+
+@if (isCropModalOpen() && previewUrl()) {
+  <div class="fixed inset-0 z-50 flex items-center justify-center bg-black/50 p-4">
+    <div class="w-full max-w-md rounded-lg bg-(--mat-sys-surface) p-4 text-(--mat-sys-on-surface) shadow-lg">
+      <h3 class="mb-3 text-base font-semibold">Crop avatar</h3>
+
+      <div
+        class="mx-auto mb-3 size-[280px] overflow-hidden rounded-full bg-black/10 ring-2 ring-(--mat-sys-outline-variant) touch-none"
+        (pointerdown)="onPointerDown($event)"
+        (pointermove)="onPointerMove($event)"
+        (pointerup)="onPointerUp()"
+        (pointerleave)="onPointerUp()"
+        (wheel)="onWheel($event)"
+        (touchstart)="onTouchStart($event)"
+        (touchmove)="onTouchMove($event)"
+        (touchend)="onTouchEnd()"
+      >
+        <img
+          [src]="previewUrl()!"
+          alt="Avatar crop preview"
+          class="h-full w-full select-none object-contain"
+          draggable="false"
+          [style.transform]="'translate(' + positionX() + 'px, ' + positionY() + 'px) scale(' + zoom() + ')'"
+        />
+      </div>
+
+      <label for="avatar-crop-zoom" class="mb-1 block text-sm">Zoom</label>
+      <mat-slider class="mb-2 w-full" [min]="minZoom" [max]="maxZoom" step="0.05">
+        <input
+          id="avatar-crop-zoom"
+          matSliderThumb
+          [value]="zoom()"
+          (valueChange)="onZoomSliderChange($event)"
+        />
+      </mat-slider>
+
+      <label for="avatar-crop-x" class="mb-1 block text-sm">Horizontal</label>
+      <mat-slider class="mb-2 w-full" min="-140" max="140" step="1">
+        <input
+          id="avatar-crop-x"
+          matSliderThumb
+          [value]="positionX()"
+          (valueChange)="positionX.set($event)"
+        />
+      </mat-slider>
+
+      <label for="avatar-crop-y" class="mb-1 block text-sm">Vertical</label>
+      <mat-slider class="mb-4 w-full" min="-140" max="140" step="1">
+        <input
+          id="avatar-crop-y"
+          matSliderThumb
+          [value]="positionY()"
+          (valueChange)="positionY.set($event)"
+        />
+      </mat-slider>
+
+      <div class="flex justify-end gap-2">
+        <button
+          type="button"
+          class="rounded-md border border-(--mat-sys-outline) px-3 py-2 text-sm"
+          (click)="closeCropModal()"
+        >
+          Cancel
+        </button>
+        <button
+          type="button"
+          class="rounded-md bg-(--mat-sys-primary) px-3 py-2 text-sm text-(--mat-sys-on-primary) disabled:opacity-60"
+          [disabled]="isUploading()"
+          (click)="saveCroppedImage()"
+        >
+          {{ isUploading() ? 'Saving...' : 'Save image' }}
+        </button>
+      </div>
+    </div>
+  </div>
 }

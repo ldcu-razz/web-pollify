@@ -37,13 +37,14 @@ export class ParticipantsController {
     const supabase = await this.supabaseService.supabaseClient();
 
     const query = filters.q ?? null;
+    const normalizedQuery = query?.trim();
 
     const getParticipantsQuery = supabase.from(this.participantsTable).select('*,workspace:workspace_id(id,name),group:group_id(id,name)')
       .eq('group_id', groupId)
       .range((pagination.page - 1) * pagination.limit, (pagination.page * pagination.limit) - 1);
 
-    if (query) {
-      getParticipantsQuery.filter('name', 'ilike', `%${query}%`);
+    if (normalizedQuery) {
+      getParticipantsQuery.or(`name.ilike.%${normalizedQuery}%,rfid_number.ilike.%${normalizedQuery}%`);
     }
 
     const { data, error } = await getParticipantsQuery;
@@ -54,8 +55,8 @@ export class ParticipantsController {
 
     const countQuery = supabase.from(this.participantsTable).select('*', { count: 'exact' }).eq('group_id', groupId);
 
-    if (query) {
-      countQuery.filter('name', 'ilike', `%${query}%`);
+    if (normalizedQuery) {
+      countQuery.or(`name.ilike.%${normalizedQuery}%,rfid_number.ilike.%${normalizedQuery}%`);
     }
 
     const { count, error: countError } = await countQuery;

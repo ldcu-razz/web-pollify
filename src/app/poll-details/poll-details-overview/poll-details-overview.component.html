@@ -51,7 +51,7 @@
         <section class="flex gap-2 flex-wrap">
           <mat-form-field appearance="outline" class="flex-1 min-w-[140px]">
             <mat-label>End Date</mat-label>
-            <input matInput [matDatepicker]="endDatePicker" [min]="startDate()" [(ngModel)]="endDate" readonly [disabled]="!isPollDraft()">
+            <input matInput [matDatepicker]="endDatePicker" [min]="minDate()" [(ngModel)]="endDate" readonly [disabled]="!isPollDraft()">
             <mat-datepicker-toggle matSuffix [for]="endDatePicker" [disabled]="!isPollDraft()"></mat-datepicker-toggle>
             <mat-datepicker #endDatePicker></mat-datepicker>
           </mat-form-field>
@@ -66,7 +66,7 @@
           <button matButton="outlined" color="primary" (click)="resetPollDuration()">
             <span>Reset</span>
           </button>
-          <button matButton="filled" color="primary" (click)="setPollDuration()">
+          <button matButton="filled" color="primary" (click)="setPollDuration()" [disabled]="isScheduleInvalid()">
             <span>Set poll schedule</span>
           </button>
         </section>
@@ -110,9 +110,9 @@
         <p class="text-2xl font-bold mt-auto">{{ poll()?.total_positions }}</p>
       </section>
       <section class="col-span-1 md:col-span-1 border border-(--mat-sys-outline-variant) flex flex-col rounded-xl p-4 h-full">
-        <mat-icon class="size-10! text-[38px]! mat-text-secondary">percent</mat-icon>
-        <h3 class="text-lg">Percentage of Votes:</h3>
-        <p class="text-2xl font-bold mt-auto">100%</p>
+        <mat-icon class="size-10! text-[38px]! mat-text-secondary">poll</mat-icon>
+        <h3 class="text-lg">Total Votes:</h3>
+        <p class="text-2xl font-bold mt-auto">{{ ((poll()?.total_positions ?? 0) * (poll()?.total_candidates ?? 0)) * (poll()?.total_participants ?? 0) }}</p>
       </section>
     </section>
   

@@ -10,16 +10,19 @@ import { MatIconModule } from "@angular/material/icon";
 import { MatButtonModule } from "@angular/material/button";
 import { PollParticipantStatusSchema } from "@models/polls/poll-participants.schema";
 import { VotedCardComponent } from "./components/voted-card/voted-card.component";
+import { MatDialog, MatDialogModule } from "@angular/material/dialog";
+import { ConfirmSubmitVoteDialogComponent } from "./components/confirm-submit-vote-dialog/confirm-submit-vote-dialog.component";
 
 @Component({
   selector: 'app-participant-vote',
   templateUrl: './participant-vote.component.html',
   styleUrls: ['./participant-vote.component.scss'],
-  imports: [RouterModule, VoteCardComponent, MatProgressSpinnerModule, MatIconModule, MatButtonModule, VotedCardComponent]
+  imports: [RouterModule, VoteCardComponent, MatProgressSpinnerModule, MatIconModule, MatButtonModule, VotedCardComponent, MatDialogModule]
 })
 export class ParticipantVoteComponent implements OnInit, OnDestroy {
   private readonly participantVoteStore = inject(ParticipantVoteStore);
   private readonly authParticipantsStore = inject(AuthParticipantsStore);
+  private readonly dialog = inject(MatDialog);
 
   private readonly tick = signal(0);
   private tickInterval?: ReturnType<typeof setInterval>;
@@ -140,9 +143,23 @@ export class ParticipantVoteComponent implements OnInit, OnDestroy {
     });
   }
 
-  public onSubmitVote(): void {
-    const filteredPollPositionWithCandidates = this.pollPositionsWithCandidates().filter(pollPositionWithCandidate => pollPositionWithCandidate.poll_selected.poll_candidate !== '');
-    this.participantVoteStore.createParticipantVote(filteredPollPositionWithCandidates);
+  public openSubmitVoteConfirmation(): void {
+    const dialogRef = this.dialog.open(ConfirmSubmitVoteDialogComponent, {
+      width: '640px',
+      maxWidth: '95vw',
+      data: {
+        pollPositionsWithCandidates: this.pollPositionsWithCandidates(),
+      },
+    });
+
+    dialogRef.afterClosed().subscribe((confirmed) => {
+      if (confirmed) {
+        const filteredPollPositionWithCandidates = this.pollPositionsWithCandidates().filter(
+          (pollPositionWithCandidate) => pollPositionWithCandidate.poll_selected.poll_candidate !== ''
+        );
+        this.participantVoteStore.createParticipantVote(filteredPollPositionWithCandidates);
+      }
+    });
   }
 
   public ngOnDestroy(): void {

@@ -12,6 +12,7 @@ import { debounceTime, distinctUntilChanged, switchMap, tap } from "rxjs/operato
 interface PollState {
   polls: Poll[];
   pagination: Pagination;
+  filters: GetPollsFilter;
   loading: boolean;
   searchQuery: string;
   searchLoading: boolean;
@@ -28,6 +29,7 @@ const initialState: PollState = {
     limit: 10,
     total: 0,
   },
+  filters: {},
   loading: false,
   searchQuery: '',
   searchLoading: false,
@@ -56,7 +58,7 @@ export const PollStore = signalStore(
           page: result.page,
           limit: result.limit,
           total: result.total,
-        }, loading: false });
+        }, filters: modifiedFilters, loading: false });
       } catch (error) {
         patchState(store, { error: error as string, loading: false });
         snackbar.open("Failed to get polls", "Close", { duration: 3000 });
@@ -88,7 +90,7 @@ export const PollStore = signalStore(
             page: result.page,
             limit: result.limit,
             total: result.total,
-          }, searchLoading: false });
+          }, filters: modifiedFilters, searchLoading: false });
         })
       )
     ),
@@ -96,12 +98,15 @@ export const PollStore = signalStore(
     filterPoll: async (filters: GetPollsFilter) => {
       patchState(store, { loading: true });
       try {
-        const result = await pollsService.getPolls(store.pagination(), filters);
+        const isSuperAdmin = authAdminStore.isSuperAdmin();
+        const modifiedFilters = isSuperAdmin ? filters : { ...filters, workspace_id: authAdminStore.workspaceId() ?? undefined };
+
+        const result = await pollsService.getPolls(store.pagination(), modifiedFilters);
         patchState(store, { polls: result.data, pagination: {
           page: result.page,
           limit: result.limit,
           total: result.total,
-        }, loading: false });
+        }, filters: modifiedFilters, loading: false });
       } catch (error) {
         patchState(store, { error: error as string, loading: false });
         snackbar.open("Failed to filter polls", "Close", { duration: 3000 });

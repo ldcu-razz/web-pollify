@@ -8,7 +8,7 @@ import { PollDetailsStore } from "@store/poll-details/poll-details.store";
 import { ROUTES as ROUTES_CONSTANTS } from "@constants/routes.constants";
 import { DatePipe } from "@angular/common";
 
-export type PollDetailsNavItem = "overview" | "candidates" | "positions" | "participants" | "votings";
+export type PollDetailsNavItem = "overview" | "partylists" | "candidates" | "positions" | "participants" | "votings";
 
 @Component({
   selector: 'app-poll-details-navbar',
@@ -37,6 +37,8 @@ export class PollDetailsNavbarComponent {
 
   public isPollExceedToEndDateToday = computed(() => this.pollDetailsStore.isPollExceedToEndDateToday());
 
+  public isPollNotYetStartedToday = computed(() => this.pollDetailsStore.isPollNotYetStartedToday());
+
   public activeNavItem = signal<PollDetailsNavItem>("overview");
 
   public setActiveNavItem(item: PollDetailsNavItem): void {
@@ -47,6 +49,13 @@ export class PollDetailsNavbarComponent {
     ROUTES_CONSTANTS.MAIN.BASE,
     ROUTES_CONSTANTS.MAIN.POLLS,
     this.poll()?.id ?? '',
+  ]);
+
+  private partylistsRoute = computed(() => [
+    ROUTES_CONSTANTS.MAIN.BASE,
+    ROUTES_CONSTANTS.MAIN.POLLS,
+    this.poll()?.id ?? '',
+    ROUTES_CONSTANTS.MAIN.POLL_DETAILS_PARTYLISTS,
   ]);
 
   private candidatesRoute = computed(() => [
@@ -88,7 +97,12 @@ export class PollDetailsNavbarComponent {
 
   public isOverviewActive = computed(() => {
     const url = this.currentUrl() ?? '';
-    return url.includes(ROUTES_CONSTANTS.MAIN.POLLS) && !url.includes(ROUTES_CONSTANTS.MAIN.POLL_DETAILS_CANDIDATES) && !url.includes(ROUTES_CONSTANTS.MAIN.POLL_DETAILS_POSITIONS) && !url.includes(ROUTES_CONSTANTS.MAIN.POLL_DETAILS_PARTICIPANTS) && !url.includes(ROUTES_CONSTANTS.MAIN.POLL_DETAILS_VOTINGS);
+    return url.includes(ROUTES_CONSTANTS.MAIN.POLLS) && !url.includes(ROUTES_CONSTANTS.MAIN.POLL_DETAILS_CANDIDATES) && !url.includes(ROUTES_CONSTANTS.MAIN.POLL_DETAILS_POSITIONS) && !url.includes(ROUTES_CONSTANTS.MAIN.POLL_DETAILS_PARTICIPANTS) && !url.includes(ROUTES_CONSTANTS.MAIN.POLL_DETAILS_VOTINGS) && !url.includes(ROUTES_CONSTANTS.MAIN.POLL_DETAILS_PARTYLISTS);
+  });
+
+  public isPartylistsActive = computed(() => {
+    const url = this.currentUrl() ?? '';
+    return url.includes(ROUTES_CONSTANTS.MAIN.POLL_DETAILS_PARTYLISTS);
   });
 
   public isCandidatesActive = computed(() => {
@@ -121,6 +135,11 @@ export class PollDetailsNavbarComponent {
   public navigateToOverview(): void {
     this.router.navigate(this.overviewRoute());
     this.setActiveNavItem('overview');
+  }
+
+  public navigateToPartylists(): void {
+    this.router.navigate(this.partylistsRoute());
+    this.setActiveNavItem('partylists');
   }
 
   public navigateToCandidates(): void {

@@ -10,10 +10,11 @@ export class PollCandidatesController {
   private readonly supabase = inject(SupabaseService);
   private readonly pollCandidatesTable = 'poll_candidates';
   private readonly pollPositionsTable = 'poll_positions';
+  private readonly pollPartylistsTable = 'poll_partylists';
 
   public async getPollCandidates(pollId: string, pagination: Pagination): Promise<GetPollCandidatePagination> {
     const supabase = await this.supabase.supabaseClient();
-    const { data, error } = await supabase.from(this.pollCandidatesTable).select(`*, poll_position:${this.pollPositionsTable}(*)`).eq('poll_id', pollId)
+    const { data, error } = await supabase.from(this.pollCandidatesTable).select(`*, poll_position:${this.pollPositionsTable}(*), poll_partylist:${this.pollPartylistsTable}(*)`).eq('poll_id', pollId)
       .range((pagination.page - 1) * pagination.limit, (pagination.page * pagination.limit) - 1);
 
     if (error) {
@@ -38,7 +39,7 @@ export class PollCandidatesController {
 
   public async createPollCandidate(pollId: string, payload: PostPollCandidate): Promise<GetPollCandidate> {
     const supabase = await this.supabase.supabaseClient();
-    const { data, error } = await supabase.from(this.pollCandidatesTable).insert(payload).eq('poll_id', pollId).select(`*, poll_position:${this.pollPositionsTable}(*)`).single();
+    const { data, error } = await supabase.from(this.pollCandidatesTable).insert(payload).eq('poll_id', pollId).select(`*, poll_position:${this.pollPositionsTable}(*), poll_partylist:${this.pollPartylistsTable}(*)`).single();
     if (error) {
       throw error;
     }
@@ -48,7 +49,7 @@ export class PollCandidatesController {
 
   public async updatePollCandidate(pollCandidateId: string, payload: PatchPollCandidate): Promise<GetPollCandidate> {
     const supabase = await this.supabase.supabaseClient();
-    const { data, error } = await supabase.from(this.pollCandidatesTable).update(payload).eq('id', pollCandidateId).select(`*, poll_position:${this.pollPositionsTable}(*)`).single();
+    const { data, error } = await supabase.from(this.pollCandidatesTable).update(payload).eq('id', pollCandidateId).select(`*, poll_position:${this.pollPositionsTable}(*), poll_partylist:${this.pollPartylistsTable}(*)`).single();
     if (error) {
       throw error;
     }
