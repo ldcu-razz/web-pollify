@@ -9,6 +9,7 @@ export const ROUTES = {
     DASHBOARD: 'dashboard',
     POLLS: 'polls',
     POLL_DETAILS: ':id',
+    POLL_DETAILS_PARTYLISTS: 'partylists',
     POLL_DETAILS_CANDIDATES: 'candidates',
     POLL_DETAILS_POSITIONS: 'positions',
     POLL_DETAILS_PARTICIPANTS: 'participants',

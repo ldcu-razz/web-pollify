@@ -8,6 +8,7 @@
   </section>
   <section class="flex items-center gap-2">
     <button matButton="text" color="primary" class="nav-item" [class.active]="isOverviewActive()" (click)="navigateToOverview()">Overview</button>
+    <button matButton="text" color="primary" class="nav-item" [class.active]="isPartylistsActive()" (click)="navigateToPartylists()">Partylists</button>
     <button matButton="text" color="primary" class="nav-item" [class.active]="isCandidatesActive()" (click)="navigateToCandidates()">Candidates</button>
     <button matButton="text" color="primary" class="nav-item" [class.active]="isPositionsActive()" (click)="navigateToPositions()">Positions</button>
     <button matButton="text" color="primary" class="nav-item" [class.active]="isParticipantsActive()" (click)="navigateToParticipants()">Participants</button>

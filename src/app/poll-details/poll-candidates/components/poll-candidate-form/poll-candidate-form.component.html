@@ -24,6 +24,18 @@
       </mat-form-field>
 
       <mat-form-field appearance="outline" class="w-full">
+        <mat-label>Partylist</mat-label>
+        <mat-select [formField]="candidateForm.pollPartylistId">
+          @for (partylist of partylists(); track partylist.id) {
+            <mat-option [value]="partylist.id">{{ partylist.name }}</mat-option>
+          }
+        </mat-select>
+        @if (candidateForm.pollPartylistId().touched() && candidateForm.pollPartylistId().required()) {
+          <mat-error>Partylist is required</mat-error>
+        }
+      </mat-form-field>
+
+      <mat-form-field appearance="outline" class="w-full">
         <mat-label>Description</mat-label>
         <textarea matInput cdkTextareaAutosize style="resize: vertical; min-height: 50px; max-height: 250px; overflow-y: auto;" [formField]="candidateForm.description"></textarea>
         @if (candidateForm.description().touched() && candidateForm.description().required()) {
