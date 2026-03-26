@@ -15,6 +15,9 @@ export const PollCandidateSchema = z.object({
   updated_at: z.string(),
 });
 
+export const PollCandidateWithPartylistSchema = PollCandidateSchema.extend({
+  poll_partylist: PollPartylistSchema,
+});
 export const GetPollCandidateSchema = PollCandidateSchema.extend({
   poll_position: PollPositionsSchema,
   poll_partylist: PollPartylistSchema,

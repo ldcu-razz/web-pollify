@@ -11,6 +11,7 @@ export class ParticipantVoteController {
   private readonly supabase = inject(SupabaseService);
   private readonly pollsTable = 'polls';
   private readonly pollPositionsTable = 'poll_positions';
+  private readonly pollPartylistsTable = 'poll_partylists';
   private readonly pollCandidatesTable = 'poll_candidates';
   private readonly pollVotingsTable = 'poll_votings';
   private readonly pollParticipantsTable = 'poll_participants';
@@ -28,7 +29,7 @@ export class ParticipantVoteController {
       throw pollPositionsError;
     }
 
-    const { data: pollCandidatesData, error: pollCandidatesError } = await supabase.from(this.pollCandidatesTable).select('*').eq('poll_id', pollId);
+    const { data: pollCandidatesData, error: pollCandidatesError } = await supabase.from(this.pollCandidatesTable).select(`*, poll_partylist:${this.pollPartylistsTable}(*)`).eq('poll_id', pollId);
     if (pollCandidatesError) {
       throw pollCandidatesError;
     }
