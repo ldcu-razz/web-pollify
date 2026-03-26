@@ -173,7 +173,8 @@ export const GroupDetailsStore = signalStore(
       patchState(store, { deletingParticipantLoading: true });
       try {
         await groupDetailsService.deleteParticipant(participantId);
-        patchState(store, { participants: store.participants().filter(participant => participant.id !== participantId) });
+        patchState(store, { participants: store.participants().filter(participant => participant.id !== participantId),
+        pagination: { ...store.pagination(),total: store.pagination().total -1, }, });
       } catch (error) {
         console.error(error);
       } finally {
