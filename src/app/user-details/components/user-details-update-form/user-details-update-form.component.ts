@@ -100,6 +100,16 @@ export class UserDetailsUpdateFormComponent {
   public userPasswordForm = form(this.userPassword, (schemaPath) => {
     required(schemaPath.newPassword, {message: "New password is required"});
     required(schemaPath.confirmNewPassword, {message: "Confirm new password is required"});
+
+    validate(schemaPath.newPassword, (ctx) => {
+      const value = ctx.value() as string;
+      
+      if (value.length < 8) {
+        return {kind: "minLength" };
+      }
+      return null;
+    })
+
     validate(schemaPath.confirmNewPassword, (ctx) => {
       const value = ctx.value() as string;
       const newPasswordValue = this.userPasswordForm.newPassword().value();
@@ -112,7 +122,13 @@ export class UserDetailsUpdateFormComponent {
 
   public isConfirmNewPasswordRequired = computed(() => this.userPasswordForm.confirmNewPassword().touched() && this.userPasswordForm.confirmNewPassword().errors().some((error: { kind: string }) => error.kind === "required"));
   public isPasswordsNotMatch = computed(() => this.userPasswordForm.confirmNewPassword().touched() && this.userPasswordForm.confirmNewPassword().errors().some((error: { kind: string }) => error.kind === "passwordMatch"));
-
+  
+  public isNewPasswordTooShort = computed(() => {
+    const field = this.userPasswordForm.newPassword();
+    const value = field.value() as string;
+    return field.touched() && value.length > 0 && value.length < 8;
+  });
+  
   public userWorkspace = signal({
     workspace_id: this.currentUser()?.workspace_id ?? '',
   });
