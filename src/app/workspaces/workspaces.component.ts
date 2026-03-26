@@ -55,7 +55,7 @@ export class WorkspacesComponent implements OnInit {
   public ngOnInit(): void {
     this.searchWorkspace.setValue('');
     this.workspaceStore.resetSearch();
-    // Load full list - assuming resolver or auto-load, but ensure
+
     const pagination = this.workspaceStore.pagination();
     this.workspaceStore.getWorkspaces(pagination, {});
   }
