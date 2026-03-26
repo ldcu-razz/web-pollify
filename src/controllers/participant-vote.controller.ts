@@ -15,7 +15,7 @@ export class ParticipantVoteController {
   private readonly pollCandidatesTable = 'poll_candidates';
   private readonly pollVotingsTable = 'poll_votings';
   private readonly pollParticipantsTable = 'poll_participants';
-  private readonly pollVotingsSelectQuery = '*,poll_participant:poll_participants(id,name,poll_status), poll_candidate:poll_candidates(id,name), poll_position:poll_positions(id,name)';
+  private readonly pollVotingsSelectQuery = '*,poll_participant:poll_participants(id,name,poll_status), poll_candidate:poll_candidates(id,name,poll_partylist:poll_partylists(*)), poll_position:poll_positions(id,name)';
 
   public async getParticipantVote(pollId: string): Promise<GetParticipantVote> {
     const supabase = await this.supabase.supabaseClient();

@@ -12,7 +12,10 @@
             <app-avatar [name]="candidate().name" [avatar]="null" [size]="'xs'"></app-avatar>
           </div>
           <div class="flex flex-col gap-1">
-            <span class="font-medium">{{ candidate().name }}</span>
+            <div class="flex items-center gap-1">
+              <span class="font-medium">{{ candidate().name }}</span>
+              <span class="text-(--mat-sys-on-surface-variant) font-bold">({{ candidate().poll_partylist.name }})</span>
+            </div>
           </div>
         </div>
       </mat-list-option>

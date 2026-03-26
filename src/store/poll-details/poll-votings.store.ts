@@ -7,6 +7,7 @@ import { PollVotingsService } from "@services/poll-votings.service";
 import { PollPositionsStore } from "./poll-positions.store";
 import { PollCandidatesStore } from "./poll-candidates.store";
 import { PollDetailsStore } from "./poll-details.store";
+import { PollPartylistStore } from "./poll-partylist.store";
 
 interface PollVotingsState {
   votings: GetPollVoting[];
@@ -39,10 +40,11 @@ export const PollVotingsStore = signalStore(
     pollDetailsStore: inject(PollDetailsStore),
     pollPositionsStore: inject(PollPositionsStore),
     pollCandidatesStore: inject(PollCandidatesStore),
+    pollPartylistStore: inject(PollPartylistStore),
     pollVotingsService: inject(PollVotingsService),
     snackbar: inject(MatSnackBar),
   })),
-  withComputed(({ pollPositionsStore, pollCandidatesStore, votings }) => ({
+  withComputed(({ pollPositionsStore, pollCandidatesStore, pollPartylistStore, votings }) => ({
     sortedPollPositions: computed(() => pollPositionsStore.sortedPollPositions()),
     votingPositionResults: computed(() => {
       const candidates = pollCandidatesStore.candidates();
@@ -56,6 +58,7 @@ export const PollVotingsStore = signalStore(
           candidates: positionCandidates.map(candidate => ({
             id: candidate.id,
             name: candidate.name,
+            poll_partylist: pollPartylistStore.pollPartylists().find(partylist => partylist.id === candidate.poll_partylist_id) ?? null,
           })),
           votings: votings().filter((voting) => voting.poll_position_id === position.id),
         }

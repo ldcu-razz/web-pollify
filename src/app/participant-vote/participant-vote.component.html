@@ -52,7 +52,7 @@
       </section>
 
       <section class="flex justify-end mt-4">
-        <button matButton="filled" color="primary" class="w-full" (click)="onSubmitVote()" [disabled]="submitVoteLoading()">
+        <button matButton="filled" color="primary" class="w-full" (click)="openSubmitVoteConfirmation()" [disabled]="submitVoteLoading()">
           @if (submitVoteLoading()) {
             <mat-progress-spinner mode="indeterminate" diameter="24"></mat-progress-spinner>
           }
