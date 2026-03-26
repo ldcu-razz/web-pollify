@@ -37,6 +37,8 @@ export class PollDetailsNavbarComponent {
 
   public isPollExceedToEndDateToday = computed(() => this.pollDetailsStore.isPollExceedToEndDateToday());
 
+  public isPollNotYetStartedToday = computed(() => this.pollDetailsStore.isPollNotYetStartedToday());
+
   public activeNavItem = signal<PollDetailsNavItem>("overview");
 
   public setActiveNavItem(item: PollDetailsNavItem): void {
