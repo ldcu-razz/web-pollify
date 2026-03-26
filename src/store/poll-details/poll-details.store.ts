@@ -43,6 +43,16 @@ export const PollDetailsStore = signalStore(
       const now = new Date();
       return endDateAndTime.getTime() < now.getTime();
     }),
+    isPollNotYetStartedToday: computed(() => {
+      const start = store.poll()?.date_time_start;
+      if (!start) {
+        return false;
+      }
+
+      const startDateAndTime = new Date(start);
+      const now = new Date();
+      return now.getTime() < startDateAndTime.getTime();
+    }),
     isPollDurationValidTodaysTimeAndDate: computed(() => {
       const start = store.poll()?.date_time_start;
       const end = store.poll()?.date_time_end;
