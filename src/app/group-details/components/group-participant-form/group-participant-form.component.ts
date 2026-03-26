@@ -49,21 +49,40 @@ export class GroupParticipantFormComponent {
     workspace_id: this.isUpdateMode() ? this.currentParticipant()?.workspace_id ?? '' : '',
   });
 
+  public groupParticipants = computed(() => this.groupDetailsStore.participants());
+
   public groupParticipantForm = form(this.groupParticipantData, (schemaPath) => {
     required(schemaPath.name, { message: 'Name is required' });
-    required(schemaPath.rfid_number, { message: 'RFID number is required' });
     validate(schemaPath.rfid_number, (ctx) => {
       const value = (ctx.value() as string).trim();
 
+      // Check if empty - return required error
       if (value.length === 0) {
-        return null;
+        return {
+          kind: 'required',
+          message: 'RFID number is required',
+        };
       }
 
+      // Check max length
       if (value.length > this.rfidMaxLength) {
         return {
           kind: 'rfidMaxLength',
           message: `RFID number must not exceed ${this.rfidMaxLength} characters`,
         };
+      }
+
+      // Check for duplicate RFID within the group
+      const existingParticipant = this.groupParticipants().find(p => p.rfid_number === value);
+      if (existingParticipant) {
+        // In update mode, allow the same RFID if it belongs to the current participant
+        const currentParticipantId = this.currentParticipant()?.id;
+        if (!this.isUpdateMode() || existingParticipant.id !== currentParticipantId) {
+          return {
+            kind: 'rfidDuplicate',
+            message: 'This RFID number is already used by another participant in this group',
+          };
+        }
       }
 
       return null;
@@ -73,6 +92,14 @@ export class GroupParticipantFormComponent {
 
   public hasRfidMaxLengthError = computed(() =>
     this.groupParticipantForm.rfid_number().errors().some((error: { kind: string }) => error.kind === 'rfidMaxLength')
+  );
+
+  public hasRfidDuplicateError = computed(() =>
+    this.groupParticipantForm.rfid_number().errors().some((error: { kind: string }) => error.kind === 'rfidDuplicate')
+  );
+
+  public hasRfidRequiredError = computed(() =>
+    this.groupParticipantForm.rfid_number().errors().some((error: { kind: string }) => error.kind === 'required')
   );
 
   public isFormInvalid = computed(() => this.groupParticipantForm().invalid());

@@ -74,20 +74,22 @@
       <mat-form-field appearance="outline" class="w-full">
         <mat-label>New Password</mat-label>
         <input matInput type="password" placeholder="New Password" [formField]="userPasswordForm.newPassword">
-        @if (userPasswordForm.newPassword().touched() && userPasswordForm.newPassword().required()) {
+        @if (userPasswordForm.newPassword().touched() && !userPasswordForm.newPassword().value()) {
           <mat-error>New password is required</mat-error>
+        } @else if (isNewPasswordTooShort()) {
+          <mat-error>Password must be at least 8 characters long</mat-error>
+        }
+      </mat-form-field>
+    <mat-form-field appearance="outline" class="w-full">
+      <mat-label>Confirm New Password</mat-label>
+        <input matInput type="password" placeholder="Confirm New Password" [formField]="userPasswordForm.confirmNewPassword">
+        @if (isConfirmNewPasswordRequired()) {
+          <mat-error>Confirm new password is required</mat-error>
+        } @else if (isPasswordsNotMatch()) {
+          <mat-error>Passwords must match</mat-error>
         }
       </mat-form-field>
     </form>
-    <mat-form-field appearance="outline" class="w-full">
-      <mat-label>Confirm New Password</mat-label>
-      <input matInput type="password" placeholder="Confirm New Password" [formField]="userPasswordForm.confirmNewPassword">
-      @if (isConfirmNewPasswordRequired()) {
-        <mat-error>Confirm new password is required</mat-error>
-      } @else if (isPasswordsNotMatch()) {
-        <mat-error>Passwords must match</mat-error>
-      }
-    </mat-form-field>
   }
 
   @if (fieldUpdateType() === 'workspace_id') {
