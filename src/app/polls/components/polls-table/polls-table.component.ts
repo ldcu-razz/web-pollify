@@ -62,7 +62,7 @@ export class PollsTableComponent {
       limit: event.pageSize,
       total: this.pagination().total,
     }
-    this.pollsStore.getPolls(pagination, {});
+    this.pollsStore.getPolls(pagination, this.pollsStore.filters());
   }
 
   public navigateToPollDetails(pollId: string): void {
