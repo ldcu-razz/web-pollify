@@ -159,6 +159,14 @@ export class UserDetailsUpdateFormComponent {
       return;
     }
 
+    const firstName = this.userFirstAndLastNameForm().value().first_name.trim();
+    const lastName = this.userFirstAndLastNameForm().value().last_name.trim();
+
+    if (!firstName || !lastName) {
+      this.userFirstAndLastNameForm().markAsTouched();
+      return;
+    }
+
     await this.userStore.updateUser(this.currentUser()?.id ?? '', {
       first_name: this.userFirstAndLastNameForm().value().first_name,
       last_name: this.userFirstAndLastNameForm().value().last_name,
