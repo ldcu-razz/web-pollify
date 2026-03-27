@@ -20,7 +20,9 @@ export class UsersController {
     const getUsersQuery = supabase.from(this.usersTable).select('*')
       .range((pagination.page - 1) * pagination.limit, (pagination.page * pagination.limit) - 1).order('createdAt', { ascending: false });
     if (query) {
-      getUsersQuery.or(`email.ilike.%${query}%,first_name.ilike.%${query}%,last_name.ilike.%${query}%`);
+      const [firstName, ...rest] = query.trim().split(' ');
+      const lastName = rest.join(' ');
+      getUsersQuery.or(`email.ilike.%${query}%,first_name.ilike.%${firstName}%,last_name.ilike.%${lastName || firstName }%`);
     }
 
     if (status) {
@@ -37,7 +39,9 @@ export class UsersController {
 
     const totalUsersQuery = supabase.from(this.usersTable).select('*', { count: 'exact' });
     if (query) {
-      totalUsersQuery.or(`email.ilike.%${query}%,first_name.ilike.%${query}%,last_name.ilike.%${query}%`);
+      const [firstName, ...rest] = query.trim().split(' ');
+      const lastName = rest.join(' ');
+      totalUsersQuery.or(`email.ilike.%${query}%,first_name.ilike.%${firstName}%,last_name.ilike.%${lastName || firstName}%`);
     }
     if (status) {
       totalUsersQuery.filter('status', 'eq', status);
