@@ -138,7 +138,7 @@ export const GroupDetailsStore = signalStore(
       try {
         const result = await groupDetailsService.createParticipant(payload);
         patchState(store, {
-          participants: [...store.participants(), result],
+          participants: [result, ...store.participants()],
         });
         snackbar.open('Participant added successfully', 'Close', { duration: 3000 });
       } catch (error) {
@@ -173,7 +173,8 @@ export const GroupDetailsStore = signalStore(
       patchState(store, { deletingParticipantLoading: true });
       try {
         await groupDetailsService.deleteParticipant(participantId);
-        patchState(store, { participants: store.participants().filter(participant => participant.id !== participantId) });
+        patchState(store, { participants: store.participants().filter(participant => participant.id !== participantId),
+        pagination: { ...store.pagination(),total: store.pagination().total -1, }, });
       } catch (error) {
         console.error(error);
       } finally {
