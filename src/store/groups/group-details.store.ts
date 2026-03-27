@@ -138,7 +138,7 @@ export const GroupDetailsStore = signalStore(
       try {
         const result = await groupDetailsService.createParticipant(payload);
         patchState(store, {
-          participants: [...store.participants(), result],
+          participants: [result, ...store.participants()],
         });
         snackbar.open('Participant added successfully', 'Close', { duration: 3000 });
       } catch (error) {
