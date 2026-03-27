@@ -204,8 +204,12 @@ export const GroupDetailsStore = signalStore(
       patchState(store, { currentParticipant: participant });
     },
 
+    setSearchQuery: (query: string): void => {
+      patchState(store, { searchQuery: query });
+    },
+
     resetGroupParticipants: (): void => {
-      patchState(store, { participants: [], pagination: { page: 1, limit: 20, total: 0 } });
+      patchState(store, { participants: [], pagination: { page: 1, limit: 20, total: 0 }, searchQuery: '' });
     },
   }))
 )
