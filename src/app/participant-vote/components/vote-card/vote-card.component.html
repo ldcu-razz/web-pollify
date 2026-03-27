@@ -15,6 +15,9 @@
             <div class="flex flex-col gap-1">
               <div class="flex items-center gap-1">
                 <span class="font-medium">{{ candidate.name }}</span>
+                <button mat-icon-button class="shrink-0 p-0 w-4 h-4 -ml-1" title="Info" (click)="openCandidateInfoDialog(candidate); $event.stopPropagation()">
+                  <mat-icon class="mat-icon-xs text-(--mat-sys-on-surface-variant)" fontIcon="info_outline"></mat-icon>
+                </button>
                 <span class="text-(--mat-sys-on-surface-variant) font-bold">({{ candidate.poll_partylist.name }})</span>
               </div>
               <span class="text-xs text-(--mat-sys-on-surface-variant)">{{ candidate.description }}</span>

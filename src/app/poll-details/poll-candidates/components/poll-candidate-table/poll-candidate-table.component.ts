@@ -13,6 +13,8 @@ import { MatDialog } from "@angular/material/dialog";
 import { PollCandidateFormComponent } from "../poll-candidate-form/poll-candidate-form.component";
 import { PollDetailsStore } from "@store/poll-details/poll-details.store";
 import { AvatarComponent } from "@components/avatar/avatar.component";
+import { CandidateInfoDialogComponent } from "../candidate-info-dialog/candidate-info-dialog.component";
+import { PollCandidate } from "@models/polls/poll-candidate.type";
 
 @Component({
   selector: 'app-poll-candidate-table',
@@ -58,6 +60,14 @@ export class PollCandidateTableComponent {
       data: {
         candidateId: candidateId,
       }
+    });
+  }
+
+  public openCandidateInfoDialog(candidate: PollCandidate): void {
+    this.dialog.open(CandidateInfoDialogComponent, {
+      width: '100%',
+      maxWidth: '600px',
+      data: { candidate }
     });
   }
 }
