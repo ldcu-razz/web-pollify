@@ -5,7 +5,7 @@
     </mat-card-title>
   </mat-card-header>
   <mat-card-content>
-    <p class="text-lg font-bold line-clamp-3">{{ pollPosition().name }}</p>
+    <p class="text-lg font-bold truncate" [title]="pollPosition().name">{{ pollPosition().name }}</p>
   </mat-card-content>
   <mat-card-actions class="mt-auto">
     <div class="flex justify-between items-center w-full px-2">

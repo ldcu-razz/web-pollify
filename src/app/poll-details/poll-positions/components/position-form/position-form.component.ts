@@ -7,7 +7,7 @@ import { MAT_DIALOG_DATA, MatDialogModule, MatDialogRef } from "@angular/materia
 import { MatProgressSpinnerModule } from "@angular/material/progress-spinner";
 import { PollPositionsStore } from "@store/poll-details/poll-positions.store";
 import { GetPollPosition, PatchPollPosition, PostPollPosition } from "@models/polls/poll-positions.type";
-import { disabled, form, FormField, required } from "@angular/forms/signals";
+import { disabled, form, FormField, required, validate } from "@angular/forms/signals";
 import { PollDetailsStore } from "@store/poll-details/poll-details.store";
 import { MatChipsModule } from "@angular/material/chips";
 import { MatAutocompleteModule, MatAutocompleteSelectedEvent } from "@angular/material/autocomplete";
@@ -42,6 +42,8 @@ interface PositionFormData {
   ]
 })
 export class PositionFormComponent {
+  public readonly positionNameMaxLength = 50;
+
   private readonly dialogRef = inject(MatDialogRef<PositionFormComponent>);
   private readonly data = inject<PositionFormData>(MAT_DIALOG_DATA);
   private readonly pollDetailsStore = inject(PollDetailsStore);
@@ -105,7 +107,27 @@ export class PositionFormComponent {
     required(schemaPath.position, { message: 'Position is required' });
     disabled(schemaPath.position, () => !this.isPollDraft() || this.pollPositionsStore.pollPositions().length === 0);
     required(schemaPath.name, { message: 'Name is required' });
+    validate(schemaPath.name, (ctx) => {
+      const value = (ctx.value() as string).trim();
+
+      if (value.length === 0) {
+        return null;
+      }
+
+      if (value.length > this.positionNameMaxLength) {
+        return {
+          kind: 'positionNameMaxLength',
+          message: `Position name must not exceed ${this.positionNameMaxLength} characters`,
+        };
+      }
+
+      return null;
+    });
   });
+
+  public hasPositionNameMaxLengthError = computed(() =>
+    this.positionForm.name().errors().some((error: { kind: string }) => error.kind === 'positionNameMaxLength')
+  );
 
   public isFormInvalid = computed(() => this.positionForm().invalid());
   public isFormTouched = computed(() => this.positionForm().touched());
@@ -115,6 +137,23 @@ export class PositionFormComponent {
   public updatingPollPosition = computed(() => this.pollPositionsStore.updatingPollPosition());
 
   public submitFormLabel = computed(() => this.isCreateMode() ? 'Create Position' : 'Update Position');
+
+  public onPositionNameInput(event: Event): void {
+    const input = event.target as HTMLInputElement;
+    const value = input.value ?? '';
+
+    if (value.length <= this.positionNameMaxLength) {
+      return;
+    }
+
+    const trimmedValue = value.slice(0, this.positionNameMaxLength);
+    input.value = trimmedValue;
+
+    this.positionFormData.update((current) => ({
+      ...current,
+      name: trimmedValue,
+    }));
+  }
 
   public selectCandidate(event: MatAutocompleteSelectedEvent): void {
     this.selectedCandidates.set([...this.selectedCandidates(), event.option.value]);
