@@ -29,7 +29,11 @@
 
     <ng-container matColumnDef="position">
       <th mat-header-cell *matHeaderCellDef> Position </th>
-      <td mat-cell *matCellDef="let element"> {{element.poll_position?.name ?? 'Unassigned'}} </td>
+      <td mat-cell *matCellDef="let element">
+        <div class="position-name-ellipsis" [title]="element.poll_position?.name ?? 'Unassigned'">
+          {{element.poll_position?.name ?? 'Unassigned'}}
+        </div>
+      </td>
     </ng-container>
 
     <ng-container matColumnDef="partylist">

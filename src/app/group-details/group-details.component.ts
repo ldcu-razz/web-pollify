@@ -36,6 +36,7 @@ export class GroupDetailsComponent implements OnInit, OnDestroy {
 
   public ngOnInit(): void {
     this.groupDetailsStore.getGroupDetails(this.groupId());
+    this.groupDetailsStore.setSearchQuery('');
     this.groupDetailsStore.getGroupParticipants(this.pagination(), this.groupId());
   }
 
