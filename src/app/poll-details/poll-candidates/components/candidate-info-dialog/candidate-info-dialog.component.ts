@@ -2,6 +2,7 @@ import { CommonModule } from '@angular/common';
 import { Component, inject } from '@angular/core';
 import { MatButtonModule } from '@angular/material/button';
 import { MAT_DIALOG_DATA, MatDialogModule, MatDialogRef } from '@angular/material/dialog';
+import { AvatarComponent } from '@components/avatar/avatar.component';
 import { PollCandidate } from '@models/polls/poll-candidate.type';
 
 interface CandidateInfoDialogData {
@@ -12,7 +13,7 @@ interface CandidateInfoDialogData {
   selector: 'app-candidate-info-dialog',
   templateUrl: './candidate-info-dialog.component.html',
   styleUrls: ['./candidate-info-dialog.component.scss'],
-  imports: [CommonModule, MatDialogModule, MatButtonModule],
+  imports: [CommonModule, MatDialogModule, MatButtonModule, AvatarComponent],
   standalone: true
 })
 export class CandidateInfoDialogComponent {
