@@ -2,7 +2,6 @@ import { CommonModule } from '@angular/common';
 import { Component, inject } from '@angular/core';
 import { MatButtonModule } from '@angular/material/button';
 import { MAT_DIALOG_DATA, MatDialogModule, MatDialogRef } from '@angular/material/dialog';
-import { AvatarComponent } from '@components/avatar/avatar.component';
 import { PollCandidate } from '@models/polls/poll-candidate.type';
 
 interface CandidateInfoDialogData {
