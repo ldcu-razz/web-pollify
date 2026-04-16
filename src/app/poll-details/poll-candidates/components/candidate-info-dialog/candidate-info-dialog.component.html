@@ -1,9 +1,11 @@
 <div class="flex flex-col p-8 min-h-[400px] relative">
-  <h2 class="text-2xl font-bold mb-6">{{ data.candidate.name }}</h2>
-  <div class="flex-1">
-    <p class="text-(--mat-sys-on-surface-variant) whitespace-pre-wrap max-h-[520px] overflow-hidden">{{ data.candidate.description || 'No description available' }}</p>
+  <div class="max-h-[600px] overflow-auto">
+    <h2 class="text-2xl font-bold mb-6">{{ data.candidate.name }}</h2>
+    <div class="flex-1">
+      <p class="text-(--mat-sys-on-surface-variant) whitespace-pre-wrap">{{ data.candidate.description || 'No description available' }}</p>
+    </div>
   </div>
-  <button matButton="filled" type="button" (click)="close()">
+  <button matButton="filled" type="button" (click)="close()" class="mt-6">
     Close
   </button>
 </div>
