@@ -21,7 +21,7 @@ const initialState: PollCandidatesState = {
   candidates: [],
   pagination: {
     page: 1,
-    limit: 25,
+    limit: 250,
     total: 0,
   },
   loading: false,
