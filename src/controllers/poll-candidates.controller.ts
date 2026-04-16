@@ -15,7 +15,7 @@ export class PollCandidatesController {
   public async getPollCandidates(pollId: string, pagination: Pagination): Promise<GetPollCandidatePagination> {
     const supabase = await this.supabase.supabaseClient();
     const { data, error } = await supabase.from(this.pollCandidatesTable).select(`*, poll_position:${this.pollPositionsTable}(*), poll_partylist:${this.pollPartylistsTable}(*)`).eq('poll_id', pollId)
-      .range((pagination.page - 1) * pagination.limit, (pagination.page * pagination.limit) - 1);
+      .range((pagination.page - 1) * pagination.limit, (pagination.page * pagination.limit) - 1).order('poll_position(name)', { ascending: true }).order('created_at', { ascending: false });
 
     if (error) {
       throw error;
