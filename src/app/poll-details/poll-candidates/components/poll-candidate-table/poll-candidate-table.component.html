@@ -15,10 +15,16 @@
     <ng-container matColumnDef="description">
       <th mat-header-cell *matHeaderCellDef> Description </th>
       <td mat-cell *matCellDef="let element">
-        <div class="max-w-[280px] line-clamp-2 text-ellipsis overflow-hidden">
-          {{element.description || 'No description'}}
+        <div class="flex items-center justify-between max-w-[280px]">
+          <div class="truncate text-sm">
+            {{element.description}}
+          </div>
+          <button mat-icon-button class="icon-btn shrink-0 p-0 w-4 h-4" title="Info" (click)="openCandidateInfoDialog(element); $event.stopPropagation()">
+            <mat-icon class="text-xs text-(--mat-sys-on-surface-variant)">info</mat-icon>
+          </button>
         </div>
       </td>
+
     </ng-container>
 
     <ng-container matColumnDef="position">
@@ -32,10 +38,15 @@
 
     <ng-container matColumnDef="partylist">
       <th mat-header-cell *matHeaderCellDef> Partylist </th>
-      <td mat-cell *matCellDef="let element"> {{element.poll_partylist?.name ?? 'Unassigned'}} </td>
+      <td mat-cell *matCellDef="let element">
+        <div class="flex items-center gap-2">
+          <span>{{element.poll_partylist?.name ?? 'Unassigned'}}</span>
+        </div>
+      </td>
     </ng-container>
 
     <ng-container matColumnDef="updated_at">
+
       <th mat-header-cell *matHeaderCellDef> Updated At </th>
       <td mat-cell *matCellDef="let element"> {{element.updated_at | date:'medium'}} </td>
     </ng-container>
