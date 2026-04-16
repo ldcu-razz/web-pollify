@@ -26,6 +26,8 @@ export class PollParticipantsComponent implements OnInit {
 
   public isPollDraft = computed(() => this.pollDetailsStore.isPollDraft());
 
+  public isPollPublished = computed(() => this.pollDetailsStore.isPollPublished());
+
   public searchQuery = signal('');
 
   public pollId = computed(() => this.pollDetailsStore.poll()?.id ?? '');

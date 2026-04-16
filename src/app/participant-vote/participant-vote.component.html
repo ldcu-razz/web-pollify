@@ -13,7 +13,7 @@
         Poll is draft or not yet started. Contact the administrator to if this is an error.
       </section>
     }
-    @if (isPollPublished() && !isPollExceedToEndDateToday()) {
+    @if (isPollPublished() && isPollOnTimeRange() && !isPollExceedToEndDateToday()) {
       <section class="text-sm text-center border-dashed rounded-lg p-4 border border-(--md-sys-color-secondary) flex flex-wrap items-center justify-center mat-bg-surface-container-lowest">
         Poll is going: Remaining time to vote: <span class="font-bold ml-2">{{ remainingTime() }}</span>
       </section>
@@ -37,7 +37,7 @@
       </p>
     </section>
      
-    @if (isPollPublished() && !participantDoneVoting() && !isPollExceedToEndDateToday()) {
+    @if (isPollPublished() && isPollOnTimeRange() && !participantDoneVoting() && !isPollExceedToEndDateToday()) {
       <p class="text-sm text-(--md-sys-color-on-surface-variant) mt-1">
         Select one of the following positions to vote for your choosen candidate.
       </p>

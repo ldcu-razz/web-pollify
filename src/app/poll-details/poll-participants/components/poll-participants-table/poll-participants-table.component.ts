@@ -41,6 +41,8 @@ export class PollParticipantsTableComponent {
 
   public isPollDraft = computed(() => this.pollDetailsStore.isPollDraft());
 
+  public isPollClosed = computed(() => this.pollDetailsStore.isPollClosed());
+
   public participants = computed(() => this.pollParticipantsStore.pollParticipants());
 
   public pagination = computed(() => this.pollParticipantsStore.pagination());

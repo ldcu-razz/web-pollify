@@ -49,6 +49,14 @@ export class ParticipantVoteComponent implements OnInit, OnDestroy {
 
   public participantVotings = computed(() => this.participantVoteStore.participantVotings());
 
+  public isPollOnTimeRange = computed(() => {
+    const poll = this.poll();
+    if (!poll || poll.status !== PollStatusSchema.enum.published || !poll.date_time_start || !poll.date_time_end) {
+      return false;
+    }
+    return new Date() >= new Date(poll.date_time_start) && new Date() <= new Date(poll.date_time_end);
+  });
+
   public participantId = computed(() => this.authParticipantsStore.session()?.poll_participant_id ?? '');
 
   public isPollExceedToEndDateToday = computed(() => {
