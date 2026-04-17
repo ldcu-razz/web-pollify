@@ -24,7 +24,7 @@ interface PollPartificipantsFormData {
   imports: [MatFormFieldModule, MatInputModule, MatButtonModule, MatDialogModule, MatIconModule, MatProgressSpinner, MatSelectModule, FormField]
 })
 export class PollPartificipantsFormComponent {
-  public readonly rfidMaxLength = 5;
+  public readonly rfidMaxLength = 20;
 
   private readonly dialogRef = inject(MatDialogRef<PollPartificipantsFormComponent>);
   private readonly data = inject<PollPartificipantsFormData>(MAT_DIALOG_DATA);
